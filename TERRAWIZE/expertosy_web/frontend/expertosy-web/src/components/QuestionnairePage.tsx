@@ -19,6 +19,9 @@ const QuestionnairePage: React.FC = () => {
   const [userAnswers, setUserAnswers] = useState<{[key: string]: string}>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showQuestion, setShowQuestion] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingStage, setLoadingStage] = useState('Analyzing your request...');
 
   useEffect(() => {
     let mounted = true;
@@ -31,11 +34,38 @@ const QuestionnairePage: React.FC = () => {
 
     setSearchQuery(state.searchQuery);
 
+    // Simulate loading stages for better UX
+    const loadingStages = [
+      { text: 'Analyzing your request...', duration: 1000 },
+      { text: 'Gathering expert insights...', duration: 1500 },
+      { text: 'Crafting personalized questions...', duration: 1000 },
+      { text: 'Finalizing your questionnaire...', duration: 500 }
+    ];
+
+    let currentProgress = 0;
+    const progressInterval = setInterval(() => {
+      if (currentProgress < 100) {
+        currentProgress += 1;
+        if (mounted) setLoadingProgress(currentProgress);
+      }
+    }, 40);
+
+    let currentStageIndex = 0;
+    const updateStage = () => {
+      if (currentStageIndex < loadingStages.length && mounted) {
+        setLoadingStage(loadingStages[currentStageIndex].text);
+        currentStageIndex++;
+        if (currentStageIndex < loadingStages.length) {
+          setTimeout(updateStage, loadingStages[currentStageIndex - 1].duration);
+        }
+      }
+    };
+    updateStage();
+
     const generateQuestionnaire = async () => {
       try {
         if (!mounted) return;
         
-        setIsLoading(true);
         console.log('Generating questionnaire for:', state.searchQuery);
         console.log('With factors:', state.factors);
 
@@ -54,7 +84,6 @@ const QuestionnairePage: React.FC = () => {
 
         console.log('Raw questionnaire response:', questionnaireResponse.data);
 
-        // Parse the questionnaire text into structured questions
         const parsedQuestionnaire = parseQuestionnaire(questionnaireResponse.data.questionnaire);
 
         if (!parsedQuestionnaire || parsedQuestionnaire.length === 0) {
@@ -66,6 +95,7 @@ const QuestionnairePage: React.FC = () => {
         if (!mounted) return;
         setQuestionnaire(parsedQuestionnaire);
         setIsLoading(false);
+        setTimeout(() => setShowQuestion(true), 300);
       } catch (error) {
         if (!mounted) return;
         
@@ -87,6 +117,7 @@ const QuestionnairePage: React.FC = () => {
 
     return () => {
       mounted = false;
+      clearInterval(progressInterval);
     };
   }, [navigate, location.state]);
 
@@ -228,12 +259,23 @@ const QuestionnairePage: React.FC = () => {
       [currentQuestion.question]: option
     }));
 
-    if (currentQuestionIndex < questionnaire.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    } else {
-      // All questions answered, generate recommendation
-      generateRecommendation();
-    }
+    setShowQuestion(false);
+    setTimeout(() => {
+      if (currentQuestionIndex < questionnaire.length - 1) {
+        setCurrentQuestionIndex(prev => prev + 1);
+        setShowQuestion(true);
+      } else {
+        generateRecommendation();
+      }
+    }, 300);
+  };
+
+  const handlePrevious = () => {
+    setShowQuestion(false);
+    setTimeout(() => {
+      setCurrentQuestionIndex(prev => prev - 1);
+      setShowQuestion(true);
+    }, 300);
   };
 
   const generateRecommendation = async () => {
@@ -258,75 +300,126 @@ const QuestionnairePage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading questionnaire...</div>;
+    return (
+      <div className="questionnaire-page loading">
+        <div className="loading-container">
+          <div className="loading-content">
+            <div className="loading-icon">
+              <div className="pulse-ring"></div>
+              <span className="icon">🎯</span>
+            </div>
+            <h2>{loadingStage}</h2>
+            <div className="progress-container">
+              <div className="progress-bar">
+                <div 
+                  className="progress-fill"
+                  style={{ width: `${loadingProgress}%` }}
+                />
+              </div>
+              <span className="progress-text">{loadingProgress}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (questionnaire.length === 0) {
-    return <div>No questionnaire available</div>;
+    return (
+      <div className="questionnaire-page error">
+        <div className="error-container">
+          <span className="error-icon">⚠️</span>
+          <h2>No questionnaire available</h2>
+          <p>We couldn't generate questions for your request. Please try again.</p>
+          <button onClick={() => navigate('/')} className="retry-button">
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const currentQuestion = questionnaire[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questionnaire.length) * 100;
 
   return (
     <div className="questionnaire-page">
       <div className="questionnaire-container">
-        <h2>Personalized Questions about {searchQuery}</h2>
-        
-        <div className="progress-container">
-          <div className="progress-text">
-            <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
-            <span>{Math.round(((currentQuestionIndex + 1) / questionnaire.length) * 100)}% Complete</span>
-          </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${((currentQuestionIndex + 1) / questionnaire.length) * 100}%` }}
-            />
+        <div className="questionnaire-header">
+          <h2>Personalizing recommendations for <span className="highlight">{searchQuery}</span></h2>
+          
+          <div className="progress-container">
+            <div className="progress-text">
+              <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
+              <span>{Math.round(progress)}% Complete</span>
+            </div>
+            <div className="progress-bar">
+              <div 
+                className="progress-fill"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="question-section">
-          <h3 className="question-text">{currentQuestion.question}</h3>
-          <div className="options-grid">
-            {currentQuestion.options.map((option, index) => {
-              const optionLabel = String.fromCharCode(65 + index); // Convert 0 to 'A', 1 to 'B', etc.
-              return (
-                <button 
-                  key={index} 
-                  className="option-button"
-                  onClick={() => handleOptionSelect(option.text)}
-                >
-                  <span className="option-label">{optionLabel}.</span>
-                  <span className="option-text">{option.text}</span>
-                </button>
-              );
-            })}
+        <div className={`question-section ${showQuestion ? 'fade-in' : 'fade-out'}`}>
+          <div className="question-card">
+            <div className="question-number">
+              <span className="current">{currentQuestionIndex + 1}</span>
+              <span className="total">/{questionnaire.length}</span>
+            </div>
+            
+            <h3 className="question-text">{currentQuestion.question}</h3>
+            
+            <div className="options-grid">
+              {currentQuestion.options.map((option, index) => {
+                const optionLabel = String.fromCharCode(65 + index);
+                const isSelected = userAnswers[currentQuestion.question] === option.text;
+                
+                return (
+                  <button 
+                    key={index} 
+                    className={`option-button ${isSelected ? 'selected' : ''}`}
+                    onClick={() => handleOptionSelect(option.text)}
+                  >
+                    <div className="option-content">
+                      <span className="option-label">{optionLabel}</span>
+                      <span className="option-text">{option.text}</span>
+                    </div>
+                    {isSelected && <span className="check-mark">✓</span>}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         <div className="navigation-buttons">
           {currentQuestionIndex > 0 && (
             <button 
-              className="nav-button"
-              onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+              className="nav-button previous"
+              onClick={handlePrevious}
             >
+              <span className="button-icon">←</span>
               Previous Question
             </button>
           )}
           {currentQuestionIndex < questionnaire.length - 1 && userAnswers[currentQuestion.question] && (
             <button 
-              className="nav-button"
-              onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+              className="nav-button next"
+              onClick={() => handleOptionSelect(userAnswers[currentQuestion.question])}
             >
               Next Question
+              <span className="button-icon">→</span>
             </button>
           )}
           {currentQuestionIndex === questionnaire.length - 1 && userAnswers[currentQuestion.question] && (
             <button 
-              className="nav-button submit-button"
+              className="nav-button submit"
               onClick={generateRecommendation}
             >
-              Get Recommendation
+              Get Your Recommendation
+              <span className="button-icon">✨</span>
             </button>
           )}
         </div>
