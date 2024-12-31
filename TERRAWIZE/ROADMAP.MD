@@ -1,7 +1,7 @@
 ```markdown
 # Expertosy Web Recommendation System
 
-This document describes a **web-based** recommendation system inspired by the command-line (CLI) approach shown in the original code. However, this advanced web application is **not** CLI-based. Instead, it focuses on delivering a **seamless, interactive web experience** for users looking to get personalized recommendations (for example, selecting the perfect power bank). Below is a comprehensive overview of what the app does and how the website should be structured.
+This document describes a **web-based** recommendation system inspired by the command-line (CLI) approach shown in the original code. However, this advanced web application is **not** CLI-based. Instead, it focuses on delivering a **seamless, interactive web experience** for users looking to get personalized recommendations (for example, selecting the perfect ). Below is a comprehensive overview of what the app does and how the website should be structured.
 
 ---
 
@@ -32,14 +32,14 @@ This document describes a **web-based** recommendation system inspired by the co
 
 ## High-Level Overview
 
-**Expertosy Web Recommendation System** is a platform that leverages **OpenAI**’s chat-based models to analyze a product or category (for instance, power banks) and guide users through a structured questionnaire. The system then generates:
+**Expertosy Web Recommendation System** is a platform that leverages **OpenAI**’s chat-based models to analyze a product or category () and guide users through a structured questionnaire. The system then generates:
 
 1. **Relevant Factors and Categories**: The AI determines the most important attributes (like capacity, brand reputation, and safety features).
 2. **Comprehensive Questionnaire**: It creates a set of questions, each with multiple-choice options that incorporate a pre-defined or AI-generated cost breakdown.
 3. **User Interaction**: Users select answers from the multiple-choice options on the website.
 4. **Personalized Recommendation**: The system sends the user’s selections to the AI, which then returns a product recommendation (or set of recommendations) tailored to the preferences chosen.
 
-The key innovation is that the entire process is done on a **web interface**, allowing for a more **intuitive** and **accessible** experience than a CLI application. This approach can be extended far beyond power banks—any product or service that has multiple features or factors to consider can be recommended using the same principles.
+The key innovation is that the entire process is done on a **web interface**, allowing for a more **intuitive** and **accessible** experience than a CLI application. This approach can be extended far beyond s—any product or service that has multiple features or factors to consider can be recommended using the same principles.
 
 ---
 
@@ -47,7 +47,7 @@ The key innovation is that the entire process is done on a **web interface**, al
 
 ### AI-Powered Factor Generation
 - The backend calls OpenAI to **generate factors** relevant to the user’s query.  
-  Example: If the user wants “recommend a power bank,” the AI might generate factors like **Capacity**, **Output Power**, **Number of Ports**, **Charging Speed**, etc.
+  Example: If the user wants “recommend a ,” the AI might generate factors like **Capacity**, **Output Power**, **Number of Ports**, **Charging Speed**, etc.
 - These factors serve as the **foundation** for the rest of the questionnaire.
 
 ### AI-Generated Questionnaires
@@ -120,7 +120,7 @@ The key innovation is that the entire process is done on a **web interface**, al
 
 ### Landing Page
 - **Description**: A simple, visually appealing page welcoming users to the recommendation system.  
-- **Input Field**: A text box or dropdown where the user can specify the product or category they want a recommendation for (e.g., “power bank,” “laptop,” “headphones,” etc.).  
+- **Input Field**: A text box or dropdown where the user can specify the product or category they want a recommendation for (e.g., “,” “laptop,” “headphones,” etc.).  
 - **Start Button**: Upon clicking, the user’s query is sent to the backend, which begins generating factors.
 
 ### Questionnaire Page
@@ -169,7 +169,7 @@ The key innovation is that the entire process is done on a **web interface**, al
 
 ### Multi-Query Support
 - **Comparisons**: The app might allow users to compare different categories side by side.  
-- **Multi-Product Lines**: For instance, if someone is searching for both a power bank and a set of headphones, the system can store multiple sets of preferences or run multi-step recommendations.
+- **Multi-Product Lines**: For instance, if someone is searching for both a  and a set of headphones, the system can store multiple sets of preferences or run multi-step recommendations.
 
 ---
 

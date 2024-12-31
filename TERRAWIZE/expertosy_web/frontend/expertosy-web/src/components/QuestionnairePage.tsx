@@ -15,7 +15,6 @@ const QuestionnairePage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [factors, setFactors] = useState<string[]>([]);
   const [questionnaire, setQuestionnaire] = useState<Question[]>([]);
   const [userAnswers, setUserAnswers] = useState<{[key: string]: string}>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -29,7 +28,6 @@ const QuestionnairePage: React.FC = () => {
     }
 
     setSearchQuery(state.searchQuery);
-    setFactors(state.factors);
 
     const generateQuestionnaire = async () => {
       try {
@@ -39,6 +37,8 @@ const QuestionnairePage: React.FC = () => {
         const questionnaireResponse = await axios.post('http://localhost:5001/create-questionnaire', {
           search_query: state.searchQuery,
           factors: state.factors
+        }, {
+          timeout: 30000 // 30 seconds timeout
         });
 
         console.log('Questionnaire Response:', questionnaireResponse.data);
@@ -46,6 +46,10 @@ const QuestionnairePage: React.FC = () => {
         // Parse the questionnaire text into structured questions
         const parsedQuestionnaire = parseQuestionnaire(questionnaireResponse.data.questionnaire);
         console.log('Parsed Questionnaire:', parsedQuestionnaire);
+
+        if (parsedQuestionnaire.length === 0) {
+          throw new Error('No questions were parsed from the response');
+        }
 
         setQuestionnaire(parsedQuestionnaire);
         setIsLoading(false);
@@ -64,38 +68,77 @@ const QuestionnairePage: React.FC = () => {
   }, [navigate, location.state]);
 
   const parseQuestionnaire = (questionnaireText: string): Question[] => {
+    console.log('Raw questionnaire text:', questionnaireText);
     const questions: Question[] = [];
     
-    // Split the text into sections using markdown headers
-    const questionSections = questionnaireText.split(/#+\s*\d+\.\s*/);
+    // Remove the introduction and thank you sections
+    const mainContent = questionnaireText
+      .replace(/###[^#]*?\n/, '') // Remove first header
+      .replace(/###\s*Thank you.*$/s, ''); // Remove thank you section
     
-    // Skip the first empty section
-    for (let i = 1; i < questionSections.length; i++) {
-      const section = questionSections[i].trim();
+    // Split into question blocks using various formats
+    const questionBlocks = mainContent.split(/(?:####|\*\*)\s*\d+[\.)]/);
+    
+    // Process each question block
+    questionBlocks.forEach((block, index) => {
+      if (!block.trim()) return;
       
-      // Extract the question text (first line)
-      const questionLines = section.split('\n');
-      const questionText = questionLines[0].replace(/\*+/g, '').trim();
+      console.log(`Processing block ${index}:`, block);
       
-      // Extract answer options
-      const options: string[] = [];
-      questionLines.forEach(line => {
-        const optionMatch = line.match(/^-\s*([A-D])\)\s*(.+)/);
+      // Split block into lines and clean them
+      const lines = block
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line && !line.match(/^[-\*]$/));
+      
+      if (lines.length === 0) return;
+      
+      // Find the question line
+      const questionLine = lines.find(line => 
+        line.includes('?') || 
+        line.toLowerCase().includes('what') || 
+        line.toLowerCase().includes('how') ||
+        line.toLowerCase().includes('which')
+      );
+      
+      if (!questionLine) return;
+      
+      const questionText = questionLine
+        .replace(/\*\*/g, '')
+        .replace(/^[QWHw]hat\s|^How\s|^Which\s/, '')
+        .trim();
+      
+      console.log('Question text:', questionText);
+      
+      // Find the options that belong to this question
+      const options: QuestionOption[] = [];
+      let currentOptionLetter = '';
+      
+      lines.forEach(line => {
+        // Match option headers (A, B, C, D)
+        const optionMatch = line.match(/^(?:[-\s]*)?([A-D])[\).]\s*(.+)/);
         if (optionMatch) {
-          options.push(optionMatch[2].trim());
+          currentOptionLetter = optionMatch[1];
+          const optionText = optionMatch[2].trim();
+          console.log('Found option:', optionText);
+          options.push({ text: optionText });
         }
       });
       
-      // Only add if we have a valid question and options
-      if (questionText && options.length > 0) {
+      // Only add if we have a valid question and 2-4 options
+      if (questionText && options.length >= 2 && options.length <= 4) {
         questions.push({
-          text: questionText,
+          question: questionText,
           options: options
         });
+        console.log(`Added question with ${options.length} options`);
       }
-    }
+    });
     
-    console.log('Parsed Questions:', questions);
+    console.log('Final parsed questions:', questions);
+    if (questions.length === 0) {
+      console.error('No questions were parsed. Raw text:', questionnaireText);
+    }
     return questions;
   };
 
@@ -149,8 +192,18 @@ const QuestionnairePage: React.FC = () => {
     <div className="questionnaire-page">
       <div className="questionnaire-container">
         <h2>Personalized Recommendation for {searchQuery}</h2>
-        <div className="progress-indicator">
-          Question {currentQuestionIndex + 1} of {questionnaire.length}
+        
+        <div className="progress-container">
+          <div className="progress-text">
+            <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
+            <span>{Math.round(((currentQuestionIndex + 1) / questionnaire.length) * 100)}% Complete</span>
+          </div>
+          <div className="progress-bar">
+            <div 
+              className="progress-fill" 
+              style={{ width: `${((currentQuestionIndex + 1) / questionnaire.length) * 100}%` }}
+            />
+          </div>
         </div>
 
         <div className="question-section">

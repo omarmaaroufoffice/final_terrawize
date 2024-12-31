@@ -44,7 +44,7 @@ const LandingPage: React.FC = () => {
         <div className="search-container">
           <input 
             type="text" 
-            placeholder="What are you looking to recommend? (e.g., power bank, laptop)" 
+            placeholder="What are you looking to recommend? (e.g., , laptop)" 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             disabled={isLoading}
