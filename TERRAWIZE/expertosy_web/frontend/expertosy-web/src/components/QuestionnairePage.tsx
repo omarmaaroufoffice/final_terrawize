@@ -152,28 +152,31 @@ const QuestionnairePage: React.FC = () => {
         const seenOptions = new Set<string>();
 
         lines.forEach(line => {
-          // Match various option formats:
-          // - "- A) Memory Foam (Good contouring; $50 - $150)"
-          // - "A. **Option text** - description"
-          // - "Very Important (description)"
+          // Match various option formats with complete text including costs and details
           const optionPatterns = [
-            /^-?\s*[A-D][\.\)]\s*(?:\*\*)?([^(*]+?)(?:\*\*)?(?:\s*[-\(].*)?$/,  // A) or A. format with optional bullet
-            /^(?:Very|Highly|Mostly|Somewhat|Not|Low|Medium|High|Soft|Firm|Minimal|Regular|Important|Adjustable)\s+\w+(?:\s*\([^)]+\))?$/,  // Descriptive format
+            // A) or A. format with optional bullet and full details
+            /^-?\s*[A-D][\.\)]\s*(.+?)(?:\s*$)/,
+            // Descriptive format with costs and details
+            /^(?:Very|Highly|Mostly|Somewhat|Not|Low|Medium|High|Soft|Firm|Minimal|Regular|Important|Adjustable)\s+.+$/
           ];
 
           for (const pattern of optionPatterns) {
             const match = line.match(pattern);
             if (match) {
-              let optionText = match[1] || line.split('(')[0].trim();
-              // Clean up the option text
+              // Keep the full option text including costs and details
+              let optionText = match[1] || line;
+              
+              // Clean up the option text while preserving costs and details
               optionText = optionText
                 .replace(/\*\*/g, '')  // Remove markdown
                 .replace(/^-\s*/, '')  // Remove bullet points
                 .trim();
 
+              // Only add if it's a unique option and not empty
               if (!seenOptions.has(optionText) && optionText.length > 0) {
                 seenOptions.add(optionText);
                 options.push({ text: optionText });
+                console.log('Found option:', optionText);
               }
               break;
             }
