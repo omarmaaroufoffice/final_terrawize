@@ -21,8 +21,7 @@ CORS(app)  # Enable CORS for all routes
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY"),
-    http_client=httpx.Client()
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
 class ExpertosyRecommendationEngine:

@@ -20,23 +20,21 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Virtual Environment
 venv/
-*.env
+env/
+.env
+.venv
 
 # Node.js
 node_modules/
 npm-debug.log
 yarn-error.log
-.pnp/
-.pnp.js
 
 # React
 /build
 /coverage
-
-# Frontend specific
-**/node_modules/
-**/build/
 
 # IDEs and editors
 .idea/
@@ -44,7 +42,14 @@ yarn-error.log
 *.swp
 *.swo
 *~
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Logs
@@ -53,6 +58,9 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Dependency directories
+jspm_packages/
 
 # Optional npm cache directory
 .npm
@@ -76,37 +84,15 @@ yarn-error.log*
 .env.production.local
 
 # Temporary files
-.tmp
-.temp
+*.tmp
+*.bak
+*.swp
 
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-# Submodules and nested repositories
-.gitmodules
-**/submodules/
-**/nested_repos/ 
+# Project specific
+expertosy_web/frontend/expertosy-web/build/
+expertosy_web/frontend/expertosy-web/node_modules/
+expertosy_web/backend/venv/
+expertosy_web/backend/__pycache__/ 
