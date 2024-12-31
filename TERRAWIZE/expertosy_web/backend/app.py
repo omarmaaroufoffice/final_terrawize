@@ -86,7 +86,7 @@ class ExpertosyRecommendationEngine:
         return questionnaire_text
 
     async def generate_recommendation(self, user_preferences: dict) -> str:
-        """Generate 10 personalized product recommendations based on user preferences"""
+        """Generate 10 product names and prices based on user preferences"""
         try:
             preference_text = (
                 f"I am looking for a {self.search_query} with the following preferences:\n"
@@ -100,23 +100,19 @@ class ExpertosyRecommendationEngine:
                 {
                     "role": "system",
                     "content": (
-                        f"You are an expert at recommending {self.search_query}s based on user preferences. "
-                        "Format your response in this exact structure:\n"
-                        "1. Start with a brief overview paragraph explaining the selection criteria\n"
-                        "2. List exactly 10 product recommendations in this format:\n"
-                        "**Product 1:** [Product Name] - [One-line description with key features and approximate price]\n"
-                        "**Product 2:** [Product Name] - [One-line description with key features and approximate price]\n"
-                        "... and so on until Product 10\n"
-                        "3. End with '**Selection Criteria:**' followed by 3-4 bullet points explaining how these products match the preferences\n"
-                        "Be specific about actual models, prices, and key features that match the preferences."
+                        f"Based on all the user's answers, recommend by name and price only 10 {self.search_query}s "
+                        "that would most likely fit this profile. Format each line as:\n"
+                        "1. [Product Name] - $[Price]\n"
+                        "2. [Product Name] - $[Price]\n"
+                        "... and so on until 10.\n"
+                        "ONLY include the name and price. NO descriptions or additional details."
                     )
                 },
                 {
                     "role": "user",
                     "content": (
-                        f"Based on these preferences, recommend 10 specific {self.search_query} products with brief descriptions:\n\n"
-                        f"{preference_text}\n\n"
-                        "Ensure each recommendation includes the actual product name, key features, and approximate price."
+                        f"Based on these preferences, list exactly 10 {self.search_query}s with ONLY their names and prices:\n\n"
+                        f"{preference_text}"
                     )
                 }
             ]
@@ -126,19 +122,11 @@ class ExpertosyRecommendationEngine:
             
             response = await self._create_chat_completion(
                 model="gpt-4o-mini",
-                maximum_tokens=1500,
+                maximum_tokens=500,
                 messages=messages
             )
             
             recommendation = response.choices[0].message.content.strip()
-            
-            # Verify the recommendation format
-            if "**Product 1:**" not in recommendation or "**Selection Criteria:**" not in recommendation:
-                logger.warning("Recommendation format incorrect")
-                raise Exception("Invalid recommendation format")
-            
-            # Log the raw recommendation for debugging
-            logger.debug(f"Raw recommendation: {recommendation}")
             
             # Store the recommendation
             self.results["recommendation"] = recommendation
