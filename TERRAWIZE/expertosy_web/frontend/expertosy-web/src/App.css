@@ -77,29 +77,25 @@ body {
 
 /* Questionnaire Page Styles */
 .questionnaire-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 100vh;
-  background-color: var(--background-color);
-  padding: 2rem 1rem;
+  padding: 2rem;
+  background-color: #f5f7fa;
 }
 
 .questionnaire-container {
-  background: var(--white);
-  padding: 2.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   max-width: 800px;
-  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .questionnaire-container h2 {
-  color: var(--gray-800);
-  font-size: 1.875rem;
-  font-weight: 700;
+  color: #2d3748;
   margin-bottom: 2rem;
   text-align: center;
+  font-size: 1.8rem;
 }
 
 .progress-container {
@@ -109,143 +105,347 @@ body {
 .progress-text {
   display: flex;
   justify-content: space-between;
-  color: var(--gray-700);
-  font-size: 0.875rem;
   margin-bottom: 0.5rem;
+  color: #4a5568;
+  font-size: 0.9rem;
 }
 
 .progress-bar {
   width: 100%;
-  height: 0.5rem;
-  background-color: var(--gray-200);
-  border-radius: 9999px;
+  height: 8px;
+  background-color: #edf2f7;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background-color: var(--primary-color);
+  background-color: #4299e1;
   transition: width 0.3s ease;
 }
 
 .question-section {
-  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
-.question-section h3 {
-  color: var(--gray-800);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
+.question-text {
+  color: #2d3748;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
   line-height: 1.4;
+  font-weight: 600;
 }
 
 .options-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
-  margin-top: 1.5rem;
 }
 
 .option-button {
+  display: flex;
+  align-items: flex-start;
   padding: 1.25rem;
-  background-color: var(--white);
-  border: 2px solid var(--gray-200);
-  border-radius: 0.75rem;
+  background-color: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 1rem;
-  color: var(--gray-700);
   text-align: left;
-  line-height: 1.5;
-  display: flex;
-  align-items: center;
+  width: 100%;
+  gap: 1rem;
 }
 
 .option-button:hover {
-  border-color: var(--primary-color);
-  background-color: var(--gray-100);
-  color: var(--primary-dark);
+  border-color: #4299e1;
+  background-color: #ebf8ff;
+  transform: translateY(-1px);
 }
 
-.option-button:focus {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
+.option-button:active {
+  transform: translateY(0);
+}
+
+.option-label {
+  font-weight: 600;
+  color: #4299e1;
+  min-width: 28px;
+  font-size: 1.1rem;
+}
+
+.option-text {
+  color: #2d3748;
+  line-height: 1.5;
+  font-size: 1.1rem;
+  flex: 1;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.nav-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-weight: 500;
+}
+
+.nav-button:hover {
+  background-color: #3182ce;
+}
+
+.submit-button {
+  background-color: #48bb78;
+}
+
+.submit-button:hover {
+  background-color: #38a169;
+}
+
+@media (max-width: 640px) {
+  .questionnaire-page {
+    padding: 1rem;
+  }
+
+  .questionnaire-container {
+    padding: 1rem;
+  }
+
+  .question-text {
+    font-size: 1.2rem;
+  }
+
+  .option-button {
+    padding: 0.75rem;
+  }
 }
 
 /* Results Page Styles */
 .results-page {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: 100vh;
   background-color: var(--background-color);
+  padding: 3rem 1rem;
 }
 
 .results-container {
-  background: white;
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
+  background: var(--white);
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  max-width: 1200px;
   width: 100%;
 }
 
-.recommendation-text {
-  background-color: var(--background-color);
+.results-container h1 {
+  color: var(--gray-800);
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.results-container h2 {
+  color: var(--gray-700);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.recommendation-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.recommendation-title {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--gray-200);
+}
+
+.recommendation-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.spec-label {
+  color: var(--gray-700);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.spec-value {
+  color: var(--gray-800);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.recommendation-price {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price-label {
+  color: var(--gray-700);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.price-value {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.preferences-section {
+  background: var(--gray-100);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  margin: 3rem 0;
+}
+
+.preferences-section h3 {
+  color: var(--gray-800);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.preferences-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.preference-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   padding: 1rem;
-  border-radius: 10px;
-  margin: 1rem 0;
+  background: var(--white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--gray-200);
+}
+
+.preference-question {
+  color: var(--gray-700);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.preference-answer {
+  color: var(--gray-800);
+  font-size: 0.9375rem;
 }
 
 .actions-section {
   display: flex;
-  justify-content: space-between;
-  margin-top: 2rem;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
 }
 
-.start-over-button, .download-button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 5px;
+.action-button {
+  padding: 0.875rem 1.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
   cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.start-over-button {
-  background-color: var(--accent-color);
-  color: white;
   border: none;
 }
 
-.download-button {
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
+.action-button.start-over {
+  background-color: var(--gray-200);
+  color: var(--gray-800);
 }
 
-.start-over-button:hover {
-  background-color: #c0392b;
+.action-button.start-over:hover {
+  background-color: var(--gray-300);
 }
 
-.download-button:hover {
-  background-color: #27ae60;
+.action-button.download {
+  background-color: var(--primary-color);
+  color: var(--white);
 }
 
-/* Responsive Design */
+.action-button.download:hover {
+  background-color: var(--primary-dark);
+}
+
 @media (max-width: 768px) {
-  .questionnaire-container {
+  .results-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .results-container {
     padding: 1.5rem;
   }
 
-  .questionnaire-container h2 {
-    font-size: 1.5rem;
+  .results-container h1 {
+    font-size: 2rem;
   }
 
-  .options-grid {
+  .results-container h2 {
+    font-size: 1.25rem;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .preferences-grid {
     grid-template-columns: 1fr;
   }
 
-  .option-button {
-    padding: 1rem;
+  .actions-section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .action-button {
+    width: 100%;
   }
 }
