@@ -41,8 +41,10 @@ class ExpertosyRecommendationEngine:
             },
             {
                 "role": "user",
-                "content": f"List {number_of_factors} unique and comprehensive factors for evaluating {self.search_query}."
-            },
+                "content": f"List {number_of_factors} unique and comprehensive factors for evaluating for what is most important to the user when choosing a {self.search_query}."
+                "Focus on the key differences between the different {self.search_query} and create factors that will help determine the best match for the user."
+                "Its basically the facotrs that you would think about when choosing a {self.search_query}."
+            },  
             {
                 "role": "assistant",
                 "content": "Provide factors separated by '*', without numbering or additional text."

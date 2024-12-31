@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import RankingQuestionnaire from './RankingQuestionnaire';
 
 interface QuestionOption {
   text: string;
@@ -22,6 +23,9 @@ const QuestionnairePage: React.FC = () => {
   const [showQuestion, setShowQuestion] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingStage, setLoadingStage] = useState('Analyzing your request...');
+  const [showRankingQuestionnaire, setShowRankingQuestionnaire] = useState(false);
+  const [products, setProducts] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -280,23 +284,41 @@ const QuestionnairePage: React.FC = () => {
 
   const generateRecommendation = async () => {
     try {
-      const recommendationResponse = await axios.post('http://localhost:5001/generate-recommendation', {
+      setLoadingStage('Generating primary list of candidates...');
+      setIsLoading(true);
+
+      const response = await axios.post('http://localhost:5001/generate-recommendation', {
         search_query: searchQuery,
         user_preferences: userAnswers
       });
 
-      navigate('/results', { 
-        state: { 
-          searchQuery, 
-          userPreferences: userAnswers,
-          recommendation: recommendationResponse.data.recommendation 
-        } 
-      });
+      const recommendationLines = response.data.recommendation.split('\n')
+        .filter((line: string) => line.trim().length > 0);
+
+      setLoadingStage('Preparing detailed comparison questions...');
+      
+      // Short delay to show the transition message
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      setIsLoading(false);
+      setShowRankingQuestionnaire(true);
+      setProducts(recommendationLines);
+      
     } catch (error) {
       console.error('Error generating recommendation:', error);
-      alert('Failed to generate recommendation. Please try again.');
-      navigate('/');
+      setIsLoading(false);
+      setError('Failed to generate recommendation. Please try again.');
     }
+  };
+
+  const handleRankingComplete = (rankedProducts: string[]) => {
+    navigate('/results', {
+      state: {
+        searchQuery,
+        userPreferences: userAnswers,
+        recommendation: rankedProducts
+      }
+    });
   };
 
   if (isLoading) {
@@ -324,16 +346,24 @@ const QuestionnairePage: React.FC = () => {
     );
   }
 
-  if (questionnaire.length === 0) {
+  if (showRankingQuestionnaire) {
+    return (
+      <RankingQuestionnaire
+        products={products}
+        searchQuery={searchQuery}
+        onRankingComplete={handleRankingComplete}
+      />
+    );
+  }
+
+  if (error) {
     return (
       <div className="questionnaire-page error">
         <div className="error-container">
           <span className="error-icon">⚠️</span>
-          <h2>No questionnaire available</h2>
-          <p>We couldn't generate questions for your request. Please try again.</p>
-          <button onClick={() => navigate('/')} className="retry-button">
-            Try Again
-          </button>
+          <h2>Error</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Try Again</button>
         </div>
       </div>
     );

@@ -1,83 +1,56 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import RankingQuestionnaire from './RankingQuestionnaire';
 import './ResultsPage.css';
 
 const ResultsPage: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [showRankingQuestionnaire, setShowRankingQuestionnaire] = useState(false);
-  const [rankedProducts, setRankedProducts] = useState<string[]>([]);
-  
   const state = location.state as { 
-    searchQuery?: string;
-    userPreferences?: { [key: string]: string };
-    recommendation?: string;
+    searchQuery: string;
+    userPreferences: Record<string, string>;
+    recommendation: string[];
   };
 
-  if (!state?.searchQuery || !state?.recommendation) {
-    navigate('/');
-    return null;
-  }
-
-  const products = state.recommendation.split('\n').filter(line => line.trim());
-
-  const handleStartRanking = () => {
-    setShowRankingQuestionnaire(true);
-  };
-
-  const handleRankingComplete = (ranked: string[]) => {
-    setRankedProducts(ranked);
-    setShowRankingQuestionnaire(false);
-  };
-
-  const handleStartOver = () => {
-    navigate('/');
-  };
-
-  if (showRankingQuestionnaire) {
+  if (!state || !state.recommendation) {
     return (
-      <RankingQuestionnaire
-        products={products}
-        searchQuery={state.searchQuery}
-        onRankingComplete={handleRankingComplete}
-      />
+      <div className="results-page error">
+        <div className="error-container">
+          <span className="error-icon">⚠️</span>
+          <h2>No Results Available</h2>
+          <p>Please start a new search to get recommendations.</p>
+          <Link to="/" className="back-button">Start New Search</Link>
+        </div>
+      </div>
     );
   }
 
   return (
     <div className="results-page">
       <div className="results-container">
-        <h1>Recommended Products for {state.searchQuery}</h1>
-        
+        <div className="results-header">
+          <h1>Recommended {state.searchQuery}s for You</h1>
+          <p className="subtitle">Based on your preferences, here are your top matches:</p>
+        </div>
+
         <div className="recommendations-list">
-          {(rankedProducts.length > 0 ? rankedProducts : products).map((line, index) => {
-            if (line.trim()) {
-              return (
-                <div key={index} className="recommendation-item">
-                  {line}
+          {state.recommendation.map((product, index) => {
+            const [name, price] = product.split(' - ');
+            const productName = name.split('.')[1]?.trim() || name;
+            
+            return (
+              <div key={index} className="product-card">
+                <div className="rank-badge">{index + 1}</div>
+                <div className="product-details">
+                  <h3 className="product-name">{productName}</h3>
+                  <p className="product-price">{price}</p>
                 </div>
-              );
-            }
-            return null;
+              </div>
+            );
           })}
         </div>
 
-        <div className="actions-section">
-          {!rankedProducts.length && (
-            <button 
-              className="action-button primary"
-              onClick={handleStartRanking}
-            >
-              Help Us Rank These Products
-            </button>
-          )}
-          <button 
-            className={`action-button ${rankedProducts.length ? 'primary' : 'secondary'}`}
-            onClick={handleStartOver}
-          >
-            Start New Search
-          </button>
+        <div className="action-buttons">
+          <Link to="/" className="back-button">Start New Search</Link>
         </div>
       </div>
     </div>

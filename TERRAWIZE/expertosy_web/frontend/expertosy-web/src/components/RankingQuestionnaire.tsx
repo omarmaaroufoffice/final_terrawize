@@ -18,23 +18,24 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   searchQuery,
   onRankingComplete
 }) => {
-  const [questionnaire, setQuestionnaire] = useState<Question[]>([]);
-  const [userAnswers, setUserAnswers] = useState<{[key: string]: string}>({});
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [showQuestion, setShowQuestion] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [loadingStage, setLoadingStage] = useState('Analyzing products...');
+  const [loadingStage, setLoadingStage] = useState('');
+  const [questionnaire, setQuestionnaire] = useState<Question[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
+  const [showQuestion, setShowQuestion] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     
-    // Simulate loading stages for better UX
+    // Enhanced loading stages for better UX
     const loadingStages = [
-      { text: 'Analyzing products...', duration: 1000 },
-      { text: 'Identifying key differences...', duration: 1500 },
-      { text: 'Creating comparison questions...', duration: 1000 },
-      { text: 'Finalizing questionnaire...', duration: 500 }
+      { text: 'Analyzing product specifications...', duration: 1000 },
+      { text: 'Comparing key features...', duration: 1000 },
+      { text: 'Identifying important trade-offs...', duration: 1000 },
+      { text: `Preparing ${products.length} questions for final ranking...`, duration: 1000 },
+      { text: 'Finalizing comparison criteria...', duration: 500 }
     ];
 
     let currentProgress = 0;
@@ -159,6 +160,26 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
     }
   };
 
+  const renderProductCard = (product: string, index: number) => {
+    const [name, price] = product.split(' - ');
+    const number = name.split('.')[0];
+    const productName = name.split('.')[1].trim();
+
+    return (
+      <div 
+        className="product-card"
+        style={{
+          animationDelay: `${index * 0.1}s`,
+          transform: `rotate(${Math.random() * 10 - 5}deg)`
+        }}
+      >
+        <div className="product-number">{number}</div>
+        <h3 className="product-name">{productName}</h3>
+        <div className="product-price">{price}</div>
+      </div>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="ranking-questionnaire loading">
@@ -189,12 +210,36 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
 
   const currentQuestion = questionnaire[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questionnaire.length) * 100;
+  const remainingQuestions = questionnaire.length - (currentQuestionIndex + 1);
 
   return (
     <div className="ranking-questionnaire">
+      <div className="products-background">
+        <div className="products-grid left">
+          {products.slice(0, 5).map((product, index) => (
+            <div key={`left-${index}`}>
+              {renderProductCard(product, index)}
+            </div>
+          ))}
+        </div>
+        <div className="products-grid right">
+          {products.slice(5).map((product, index) => (
+            <div key={`right-${index}`}>
+              {renderProductCard(product, index + 5)}
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="questionnaire-container">
         <div className="questionnaire-header">
           <h2>Help us rank these products for you</h2>
+          <p className="remaining-questions">
+            {remainingQuestions === 0 
+              ? "Last question to get your final ranking!" 
+              : `${remainingQuestions} question${remainingQuestions === 1 ? '' : 's'} left to get your final ranking`
+            }
+          </p>
           
           <div className="progress-container">
             <div className="progress-text">
@@ -210,35 +255,20 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
           </div>
         </div>
 
-        <div className={`question-section ${showQuestion ? 'fade-in' : 'fade-out'}`}>
-          <div className="question-card">
-            <div className="question-number">
-              <span className="current">{currentQuestionIndex + 1}</span>
-              <span className="total">/{questionnaire.length}</span>
-            </div>
-            
-            <h3 className="question-text">{currentQuestion.question}</h3>
-            
-            <div className="options-grid">
-              {currentQuestion.options.map((option, index) => {
-                const optionLabel = String.fromCharCode(65 + index);
-                const isSelected = userAnswers[currentQuestion.question] === option.text;
-                
-                return (
-                  <button 
-                    key={index} 
-                    className={`option-button ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleOptionSelect(option.text)}
-                  >
-                    <div className="option-content">
-                      <span className="option-label">{optionLabel}</span>
-                      <span className="option-text">{option.text}</span>
-                    </div>
-                    {isSelected && <span className="check-mark">✓</span>}
-                  </button>
-                );
-              })}
-            </div>
+        <div className={`question-container ${showQuestion ? 'show' : ''}`}>
+          <div className="question-number">Question {currentQuestionIndex + 1}</div>
+          <h3 className="question-text">{currentQuestion.question}</h3>
+          
+          <div className="options-container">
+            {currentQuestion.options.map((option, index) => (
+              <button
+                key={index}
+                className="option-button"
+                onClick={() => handleOptionSelect(option.text)}
+              >
+                {option.text}
+              </button>
+            ))}
           </div>
         </div>
       </div>
