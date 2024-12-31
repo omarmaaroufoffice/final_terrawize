@@ -21,7 +21,9 @@ const QuestionnairePage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     const state = location.state as { searchQuery?: string, factors?: string[] };
+    
     if (!state?.searchQuery || !state?.factors) {
       navigate('/');
       return;
@@ -31,115 +33,189 @@ const QuestionnairePage: React.FC = () => {
 
     const generateQuestionnaire = async () => {
       try {
-        console.log('Search Query:', state.searchQuery);
-        console.log('Factors:', state.factors);
+        if (!mounted) return;
+        
+        setIsLoading(true);
+        console.log('Generating questionnaire for:', state.searchQuery);
+        console.log('With factors:', state.factors);
 
         const questionnaireResponse = await axios.post('http://localhost:5001/create-questionnaire', {
           search_query: state.searchQuery,
           factors: state.factors
         }, {
-          timeout: 30000 // 30 seconds timeout
+          timeout: 60000 // 60 seconds timeout
         });
 
-        console.log('Questionnaire Response:', questionnaireResponse.data);
+        if (!mounted) return;
+
+        if (!questionnaireResponse.data?.questionnaire) {
+          throw new Error('No questionnaire data received from server');
+        }
+
+        console.log('Raw questionnaire response:', questionnaireResponse.data);
 
         // Parse the questionnaire text into structured questions
         const parsedQuestionnaire = parseQuestionnaire(questionnaireResponse.data.questionnaire);
-        console.log('Parsed Questionnaire:', parsedQuestionnaire);
 
-        if (parsedQuestionnaire.length === 0) {
+        if (!parsedQuestionnaire || parsedQuestionnaire.length === 0) {
           throw new Error('No questions were parsed from the response');
         }
 
+        console.log('Successfully parsed questionnaire:', parsedQuestionnaire);
+
+        if (!mounted) return;
         setQuestionnaire(parsedQuestionnaire);
         setIsLoading(false);
       } catch (error) {
-        console.error('Full Error Details:', error);
+        if (!mounted) return;
+        
+        console.error('Error in generateQuestionnaire:', error);
         if (axios.isAxiosError(error)) {
-          console.error('Response:', error.response?.data);
-          console.error('Status:', error.response?.status);
+          console.error('Network Error Details:', {
+            response: error.response?.data,
+            status: error.response?.status,
+            message: error.message
+          });
         }
+        setIsLoading(false);
         alert(`Failed to generate questionnaire: ${error instanceof Error ? error.message : 'Unknown error'}`);
         navigate('/');
       }
     };
 
     generateQuestionnaire();
+
+    return () => {
+      mounted = false;
+    };
   }, [navigate, location.state]);
 
   const parseQuestionnaire = (questionnaireText: string): Question[] => {
-    console.log('Raw questionnaire text:', questionnaireText);
+    if (!questionnaireText) {
+      throw new Error('No questionnaire text provided');
+    }
+
+    console.log('Starting to parse questionnaire text');
     const questions: Question[] = [];
     
-    // Remove the introduction and thank you sections
-    const mainContent = questionnaireText
-      .replace(/###[^#]*?\n/, '') // Remove first header
-      .replace(/###\s*Thank you.*$/s, ''); // Remove thank you section
-    
-    // Split into question blocks using various formats
-    const questionBlocks = mainContent.split(/(?:####|\*\*)\s*\d+[\.)]/);
-    
-    // Process each question block
-    questionBlocks.forEach((block, index) => {
-      if (!block.trim()) return;
+    try {
+      // Split into sections by numbered headers
+      const sections = questionnaireText
+        .split(/(?:####|###)\s*\d+\.|(?:\*\*\d+\.)/g)
+        .filter(Boolean)
+        .map(section => section.trim());
       
-      console.log(`Processing block ${index}:`, block);
+      console.log(`Found ${sections.length} sections to parse`);
       
-      // Split block into lines and clean them
-      const lines = block
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line && !line.match(/^[-\*]$/));
-      
-      if (lines.length === 0) return;
-      
-      // Find the question line
-      const questionLine = lines.find(line => 
-        line.includes('?') || 
-        line.toLowerCase().includes('what') || 
-        line.toLowerCase().includes('how') ||
-        line.toLowerCase().includes('which')
-      );
-      
-      if (!questionLine) return;
-      
-      const questionText = questionLine
-        .replace(/\*\*/g, '')
-        .replace(/^[QWHw]hat\s|^How\s|^Which\s/, '')
-        .trim();
-      
-      console.log('Question text:', questionText);
-      
-      // Find the options that belong to this question
-      const options: QuestionOption[] = [];
-      let currentOptionLetter = '';
-      
-      lines.forEach(line => {
-        // Match option headers (A, B, C, D)
-        const optionMatch = line.match(/^(?:[-\s]*)?([A-D])[\).]\s*(.+)/);
-        if (optionMatch) {
-          currentOptionLetter = optionMatch[1];
-          const optionText = optionMatch[2].trim();
-          console.log('Found option:', optionText);
-          options.push({ text: optionText });
+      if (sections.length === 0) {
+        throw new Error('No sections found in questionnaire');
+      }
+
+      sections.forEach((section, index) => {
+        // Skip introduction and thank you sections
+        if (section.includes('Thank you') || 
+            section.includes('### Comprehensive') || 
+            section.includes('Please select') ||
+            !section.trim()) {
+          return;
+        }
+        
+        // Split section into lines and clean them
+        const lines = section
+          .split('\n')
+          .map(line => line.trim())
+          .filter(Boolean)
+          .filter(line => !line.startsWith('###')); // Remove section headers
+        
+        // Find the question text
+        let questionLine = '';
+        const questionLines = lines.filter(line => 
+          line.includes('?') && 
+          !line.startsWith('-') && 
+          !line.startsWith('*')
+        );
+
+        if (questionLines.length > 0) {
+          // Take the longest question line (usually the most complete)
+          questionLine = questionLines.reduce((a, b) => a.length > b.length ? a : b);
+          // Remove any markdown formatting from the question
+          questionLine = questionLine.replace(/\*\*/g, '').trim();
+        }
+        
+        if (!questionLine) {
+          console.log(`No question found in section ${index + 1}`);
+          return;
+        }
+
+        // Find all options
+        const options: QuestionOption[] = [];
+        const seenOptions = new Set<string>();
+
+        lines.forEach(line => {
+          // Match various option formats:
+          // - "- A) Memory Foam (Good contouring; $50 - $150)"
+          // - "A. **Option text** - description"
+          // - "Very Important (description)"
+          const optionPatterns = [
+            /^-?\s*[A-D][\.\)]\s*(?:\*\*)?([^(*]+?)(?:\*\*)?(?:\s*[-\(].*)?$/,  // A) or A. format with optional bullet
+            /^(?:Very|Highly|Mostly|Somewhat|Not|Low|Medium|High|Soft|Firm|Minimal|Regular|Important|Adjustable)\s+\w+(?:\s*\([^)]+\))?$/,  // Descriptive format
+          ];
+
+          for (const pattern of optionPatterns) {
+            const match = line.match(pattern);
+            if (match) {
+              let optionText = match[1] || line.split('(')[0].trim();
+              // Clean up the option text
+              optionText = optionText
+                .replace(/\*\*/g, '')  // Remove markdown
+                .replace(/^-\s*/, '')  // Remove bullet points
+                .trim();
+
+              if (!seenOptions.has(optionText) && optionText.length > 0) {
+                seenOptions.add(optionText);
+                options.push({ text: optionText });
+              }
+              break;
+            }
+          }
+        });
+
+        // Filter out any options that are actually questions
+        const validOptions = options.filter(opt => !opt.text.includes('?'));
+
+        if (validOptions.length >= 2) {
+          // Sort options to ensure A, B, C, D order
+          validOptions.sort((a, b) => {
+            const aMatch = a.text.match(/^[A-D][\.\)]/);
+            const bMatch = b.text.match(/^[A-D][\.\)]/);
+            if (aMatch && bMatch) {
+              return aMatch[0].charCodeAt(0) - bMatch[0].charCodeAt(0);
+            }
+            return 0;
+          });
+
+          questions.push({
+            question: questionLine.trim(),
+            options: validOptions
+          });
+          console.log(`Added question: "${questionLine.trim()}" with ${validOptions.length} options`);
+        } else {
+          console.log(`Skipping section ${index + 1} - insufficient valid options found`);
         }
       });
-      
-      // Only add if we have a valid question and 2-4 options
-      if (questionText && options.length >= 2 && options.length <= 4) {
-        questions.push({
-          question: questionText,
-          options: options
-        });
-        console.log(`Added question with ${options.length} options`);
+
+      if (questions.length === 0) {
+        throw new Error('No valid questions could be parsed from the questionnaire');
       }
-    });
-    
-    console.log('Final parsed questions:', questions);
-    if (questions.length === 0) {
-      console.error('No questions were parsed. Raw text:', questionnaireText);
+
+      console.log(`Successfully parsed ${questions.length} questions`);
+      return questions;
+
+    } catch (error) {
+      console.error('Error parsing questionnaire:', error);
+      console.error('Questionnaire text that failed to parse:', questionnaireText);
+      throw new Error(`Failed to parse questionnaire: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-    return questions;
   };
 
   const handleOptionSelect = (option: string) => {
@@ -191,7 +267,7 @@ const QuestionnairePage: React.FC = () => {
   return (
     <div className="questionnaire-page">
       <div className="questionnaire-container">
-        <h2>Personalized Recommendation for {searchQuery}</h2>
+        <h2>Personalized Questions about {searchQuery}</h2>
         
         <div className="progress-container">
           <div className="progress-text">
@@ -207,18 +283,49 @@ const QuestionnairePage: React.FC = () => {
         </div>
 
         <div className="question-section">
-          <h3>{currentQuestion.question}</h3>
+          <h3 className="question-text">{currentQuestion.question}</h3>
           <div className="options-grid">
-            {currentQuestion.options.map((option, index) => (
-              <button 
-                key={index} 
-                className="option-button"
-                onClick={() => handleOptionSelect(option.text)}
-              >
-                {option.text}
-              </button>
-            ))}
+            {currentQuestion.options.map((option, index) => {
+              const optionLabel = String.fromCharCode(65 + index); // Convert 0 to 'A', 1 to 'B', etc.
+              return (
+                <button 
+                  key={index} 
+                  className="option-button"
+                  onClick={() => handleOptionSelect(option.text)}
+                >
+                  <span className="option-label">{optionLabel}.</span>
+                  <span className="option-text">{option.text}</span>
+                </button>
+              );
+            })}
           </div>
+        </div>
+
+        <div className="navigation-buttons">
+          {currentQuestionIndex > 0 && (
+            <button 
+              className="nav-button"
+              onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+            >
+              Previous Question
+            </button>
+          )}
+          {currentQuestionIndex < questionnaire.length - 1 && userAnswers[currentQuestion.question] && (
+            <button 
+              className="nav-button"
+              onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+            >
+              Next Question
+            </button>
+          )}
+          {currentQuestionIndex === questionnaire.length - 1 && userAnswers[currentQuestion.question] && (
+            <button 
+              className="nav-button submit-button"
+              onClick={generateRecommendation}
+            >
+              Get Recommendation
+            </button>
+          )}
         </div>
       </div>
     </div>
