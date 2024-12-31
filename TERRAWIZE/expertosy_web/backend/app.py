@@ -87,31 +87,64 @@ class ExpertosyRecommendationEngine:
 
     async def generate_recommendation(self, user_preferences: dict) -> str:
         """Generate a personalized recommendation based on user preferences"""
-        preference_text = (
-            f"I am looking for a {self.search_query} with the following preferences:\n"
-            + "\n".join([
-                f"{factor_text}: {answer_text}"
-                for factor_text, answer_text in user_preferences.items()
-            ])
-        )
-        messages = [
-            {
-                "role": "system",
-                "content": f"You are an expert at recommending {self.search_query} based on user preferences."
-            },
-            {
-                "role": "user",
-                "content": preference_text
-            }
-        ]
-        response = await self._create_chat_completion(
-            model="gpt-4o-mini",
-            maximum_tokens=1000,
-            messages=messages
-        )
-        recommendation = response.choices[0].message.content.strip()
-        self.results["recommendation"] = recommendation
-        return recommendation
+        try:
+            preference_text = (
+                f"I am looking for a {self.search_query} with the following preferences:\n"
+                + "\n".join([
+                    f"- {factor_text}: {answer_text}"
+                    for factor_text, answer_text in user_preferences.items()
+                ])
+            )
+            
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        f"You are an expert at recommending {self.search_query}s based on user preferences. "
+                        "Format your response in this exact structure:\n"
+                        "1. Start with a clear overview paragraph\n"
+                        "2. List 4-6 key points, each starting with '**Category**:'\n"
+                        "3. End with '**Potential Limitations:**' followed by 3-5 bullet points\n"
+                        "Be specific about models and features that match the preferences."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        f"Based on these preferences, recommend a specific {self.search_query} with detailed explanations:\n\n"
+                        f"{preference_text}"
+                    )
+                }
+            ]
+            
+            logger.info(f"Generating recommendation for {self.search_query}")
+            logger.debug(f"User preferences: {preference_text}")
+            
+            response = await self._create_chat_completion(
+                model="gpt-4o-mini",
+                maximum_tokens=1000,
+                messages=messages
+            )
+            
+            recommendation = response.choices[0].message.content.strip()
+            
+            # Verify the recommendation format
+            if "**Potential Limitations:**" not in recommendation:
+                logger.warning("Recommendation missing limitations section")
+                recommendation += "\n\n**Potential Limitations:**\n- No specific limitations identified"
+            
+            # Log the raw recommendation for debugging
+            logger.debug(f"Raw recommendation: {recommendation}")
+            
+            # Store the recommendation
+            self.results["recommendation"] = recommendation
+            return recommendation
+            
+        except Exception as e:
+            logger.error(f"Error generating recommendation: {str(e)}")
+            logger.error(f"Search query: {self.search_query}")
+            logger.error(f"User preferences: {user_preferences}")
+            raise Exception(f"Failed to generate recommendation: {str(e)}")
 
     async def _create_chat_completion(self, model: str, maximum_tokens: int, messages: list):
         """Helper method to create a chat completion with error handling"""
@@ -123,10 +156,16 @@ class ExpertosyRecommendationEngine:
                 messages=messages,
                 temperature=0.7
             )
+            
+            if not result or not result.choices or not result.choices[0].message:
+                raise Exception("Invalid response from OpenAI API")
+            
             return result
-        except Exception as exception_data:
-            logger.error(f"OpenAI API error: {exception_data}")
-            raise
+        except Exception as e:
+            logger.error(f"OpenAI API error: {str(e)}")
+            logger.error(f"Model: {model}")
+            logger.error(f"Messages: {messages}")
+            raise Exception(f"OpenAI API error: {str(e)}")
 
 @app.route('/generate-factors', methods=['POST', 'OPTIONS'])
 async def generate_factors_route():
