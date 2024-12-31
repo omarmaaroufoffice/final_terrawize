@@ -16,7 +16,7 @@ const LandingPage: React.FC = () => {
     setIsLoading(true);
     try {
       // Generate factors
-      const factorsResponse = await axios.post('http://localhost:5000/generate-factors', {
+      const factorsResponse = await axios.post('http://localhost:5001/generate-factors', {
         search_query: searchQuery
       });
 

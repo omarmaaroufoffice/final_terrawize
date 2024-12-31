@@ -17,11 +17,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}}, supports_credentials=True)
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
+    api_key=os.getenv("OPENAI_API_KEY", "")
 )
 
 class ExpertosyRecommendationEngine:
@@ -58,45 +58,31 @@ class ExpertosyRecommendationEngine:
         return self.results["factors"]
 
     async def create_questionnaire(self, factors: list) -> str:
-        """Create a comprehensive questionnaire with cost breakdown"""
-        cost_breakdown_text = """
-        Comprehensive cost breakdown for various product factors:
-        
-        ### 1. Capacity
-        - Option A: Basic - Cost: $20-$30
-        - Option B: Mid-range - Cost: $30-$50
-        - Option C: High-end - Cost: $50-$80
-        - Option D: Premium - Cost: $80-$120
-
-        ### 2. Performance
-        - Option A: Entry-level - Cost: $10-$20
-        - Option B: Standard - Cost: $20-$40
-        - Option C: Advanced - Cost: $40-$70
-        - Option D: Professional - Cost: $70-$120
-        """
-
+        """Create a structured questionnaire based on given factors"""
         messages = [
             {
                 "role": "system",
-                "content": f"You are an expert at creating questionnaires for {self.search_query}."
+                "content": f"You are an expert at creating questionnaires for {self.search_query}. "
+                "Generate a comprehensive questionnaire with multiple-choice questions. "
+                "Format each question with a clear text and 4 lettered options (A, B, C, D). "
+                "Include cost ranges or relevant details for each option when applicable."
             },
             {
                 "role": "user",
-                "content": (
-                    f"{cost_breakdown_text}\n\n"
-                    f"Create a questionnaire for {self.search_query} using these factors: {', '.join(factors)}. "
-                    "Include multiple-choice options with cost ranges."
-                )
+                "content": f"Create a questionnaire for {self.search_query} using these factors: {', '.join(factors)}. "
+                "Ensure each question has 4 options labeled A, B, C, D. "
+                "Include cost ranges or specific details for each option. "
+                "The questionnaire should help determine the user's precise preferences."
             }
         ]
-
+        
         response = await self._create_chat_completion(
             model="gpt-4o-mini",
             maximum_tokens=1500,
             messages=messages
         )
+        
         questionnaire_text = response.choices[0].message.content.strip()
-        self.results["questionnaire"] = questionnaire_text
         return questionnaire_text
 
     async def generate_recommendation(self, user_preferences: dict) -> str:
@@ -142,9 +128,12 @@ class ExpertosyRecommendationEngine:
             logger.error(f"OpenAI API error: {exception_data}")
             raise
 
-@app.route('/generate-factors', methods=['POST'])
+@app.route('/generate-factors', methods=['POST', 'OPTIONS'])
 async def generate_factors_route():
     """API endpoint to generate factors for a given search query"""
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
     data = request.json
     search_query = data.get('search_query')
     
@@ -159,27 +148,38 @@ async def generate_factors_route():
         logger.error(f"Error generating factors: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/create-questionnaire', methods=['POST'])
+@app.route('/create-questionnaire', methods=['POST', 'OPTIONS'])
 async def create_questionnaire_route():
     """API endpoint to create a questionnaire based on factors"""
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
     data = request.json
+    logger.info(f"Received create_questionnaire request: {data}")
+
     search_query = data.get('search_query')
     factors = data.get('factors')
     
     if not search_query or not factors:
+        logger.error("Missing search query or factors")
         return jsonify({"error": "Search query and factors are required"}), 400
     
     try:
         engine = ExpertosyRecommendationEngine(search_query)
         questionnaire = await engine.create_questionnaire(factors)
+        logger.info(f"Generated questionnaire: {questionnaire}")
         return jsonify({"questionnaire": questionnaire})
     except Exception as e:
         logger.error(f"Error creating questionnaire: {e}")
-        return jsonify({"error": str(e)}), 500
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 500
 
-@app.route('/generate-recommendation', methods=['POST'])
+@app.route('/generate-recommendation', methods=['POST', 'OPTIONS'])
 async def generate_recommendation_route():
     """API endpoint to generate a recommendation based on user preferences"""
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
     data = request.json
     search_query = data.get('search_query')
     user_preferences = data.get('user_preferences')
@@ -200,4 +200,10 @@ def create_app():
     return app
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000) 
+    import sys
+    port = 5001  # Default port
+    for arg in sys.argv:
+        if arg.startswith('--port='):
+            port = int(arg.split('=')[1])
+    
+    app.run(debug=True, port=port) 

@@ -33,18 +33,29 @@ const QuestionnairePage: React.FC = () => {
 
     const generateQuestionnaire = async () => {
       try {
-        const questionnaireResponse = await axios.post('http://localhost:5000/create-questionnaire', {
+        console.log('Search Query:', state.searchQuery);
+        console.log('Factors:', state.factors);
+
+        const questionnaireResponse = await axios.post('http://localhost:5001/create-questionnaire', {
           search_query: state.searchQuery,
           factors: state.factors
         });
 
+        console.log('Questionnaire Response:', questionnaireResponse.data);
+
         // Parse the questionnaire text into structured questions
         const parsedQuestionnaire = parseQuestionnaire(questionnaireResponse.data.questionnaire);
+        console.log('Parsed Questionnaire:', parsedQuestionnaire);
+
         setQuestionnaire(parsedQuestionnaire);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error generating questionnaire:', error);
-        alert('Failed to generate questionnaire. Please try again.');
+        console.error('Full Error Details:', error);
+        if (axios.isAxiosError(error)) {
+          console.error('Response:', error.response?.data);
+          console.error('Status:', error.response?.status);
+        }
+        alert(`Failed to generate questionnaire: ${error instanceof Error ? error.message : 'Unknown error'}`);
         navigate('/');
       }
     };
@@ -54,28 +65,37 @@ const QuestionnairePage: React.FC = () => {
 
   const parseQuestionnaire = (questionnaireText: string): Question[] => {
     const questions: Question[] = [];
-    const lines = questionnaireText.split('\n');
-    let currentQuestion: Question | null = null;
-
-    for (const line of lines) {
-      const trimmedLine = line.trim();
-      if (trimmedLine.startsWith('Q:')) {
-        if (currentQuestion) {
-          questions.push(currentQuestion);
+    
+    // Split the text into sections using markdown headers
+    const questionSections = questionnaireText.split(/#+\s*\d+\.\s*/);
+    
+    // Skip the first empty section
+    for (let i = 1; i < questionSections.length; i++) {
+      const section = questionSections[i].trim();
+      
+      // Extract the question text (first line)
+      const questionLines = section.split('\n');
+      const questionText = questionLines[0].replace(/\*+/g, '').trim();
+      
+      // Extract answer options
+      const options: string[] = [];
+      questionLines.forEach(line => {
+        const optionMatch = line.match(/^-\s*([A-D])\)\s*(.+)/);
+        if (optionMatch) {
+          options.push(optionMatch[2].trim());
         }
-        currentQuestion = {
-          question: trimmedLine.slice(2).trim(),
-          options: []
-        };
-      } else if (currentQuestion && /^\d+\./.test(trimmedLine)) {
-        currentQuestion.options.push({ text: trimmedLine.replace(/^\d+\.\s*/, '').trim() });
+      });
+      
+      // Only add if we have a valid question and options
+      if (questionText && options.length > 0) {
+        questions.push({
+          text: questionText,
+          options: options
+        });
       }
     }
-
-    if (currentQuestion) {
-      questions.push(currentQuestion);
-    }
-
+    
+    console.log('Parsed Questions:', questions);
     return questions;
   };
 
@@ -96,7 +116,7 @@ const QuestionnairePage: React.FC = () => {
 
   const generateRecommendation = async () => {
     try {
-      const recommendationResponse = await axios.post('http://localhost:5000/generate-recommendation', {
+      const recommendationResponse = await axios.post('http://localhost:5001/generate-recommendation', {
         search_query: searchQuery,
         user_preferences: userAnswers
       });
