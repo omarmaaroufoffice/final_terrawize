@@ -86,7 +86,7 @@ class ExpertosyRecommendationEngine:
         return questionnaire_text
 
     async def generate_recommendation(self, user_preferences: dict) -> str:
-        """Generate a personalized recommendation based on user preferences"""
+        """Generate 10 personalized product recommendations based on user preferences"""
         try:
             preference_text = (
                 f"I am looking for a {self.search_query} with the following preferences:\n"
@@ -102,36 +102,40 @@ class ExpertosyRecommendationEngine:
                     "content": (
                         f"You are an expert at recommending {self.search_query}s based on user preferences. "
                         "Format your response in this exact structure:\n"
-                        "1. Start with a clear overview paragraph\n"
-                        "2. List 4-6 key points, each starting with '**Category**:'\n"
-                        "3. End with '**Potential Limitations:**' followed by 3-5 bullet points\n"
-                        "Be specific about models and features that match the preferences."
+                        "1. Start with a brief overview paragraph explaining the selection criteria\n"
+                        "2. List exactly 10 product recommendations in this format:\n"
+                        "**Product 1:** [Product Name] - [One-line description with key features and approximate price]\n"
+                        "**Product 2:** [Product Name] - [One-line description with key features and approximate price]\n"
+                        "... and so on until Product 10\n"
+                        "3. End with '**Selection Criteria:**' followed by 3-4 bullet points explaining how these products match the preferences\n"
+                        "Be specific about actual models, prices, and key features that match the preferences."
                     )
                 },
                 {
                     "role": "user",
                     "content": (
-                        f"Based on these preferences, recommend a specific {self.search_query} with detailed explanations:\n\n"
-                        f"{preference_text}"
+                        f"Based on these preferences, recommend 10 specific {self.search_query} products with brief descriptions:\n\n"
+                        f"{preference_text}\n\n"
+                        "Ensure each recommendation includes the actual product name, key features, and approximate price."
                     )
                 }
             ]
             
-            logger.info(f"Generating recommendation for {self.search_query}")
+            logger.info(f"Generating 10 product recommendations for {self.search_query}")
             logger.debug(f"User preferences: {preference_text}")
             
             response = await self._create_chat_completion(
                 model="gpt-4o-mini",
-                maximum_tokens=1000,
+                maximum_tokens=1500,
                 messages=messages
             )
             
             recommendation = response.choices[0].message.content.strip()
             
             # Verify the recommendation format
-            if "**Potential Limitations:**" not in recommendation:
-                logger.warning("Recommendation missing limitations section")
-                recommendation += "\n\n**Potential Limitations:**\n- No specific limitations identified"
+            if "**Product 1:**" not in recommendation or "**Selection Criteria:**" not in recommendation:
+                logger.warning("Recommendation format incorrect")
+                raise Exception("Invalid recommendation format")
             
             # Log the raw recommendation for debugging
             logger.debug(f"Raw recommendation: {recommendation}")
@@ -141,10 +145,10 @@ class ExpertosyRecommendationEngine:
             return recommendation
             
         except Exception as e:
-            logger.error(f"Error generating recommendation: {str(e)}")
+            logger.error(f"Error generating recommendations: {str(e)}")
             logger.error(f"Search query: {self.search_query}")
             logger.error(f"User preferences: {user_preferences}")
-            raise Exception(f"Failed to generate recommendation: {str(e)}")
+            raise Exception(f"Failed to generate recommendations: {str(e)}")
 
     async def _create_chat_completion(self, model: str, maximum_tokens: int, messages: list):
         """Helper method to create a chat completion with error handling"""
