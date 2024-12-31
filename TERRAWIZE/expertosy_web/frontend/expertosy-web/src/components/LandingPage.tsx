@@ -1,213 +1,117 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/LandingPage.css';
+import './LandingPage.css';
 
 const LandingPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showSearchAnimation, setShowSearchAnimation] = useState(false);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    // Trigger search box animation after component mount
-    setTimeout(() => setShowSearchAnimation(true), 500);
-
-    // Load recent searches from localStorage
-    const savedSearches = localStorage.getItem('recentSearches');
-    if (savedSearches) {
-      setRecentSearches(JSON.parse(savedSearches));
-    }
-  }, []);
+  const popularSearches = [
+    'laptop', 'smartphone', 'headphones', 'camera', 'smartwatch',
+    'gaming console', 'tablet', 'monitor', 'keyboard', 'mouse'
+  ];
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
-      setShowTooltip(true);
-      setTimeout(() => setShowTooltip(false), 3000);
+      setError('Please enter what you want to find.');
       return;
     }
 
+    setError('');
     setIsLoading(true);
-    try {
-      // Save to recent searches
-      const updatedSearches = [searchQuery, ...recentSearches.filter(s => s !== searchQuery)].slice(0, 5);
-      setRecentSearches(updatedSearches);
-      localStorage.setItem('recentSearches', JSON.stringify(updatedSearches));
 
-      // Generate factors
-      const factorsResponse = await axios.post('http://localhost:5001/generate-factors', {
+    try {
+      const response = await axios.post('http://localhost:5001/generate-factors', {
         search_query: searchQuery
       });
 
-      // Navigate to questionnaire with factors
-      navigate('/questionnaire', { 
-        state: { 
-          searchQuery, 
-          factors: factorsResponse.data.factors 
-        } 
+      navigate('/questionnaire', {
+        state: {
+          searchQuery,
+          factors: response.data.factors
+        }
       });
     } catch (error) {
-      console.error('Error generating factors:', error);
-      alert('Failed to generate factors. Please try again.');
-    } finally {
+      console.error('Error:', error);
+      setError('Failed to start the search. Please try again.');
       setIsLoading(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !isLoading) {
-      handleSearch();
-    }
+  const handlePopularSearch = (query: string) => {
+    setSearchQuery(query);
+    handleSearch();
   };
-
-  const popularSearches = [
-    { text: 'Laptop', icon: '💻', category: 'Tech' },
-    { text: 'Smartphone', icon: '📱', category: 'Tech' },
-    { text: 'Camera', icon: '📸', category: 'Tech' },
-    { text: 'Headphones', icon: '🎧', category: 'Tech' },
-    { text: 'Smart Watch', icon: '⌚', category: 'Tech' },
-    { text: 'TV', icon: '📺', category: 'Tech' },
-    { text: 'Running Shoes', icon: '👟', category: 'Sports' },
-    { text: 'Coffee Maker', icon: '☕', category: 'Home' },
-    { text: 'Backpack', icon: '🎒', category: 'Travel' }
-  ];
-
-  const features = [
-    {
-      icon: '🤖',
-      title: 'AI-Powered Intelligence',
-      description: 'Our advanced AI analyzes thousands of data points to provide the most accurate recommendations tailored to your needs.'
-    },
-    {
-      icon: '⚡',
-      title: 'Lightning Fast Results',
-      description: 'Get instant, personalized suggestions in seconds, saving you hours of research and comparison.'
-    },
-    {
-      icon: '🎯',
-      title: 'Precise & Accurate',
-      description: 'Smart filtering and matching algorithms ensure you get exactly what you\'re looking for, every time.'
-    },
-    {
-      icon: '🔒',
-      title: 'Privacy Focused',
-      description: 'Your preferences and data are always protected. We never share your information with third parties.'
-    }
-  ];
 
   return (
     <div className="landing-page">
-      <div className="landing-background">
+      <div className="background-effects">
         <div className="gradient-overlay"></div>
-        <div className="pattern-overlay"></div>
-        <div className="floating-shapes">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className={`floating-shape shape-${i + 1}`} />
+        <div className="pattern-grid"></div>
+        <div className="floating-circles">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className={`circle circle-${i + 1}`}></div>
           ))}
         </div>
       </div>
 
-      <div className={`landing-content ${showSearchAnimation ? 'animate-in' : ''}`}>
-        <div className="brand-section">
-          <div className="logo-container">
-            <div className="logo">
-              <span className="logo-icon">🎯</span>
-            </div>
-          </div>
-          <h1>
-            <span className="gradient-text">Expertosy</span>
+      <div className="content-container">
+        <div className="hero-section">
+          <h1 className="main-title">
+            Find Your Perfect Match with
+            <span className="highlight"> AI-Powered</span> Recommendations
           </h1>
-          <h2>AI-Powered Recommendation System</h2>
-          <p className="tagline">
-            Get expert recommendations for anything
-            <span className="highlight">Personalized just for you</span>
+          
+          <p className="subtitle">
+            Tell us what you're looking for, and we'll guide you to the best choice through
+            personalized questions and expert analysis.
           </p>
-        </div>
-        
-        <div className="search-section">
+
           <div className="search-container">
-            <div className="search-input-wrapper">
-              <span className="search-icon pulse-animation">🔍</span>
-              <input 
-                type="text" 
-                placeholder="What would you like recommendations for?" 
+            <div className="search-box">
+              <input
+                type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-                disabled={isLoading}
-                className="search-input"
-                aria-label="Search input"
+                placeholder="What are you looking to find? (e.g., laptop, smartphone, camera)"
+                className={error ? 'error' : ''}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
-              {searchQuery && (
-                <button 
-                  className="clear-input"
-                  onClick={() => setSearchQuery('')}
-                  type="button"
-                  aria-label="Clear search"
-                >
-                  ✕
-                </button>
-              )}
-              {showTooltip && (
-                <div className="search-tooltip">
-                  Please enter what you're looking for
-                </div>
-              )}
-            </div>
-            <button 
-              onClick={handleSearch} 
-              disabled={isLoading}
-              className="search-button"
-              aria-label="Get recommendations"
-            >
-              {isLoading ? (
-                <div className="loading-spinner">
-                  <div className="spinner"></div>
-                  <span>Analyzing...</span>
-                </div>
-              ) : (
-                <>
-                  <span>Get Smart Recommendations</span>
-                  <span className="button-icon">→</span>
-                </>
-              )}
-            </button>
-          </div>
-          
-          <div className="search-examples">
-            <div className="recent-searches">
-              {recentSearches.length > 0 && (
-                <>
-                  <p>Recent searches:</p>
-                  <div className="recent-tags">
-                    {recentSearches.map((search, index) => (
-                      <button 
-                        key={index}
-                        onClick={() => setSearchQuery(search)}
-                        className="recent-tag"
-                      >
-                        <span className="tag-icon">🕒</span>
-                        <span className="tag-text">{search}</span>
-                      </button>
-                    ))}
+              <button 
+                className="search-button"
+                onClick={handleSearch}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <div className="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                   </div>
-                </>
-              )}
+                ) : (
+                  <>
+                    <span className="button-text">Find My Match</span>
+                    <span className="button-icon">→</span>
+                  </>
+                )}
+              </button>
             </div>
-            <p>Popular recommendations:</p>
-            <div className="example-tags">
-              {popularSearches.map((item, index) => (
-                <button 
+            {error && <p className="error-message">{error}</p>}
+          </div>
+
+          <div className="popular-searches">
+            <h3>Popular Searches</h3>
+            <div className="tags">
+              {popularSearches.map((query, index) => (
+                <button
                   key={index}
-                  onClick={() => setSearchQuery(item.text)}
-                  className="example-tag"
-                  data-category={item.category}
+                  className="tag"
+                  onClick={() => handlePopularSearch(query)}
                 >
-                  <span className="tag-icon">{item.icon}</span>
-                  <span className="tag-text">{item.text}</span>
-                  <span className="tag-category">{item.category}</span>
+                  {query}
                 </button>
               ))}
             </div>
@@ -215,52 +119,50 @@ const LandingPage: React.FC = () => {
         </div>
 
         <div className="features-section">
-          {features.map((feature, index) => (
-            <div key={index} className="feature">
-              <div className="feature-icon-wrapper">
-                <span className="feature-icon">{feature.icon}</span>
-              </div>
-              <h3>{feature.title}</h3>
-              <p>{feature.description}</p>
+          <div className="feature-grid">
+            <div className="feature-card">
+              <div className="feature-icon">🎯</div>
+              <h3>Personalized Recommendations</h3>
+              <p>Get tailored suggestions based on your specific needs and preferences.</p>
             </div>
-          ))}
-        </div>
-
-        <div className="trust-section">
-          <h3 className="section-title">Trusted by Thousands</h3>
-          <div className="trust-indicators">
-            <div className="trust-item">
-              <span className="trust-icon">🌟</span>
-              <div className="trust-text">
-                <strong className="counter">50,000+</strong>
-                <span>Recommendations</span>
-              </div>
+            <div className="feature-card">
+              <div className="feature-icon">🤖</div>
+              <h3>AI-Powered Analysis</h3>
+              <p>Advanced algorithms analyze thousands of options to find your perfect match.</p>
             </div>
-            <div className="trust-item">
-              <span className="trust-icon">👥</span>
-              <div className="trust-text">
-                <strong className="counter">10,000+</strong>
-                <span>Happy Users</span>
-              </div>
+            <div className="feature-card">
+              <div className="feature-icon">💡</div>
+              <h3>Smart Comparison</h3>
+              <p>Compare features and trade-offs to make informed decisions.</p>
             </div>
-            <div className="trust-item">
-              <span className="trust-icon">⭐</span>
-              <div className="trust-text">
-                <strong className="counter">4.9/5</strong>
-                <span>User Rating</span>
-              </div>
+            <div className="feature-card">
+              <div className="feature-icon">⚡</div>
+              <h3>Quick Results</h3>
+              <p>Get instant recommendations after answering a few simple questions.</p>
             </div>
           </div>
         </div>
 
-        <footer className="landing-footer">
-          <p>Powered by advanced AI technology</p>
-          <div className="footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#about">About Us</a>
+        <div className="how-it-works">
+          <h2>How It Works</h2>
+          <div className="steps">
+            <div className="step">
+              <div className="step-number">1</div>
+              <h3>Tell Us What You Need</h3>
+              <p>Enter what you're looking for, and we'll start the search process.</p>
+            </div>
+            <div className="step">
+              <div className="step-number">2</div>
+              <h3>Answer Questions</h3>
+              <p>Respond to personalized questions about your preferences and needs.</p>
+            </div>
+            <div className="step">
+              <div className="step-number">3</div>
+              <h3>Get Recommendations</h3>
+              <p>Receive a curated list of the best matches for your requirements.</p>
+            </div>
           </div>
-        </footer>
+        </div>
       </div>
     </div>
   );
