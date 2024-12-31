@@ -159,6 +159,112 @@ class ExpertosyRecommendationEngine:
             logger.error(f"Messages: {messages}")
             raise Exception(f"OpenAI API error: {str(e)}")
 
+    async def generate_ranking_questionnaire(self, products: list) -> str:
+        """Generate a questionnaire to rank products based on trade-offs"""
+        try:
+            products_text = "\n".join(products)
+            
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an expert at creating questionnaires that help rank products based on trade-offs. "
+                        "Create exactly 5 multiple-choice questions that help understand user preferences regarding the key differences between these products.\n\n"
+                        "Format requirements:\n"
+                        "1. Number each question as '1.', '2.', etc.\n"
+                        "2. Each question MUST end with a question mark (?)\n"
+                        "3. Format options exactly as 'A)', 'B)', 'C)', 'D)'\n"
+                        "4. Focus on comparing price vs features, performance vs portability, etc.\n"
+                        "5. Make questions that help distinguish between the products' advantages and disadvantages.\n\n"
+                        "Example format:\n"
+                        "1. What is your primary concern when choosing between these products?\n"
+                        "A) Price and value for money\n"
+                        "B) Performance and speed\n"
+                        "C) Build quality and durability\n"
+                        "D) Brand reputation and support"
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        f"Create a questionnaire to help rank these products based on their trade-offs:\n\n{products_text}\n\n"
+                        "Focus on the key differences between these specific products and create questions that will help determine the best match for the user."
+                    )
+                }
+            ]
+            
+            response = await self._create_chat_completion(
+                model="gpt-4o-mini",
+                maximum_tokens=1500,
+                messages=messages
+            )
+            
+            questionnaire_text = response.choices[0].message.content.strip()
+            
+            # Log the response for debugging
+            logger.info(f"Generated ranking questionnaire: {questionnaire_text}")
+            
+            return questionnaire_text
+            
+        except Exception as e:
+            logger.error(f"Error generating ranking questionnaire: {str(e)}")
+            raise Exception(f"Failed to generate ranking questionnaire: {str(e)}")
+
+    async def rank_products(self, products: list, ranking_preferences: dict) -> list:
+        """Rank the products based on user's answers to the trade-off questions"""
+        try:
+            products_text = "\n".join(products)
+            preferences_text = "\n".join([
+                f"Question: {question}\nAnswer: {answer}"
+                for question, answer in ranking_preferences.items()
+            ])
+            
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are an expert at ranking products based on user preferences about trade-offs. "
+                        "Analyze the user's answers and rank the products from best to worst match. "
+                        "Consider the trade-offs between features, price, and other characteristics. "
+                        "Return ONLY the ranked list in order from best to worst match, maintaining the exact same format as the input products. "
+                        "Do not add any additional text or explanations. Just return the ranked list."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        f"Based on these user preferences about trade-offs:\n\n{preferences_text}\n\n"
+                        f"Rank these products from best to worst match:\n\n{products_text}\n\n"
+                        "Return ONLY the ranked list in the exact same format as above, ordered from best to worst match. "
+                        "Do not add any additional text or explanations."
+                    )
+                }
+            ]
+            
+            response = await self._create_chat_completion(
+                model="gpt-4o-mini",
+                maximum_tokens=1000,
+                messages=messages
+            )
+            
+            ranked_products = [
+                line.strip() for line in response.choices[0].message.content.strip().split('\n')
+                if line.strip() and line.strip()[0].isdigit()
+            ]
+            
+            # Verify and fix numbering if needed
+            fixed_ranked_products = []
+            for i, product in enumerate(ranked_products, 1):
+                # Extract everything after the number and period/dot
+                product_text = product.split('.', 1)[1].strip() if '.' in product else product
+                fixed_ranked_products.append(f"{i}. {product_text}")
+            
+            return fixed_ranked_products
+            
+        except Exception as e:
+            logger.error(f"Error ranking products: {str(e)}")
+            raise Exception(f"Failed to rank products: {str(e)}")
+
 @app.route('/generate-factors', methods=['POST', 'OPTIONS'])
 async def generate_factors_route():
     """API endpoint to generate factors for a given search query"""
@@ -224,6 +330,47 @@ async def generate_recommendation_route():
         return jsonify({"recommendation": recommendation})
     except Exception as e:
         logger.error(f"Error generating recommendation: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/generate-ranking-questionnaire', methods=['POST', 'OPTIONS'])
+async def generate_ranking_questionnaire_route():
+    """API endpoint to generate a questionnaire for ranking products"""
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
+    data = request.json
+    products = data.get('products')
+    
+    if not products:
+        return jsonify({"error": "Products list is required"}), 400
+    
+    try:
+        engine = ExpertosyRecommendationEngine(data.get('search_query', ''))
+        questionnaire = await engine.generate_ranking_questionnaire(products)
+        return jsonify({"questionnaire": questionnaire})
+    except Exception as e:
+        logger.error(f"Error generating ranking questionnaire: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/rank-products', methods=['POST', 'OPTIONS'])
+async def rank_products_route():
+    """API endpoint to rank products based on trade-off preferences"""
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
+    data = request.json
+    products = data.get('products')
+    ranking_preferences = data.get('ranking_preferences')
+    
+    if not products or not ranking_preferences:
+        return jsonify({"error": "Products list and ranking preferences are required"}), 400
+    
+    try:
+        engine = ExpertosyRecommendationEngine(data.get('search_query', ''))
+        ranked_products = await engine.rank_products(products, ranking_preferences)
+        return jsonify({"ranked_products": ranked_products})
+    except Exception as e:
+        logger.error(f"Error ranking products: {e}")
         return jsonify({"error": str(e)}), 500
 
 def create_app():
