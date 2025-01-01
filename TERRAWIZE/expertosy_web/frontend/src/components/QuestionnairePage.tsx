@@ -94,8 +94,14 @@ const QuestionnairePage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         
+        if (!searchQuery.trim()) {
+          setError('Search query is required');
+          setIsLoading(false);
+          return;
+        }
+        
         const response = await api.post('/generate-factors', { 
-          search_query: searchQuery,
+          search_query: searchQuery.trim(),
           factors: state.factors
         });
 
