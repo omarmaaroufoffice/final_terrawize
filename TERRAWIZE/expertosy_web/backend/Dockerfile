@@ -16,10 +16,11 @@ COPY . .
 
 # Set environment variables
 ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
+ENV FLASK_ENV=production
+ENV PYTHONUNBUFFERED=1
 
 # Expose the port the app runs on
 EXPOSE 8080
 
-# Use gunicorn as the production WSGI server
-CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "4", "app:app"] 
+# Use gunicorn as the production server
+CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "4", "--timeout", "120", "--log-file", "-", "app:app"] 
