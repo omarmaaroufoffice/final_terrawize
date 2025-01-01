@@ -16,12 +16,18 @@ app.use(cors({
     'https://expertosy.com',
     'https://www.expertosy.com',
     'https://app.expertosy.com',
+    'https://api.expertosy.com',
     'http://localhost:3000'
   ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
+// Add health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy' });
+});
 
 // Add security headers
 app.use((req, res, next) => {
@@ -37,14 +43,15 @@ app.use((req, res, next) => {
 
 // Proxy API requests to the backend
 app.use('/api', createProxyMiddleware({
-  target: process.env.REACT_APP_API_URL || 'http://localhost:8080',
+  target: process.env.REACT_APP_API_URL || 'https://api.expertosy.com',
   changeOrigin: true,
   pathRewrite: {
     '^/api': ''
   },
   onProxyReq: (proxyReq, req, res) => {
-    // Add any necessary headers for the backend
     proxyReq.setHeader('X-Forwarded-Proto', req.protocol);
+    proxyReq.setHeader('X-Forwarded-Host', req.get('host'));
+    proxyReq.setHeader('Host', 'api.expertosy.com');
   },
   onError: (err, req, res) => {
     console.error('Proxy Error:', err);

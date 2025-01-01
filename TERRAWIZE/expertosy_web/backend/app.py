@@ -22,8 +22,14 @@ CORS(app, resources={r"/*": {"origins": [
     "http://localhost:8080",
     "https://expertosy.com",
     "https://www.expertosy.com",
-    "https://app.expertosy.com"
+    "https://app.expertosy.com",
+    "https://api.expertosy.com"
 ]}}, supports_credentials=True)
+
+# Add a health check endpoint
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
