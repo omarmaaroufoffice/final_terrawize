@@ -89,7 +89,18 @@ const QuestionnairePage: React.FC = () => {
     };
     updateStage();
 
+    return () => {
+      mounted = false;
+      clearInterval(progressInterval);
+    };
+  }, [navigate, location.state]);
+
+  useEffect(() => {
+    const state = location.state as { searchQuery?: string, factors?: string[] };
+    
     const generateQuestionnaire = async () => {
+      if (!searchQuery || !state?.factors) return;
+      
       try {
         setIsLoading(true);
         setError(null);
@@ -122,12 +133,7 @@ const QuestionnairePage: React.FC = () => {
     };
 
     generateQuestionnaire();
-
-    return () => {
-      mounted = false;
-      clearInterval(progressInterval);
-    };
-  }, [navigate, location.state, retryCount]);
+  }, [searchQuery, location.state, retryCount]);
 
   const parseQuestionnaire = useCallback((questionnaireText: string): Question[] => {
     if (!questionnaireText) {
