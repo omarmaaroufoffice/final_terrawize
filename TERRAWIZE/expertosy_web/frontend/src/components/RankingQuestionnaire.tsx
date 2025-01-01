@@ -32,9 +32,9 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   };
 
   const questionVariants = {
-    enter: { x: 100, opacity: 0 },
+    enter: { x: 50, opacity: 0 },
     center: { x: 0, opacity: 1 },
-    exit: { x: -100, opacity: 0 }
+    exit: { x: -50, opacity: 0 }
   };
 
   useEffect(() => {
@@ -388,8 +388,8 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
             animate="center"
             exit="exit"
             transition={{
-              x: { type: "spring", stiffness: 300, damping: 30 },
-              opacity: { duration: 0.2 }
+              x: { type: "spring", stiffness: 200, damping: 25 },
+              opacity: { duration: 0.3 }
             }}
           >
             <div className="question-number">
@@ -407,11 +407,14 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
                     key={index}
                     className={`option-button ${isSelected ? 'selected' : ''}`}
                     onClick={() => handleOptionSelect(option.text)}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ 
+                      delay: index * 0.08,
+                      duration: 0.2
+                    }}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
                   >
                     <span className="option-label">{optionLabel}</span>
                     {option.text}
@@ -420,7 +423,11 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
                         className="check-mark"
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 400, 
+                          damping: 25 
+                        }}
                       >
                         ✓
                       </motion.span>
