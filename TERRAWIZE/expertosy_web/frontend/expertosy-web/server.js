@@ -35,11 +35,7 @@ app.get('/health', (req, res) => {
 
 // Add root endpoint for health checks
 app.get('/', (req, res) => {
-  res.json({
-    status: 'healthy',
-    service: 'expertosy-frontend',
-    version: '1.0.0'
-  });
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Add security headers
@@ -54,7 +50,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// Proxy API requests to the backend
+// Serve static files from the React app build directory with caching
+app.use(express.static(path.join(__dirname, 'build'), {
+  maxAge: '1h',
+  etag: true,
+  lastModified: true
+}));
+
+// Proxy only API requests to the backend
 app.use('/api', createProxyMiddleware({
   target: process.env.REACT_APP_API_URL || 'https://api.expertosy.com',
   changeOrigin: true,
@@ -70,13 +73,6 @@ app.use('/api', createProxyMiddleware({
     console.error('Proxy Error:', err);
     res.status(500).send('Proxy Error');
   }
-}));
-
-// Serve static files from the React app build directory with caching
-app.use(express.static(path.join(__dirname, 'build'), {
-  maxAge: '1h',
-  etag: true,
-  lastModified: true
 }));
 
 // Handle React routing, return all requests to React app
