@@ -27,7 +27,10 @@ CORS(app, resources={r"/*": {"origins": [
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY", "")
+    api_key=os.getenv("OPENAI_API_KEY", ""),
+    base_url="https://api.openai.com/v1",
+    timeout=60.0,
+    max_retries=2
 )
 
 class ExpertosyRecommendationEngine:
