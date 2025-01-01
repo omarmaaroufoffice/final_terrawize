@@ -316,6 +316,7 @@ const QuestionnairePage: React.FC = () => {
       setIsLoading(false);
       setShowRankingQuestionnaire(true);
       setProducts(recommendationLines);
+      setRecommendedProducts(recommendationLines);
       
     } catch (error) {
       console.error('Error generating recommendation:', error);
@@ -416,7 +417,7 @@ const QuestionnairePage: React.FC = () => {
     );
   }
 
-  if (showRankingQuestionnaire) {
+  if (showRankingQuestionnaire && products.length > 0) {
     return (
       <motion.div
         initial="initial"
@@ -425,7 +426,7 @@ const QuestionnairePage: React.FC = () => {
         variants={pageVariants}
       >
         <RankingQuestionnaire
-          products={recommendedProducts}
+          products={products}
           searchQuery={searchQuery}
           onRankingComplete={handleRankingComplete}
           previousQuestions={questionnaire.map(q => q.question)}

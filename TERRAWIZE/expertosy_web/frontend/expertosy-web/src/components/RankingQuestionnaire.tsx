@@ -74,6 +74,12 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
 
     const generateQuestionnaire = async () => {
       try {
+        if (!products || products.length === 0) {
+          console.error('No products provided to rank');
+          setIsLoading(false);
+          return;
+        }
+
         const response = await axios.post('http://localhost:5001/generate-ranking-questionnaire', {
           products,
           search_query: searchQuery,
