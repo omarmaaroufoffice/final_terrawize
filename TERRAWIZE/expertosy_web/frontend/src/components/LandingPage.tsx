@@ -75,7 +75,7 @@ const LandingPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('PORT', {
+      const response = await axios.post('/generate-factors', {
         search_query: searchQuery
       });
 
@@ -89,11 +89,11 @@ const LandingPage: React.FC = () => {
       } else {
         setError('Received invalid response from server. Please try again.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
-      if (axios.isAxiosError(error)) {
+      if (error?.isAxiosError) {
         if (error.code === 'ERR_NETWORK') {
-          setError('Unable to connect to the server. Please ensure the backend is running.');
+          setError('Unable to connect to the server. Please try again later.');
         } else {
           setError(`Server error: ${error.response?.data?.message || 'Please try again later.'}`);
         }
