@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './ResultsPage.css';
@@ -14,6 +14,45 @@ interface ProductExplanation {
 
 const ResultsPage: React.FC = () => {
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingStage, setLoadingStage] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(45);
+  
+  const loadingStages = [
+    "✨ Analyzing your preferences...",
+    "🔍 Evaluating product features...",
+    "⚡ Calculating optimal matches...",
+    "🎯 Generating detailed explanations...",
+    "🌟 Finalizing your personalized recommendations..."
+  ];
+
+  useEffect(() => {
+    if (isLoading) {
+      // Progress through loading stages
+      const stageInterval = setInterval(() => {
+        setLoadingStage(prev => (prev < loadingStages.length - 1 ? prev + 1 : prev));
+      }, 3000);
+
+      // Update time remaining
+      const timeInterval = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            setIsLoading(false);
+            clearInterval(timeInterval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // Cleanup
+      return () => {
+        clearInterval(stageInterval);
+        clearInterval(timeInterval);
+      };
+    }
+  }, [isLoading]);
+
   const state = location.state as { 
     searchQuery: string;
     userPreferences: Record<string, string>;
@@ -79,6 +118,63 @@ const ResultsPage: React.FC = () => {
           </motion.p>
           <Link to="/" className="back-button">Start New Search</Link>
         </div>
+      </motion.div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <motion.div 
+        className="results-page loading"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
+        <div className="space-stars" />
+        <motion.div 
+          className="loading-container"
+          variants={containerVariants}
+        >
+          <motion.div 
+            className="loading-spinner"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          >
+            ✨
+          </motion.div>
+          <motion.h2
+            className="loading-title"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Crafting Your Perfect Match
+          </motion.h2>
+          <motion.div
+            className="loading-stage"
+            key={loadingStage}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            {loadingStages[loadingStage]}
+          </motion.div>
+          <motion.p
+            className="time-remaining"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            Estimated time remaining: {timeRemaining} seconds
+          </motion.p>
+          <motion.div 
+            className="loading-progress"
+            initial={{ width: "0%" }}
+            animate={{ width: `${((loadingStage + 1) / loadingStages.length) * 100}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </motion.div>
       </motion.div>
     );
   }
