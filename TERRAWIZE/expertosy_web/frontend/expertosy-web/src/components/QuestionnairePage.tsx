@@ -190,7 +190,7 @@ const QuestionnairePage: React.FC = () => {
           questionLine = questionLines.reduce((a, b) => a.length > b.length ? a : b);
           questionLine = questionLine
             .replace(/\*\*/g, '')
-            .replace(/\?+$/, '?')
+            .replace(/\?+/g, '')
             .trim();
         }
         
@@ -487,17 +487,24 @@ const QuestionnairePage: React.FC = () => {
       variants={pageVariants}
     >
       <div className="questionnaire-container">
-        <h2 className="main-title">
-          Personalizing recommendations for{' '}
-          <motion.span 
-            className="highlight"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
+        <div className="title-container">
+          <motion.h2 
+            className="main-title"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            {searchQuery}
-          </motion.span>
-        </h2>
+            Personalizing recommendations for{' '}
+            <motion.span 
+              className="highlight"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              {searchQuery}
+            </motion.span>
+          </motion.h2>
+        </div>
         
         <div className="progress-indicator">
           <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
