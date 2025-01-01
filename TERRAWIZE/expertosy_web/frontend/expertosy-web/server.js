@@ -26,7 +26,20 @@ app.use(cors({
 
 // Add health check endpoint
 app.get('/health', (req, res) => {
-  res.json({ status: 'healthy' });
+  res.json({
+    status: 'healthy',
+    service: 'expertosy-frontend',
+    version: '1.0.0'
+  });
+});
+
+// Add root endpoint for health checks
+app.get('/', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'expertosy-frontend',
+    version: '1.0.0'
+  });
 });
 
 // Add security headers

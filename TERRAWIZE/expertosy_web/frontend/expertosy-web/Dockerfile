@@ -1,30 +1,38 @@
-FROM node:18-alpine AS build
+# Build stage
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
-# Copy the rest of the application
+# Copy source code
 COPY . .
 
 # Build the application
 RUN npm run build
 
 # Production stage
-FROM nginx:alpine
+FROM node:18-alpine
 
-# Copy the build output to replace the default nginx contents
-COPY --from=build /app/build /usr/share/nginx/html
+WORKDIR /app
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy package files and install production dependencies
+COPY package*.json ./
+RUN npm install --production
 
-# Expose port 3000
-EXPOSE 3000
+# Copy built files and server
+COPY --from=builder /app/build ./build
+COPY server.js .
 
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"] 
+# Set environment variables
+ENV NODE_ENV=production
+
+# Expose the port (will be overridden by Railway's PORT)
+EXPOSE ${PORT:-3000}
+
+# Start the server
+CMD ["node", "server.js"] 
