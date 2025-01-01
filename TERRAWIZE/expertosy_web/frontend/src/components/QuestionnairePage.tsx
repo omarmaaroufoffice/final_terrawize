@@ -93,19 +93,23 @@ const QuestionnairePage: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await api.post('/generate-factors', { 
-          search_query: searchQuery 
-        });
-        if (response.data && response.data.factors && Array.isArray(response.data.factors)) {
-          setQuestionnaire(response.data.factors);
+        
+        // Use the factors from state instead of making another API call
+        if (state.factors && Array.isArray(state.factors)) {
+          // Transform factors into Question objects
+          const questions = state.factors.map(factor => ({
+            question: factor,
+            options: [] // Options will be populated later
+          }));
+          setQuestionnaire(questions);
           setShowQuestion(true);
         } else {
-          console.error('Invalid response format:', response.data);
-          setError('Received invalid response format from server. Please try again.');
+          console.error('Invalid factors format:', state.factors);
+          setError('Received invalid factors format. Please try again.');
         }
       } catch (err) {
-        console.error('Error generating questionnaire:', err);
-        setError('Failed to generate questionnaire. Please try again.');
+        console.error('Error setting up questionnaire:', err);
+        setError('Failed to set up questionnaire. Please try again.');
       } finally {
         setIsLoading(false);
       }
