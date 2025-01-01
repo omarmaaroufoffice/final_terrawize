@@ -36,8 +36,7 @@ COPY server.js .
 # Set production environment
 ENV NODE_ENV=production
 
-# Expose the port (will be overridden by Railway's PORT)
-EXPOSE :-3000}
+
 
 # Start the server
 CMD ["node", "server.js"] 
