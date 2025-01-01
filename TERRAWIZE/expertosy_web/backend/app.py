@@ -32,7 +32,7 @@ class ExpertosyRecommendationEngine:
         self.search_query = search_query
         self.results = {}
 
-    async def generate_factors(self, number_of_factors: int = 10) -> list:
+    async def generate_factors(self, number_of_factors: int = 2) -> list:
         """Generate comprehensive factors for evaluating the item"""
         messages = [
             {

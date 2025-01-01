@@ -375,24 +375,58 @@ const QuestionnairePage: React.FC = () => {
         variants={pageVariants}
       >
         <div className="questionnaire-container">
+          <div className="space-background" />
           <div className="loading-container">
             <div className="loading-content">
               <div className="loading-icon">
                 <div className="pulse-ring"></div>
-                <span className="icon" role="img" aria-label="target">🎯</span>
+                <span className="icon" role="img" aria-label="star">🌟</span>
               </div>
-              <h2>{loadingStage}</h2>
-              <div className="progress-container">
-                <div className="progress-bar">
+              
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {loadingStage}
+              </motion.h2>
+
+              <motion.div 
+                className="loading-progress-container"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="loading-progress-bar">
                   <motion.div 
-                    className="progress-fill"
+                    className="loading-progress-fill"
                     initial={{ width: 0 }}
                     animate={{ width: `${loadingProgress}%` }}
                     transition={{ duration: 0.5 }}
                   />
                 </div>
-                <span className="progress-text">{loadingProgress}%</span>
-              </div>
+                <div className="loading-progress-text">
+                  <span>Analyzing...</span>
+                  <span>{loadingProgress}%</span>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                className="loading-stage"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <p>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    ✨ Crafting Your Stellar Experience ✨
+                  </motion.span>
+                </p>
+              </motion.div>
             </div>
           </div>
         </div>
