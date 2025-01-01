@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5001"]}}, supports_credentials=True)
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
@@ -192,8 +192,9 @@ class ExpertosyRecommendationEngine:
                     "role": "user",
                     "content": (
                         f"Create a questionnaire to help rank these products based on their trade-offs:\n\n{products_text}\n\n"
-                        "Focus on the key differences between these specific products and create questions that will help determine the best match for the user."
+                        "Focus on the key differences between these specific products and create questions that will help determine the best match for the user. "
                         "When wording the questions think about specific things that would rule out some of the products."
+                    )
                 }
             ]
             
@@ -251,19 +252,8 @@ class ExpertosyRecommendationEngine:
                 messages=messages
             )
             
-            ranked_products = [
-                line.strip() for line in response.choices[0].message.content.strip().split('\n')
-                if line.strip() and line.strip()[0].isdigit()
-            ]
-            
-            # Verify and fix numbering if needed
-            fixed_ranked_products = []
-            for i, product in enumerate(ranked_products, 1):
-                # Extract everything after the number and period/dot
-                product_text = product.split('.', 1)[1].strip() if '.' in product else product
-                fixed_ranked_products.append(f"{i}. {product_text}")
-            
-            return fixed_ranked_products
+            ranked_products = response.choices[0].message.content.strip().split('\n')
+            return ranked_products
             
         except Exception as e:
             logger.error(f"Error ranking products: {str(e)}")
@@ -382,10 +372,4 @@ def create_app():
     return app
 
 if __name__ == '__main__':
-    import sys
-    port = 5001  # Default port
-    for arg in sys.argv:
-        if arg.startswith('--port='):
-            port = int(arg.split('=')[1])
-    
-    app.run(debug=True, port=port) 
+    app.run(host='0.0.0.0', port=5001, debug=True) 

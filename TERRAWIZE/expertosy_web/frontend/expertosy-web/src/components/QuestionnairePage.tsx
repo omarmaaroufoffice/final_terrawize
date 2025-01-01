@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RankingQuestionnaire from './RankingQuestionnaire';
+import { motion, AnimatePresence } from 'framer-motion';
+import './QuestionnairePage.css';
 
 interface QuestionOption {
   text: string;
+  description?: string;
+  icon?: string;
 }
 
 interface Question {
   question: string;
   options: QuestionOption[];
+  category?: string;
+  helpText?: string;
 }
 
 const QuestionnairePage: React.FC = () => {
@@ -26,23 +32,38 @@ const QuestionnairePage: React.FC = () => {
   const [showRankingQuestionnaire, setShowRankingQuestionnaire] = useState(false);
   const [products, setProducts] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [showHelpText, setShowHelpText] = useState(false);
+
+  // Animation variants for framer-motion
+  const pageVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 }
+  };
+
+  const questionVariants = {
+    enter: { x: 100, opacity: 0 },
+    center: { x: 0, opacity: 1 },
+    exit: { x: -100, opacity: 0 }
+  };
 
   useEffect(() => {
     let mounted = true;
     const state = location.state as { searchQuery?: string, factors?: string[] };
     
     if (!state?.searchQuery || !state?.factors) {
-      navigate('/');
+      navigate('/', { replace: true });
       return;
     }
 
     setSearchQuery(state.searchQuery);
 
-    // Simulate loading stages for better UX
     const loadingStages = [
       { text: 'Analyzing your request...', duration: 1000 },
       { text: 'Gathering expert insights...', duration: 1500 },
       { text: 'Crafting personalized questions...', duration: 1000 },
+      { text: 'Optimizing for your preferences...', duration: 1000 },
       { text: 'Finalizing your questionnaire...', duration: 500 }
     ];
 
@@ -77,7 +98,10 @@ const QuestionnairePage: React.FC = () => {
           search_query: state.searchQuery,
           factors: state.factors
         }, {
-          timeout: 60000 // 60 seconds timeout
+          timeout: 60000,
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
 
         if (!mounted) return;
@@ -86,15 +110,11 @@ const QuestionnairePage: React.FC = () => {
           throw new Error('No questionnaire data received from server');
         }
 
-        console.log('Raw questionnaire response:', questionnaireResponse.data);
-
         const parsedQuestionnaire = parseQuestionnaire(questionnaireResponse.data.questionnaire);
 
         if (!parsedQuestionnaire || parsedQuestionnaire.length === 0) {
           throw new Error('No questions were parsed from the response');
         }
-
-        console.log('Successfully parsed questionnaire:', parsedQuestionnaire);
 
         if (!mounted) return;
         setQuestionnaire(parsedQuestionnaire);
@@ -104,16 +124,19 @@ const QuestionnairePage: React.FC = () => {
         if (!mounted) return;
         
         console.error('Error in generateQuestionnaire:', error);
-        if (axios.isAxiosError(error)) {
-          console.error('Network Error Details:', {
-            response: error.response?.data,
-            status: error.response?.status,
-            message: error.message
-          });
+        
+        if (retryCount < 3) {
+          setRetryCount(prev => prev + 1);
+          setLoadingStage('Retrying... Please wait');
+          setTimeout(() => generateQuestionnaire(), 2000);
+        } else {
+          setIsLoading(false);
+          setError(
+            axios.isAxiosError(error)
+              ? `Network error: ${error.message}`
+              : 'Failed to generate questionnaire. Please try again.'
+          );
         }
-        setIsLoading(false);
-        alert(`Failed to generate questionnaire: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        navigate('/');
       }
     };
 
@@ -123,31 +146,26 @@ const QuestionnairePage: React.FC = () => {
       mounted = false;
       clearInterval(progressInterval);
     };
-  }, [navigate, location.state]);
+  }, [navigate, location.state, retryCount]);
 
-  const parseQuestionnaire = (questionnaireText: string): Question[] => {
+  const parseQuestionnaire = useCallback((questionnaireText: string): Question[] => {
     if (!questionnaireText) {
       throw new Error('No questionnaire text provided');
     }
 
-    console.log('Starting to parse questionnaire text');
     const questions: Question[] = [];
     
     try {
-      // Split into sections by numbered headers
       const sections = questionnaireText
         .split(/(?:####|###)\s*\d+\.|(?:\*\*\d+\.)/g)
         .filter(Boolean)
         .map(section => section.trim());
-      
-      console.log(`Found ${sections.length} sections to parse`);
       
       if (sections.length === 0) {
         throw new Error('No sections found in questionnaire');
       }
 
       sections.forEach((section, index) => {
-        // Skip introduction and thank you sections
         if (section.includes('Thank you') || 
             section.includes('### Comprehensive') || 
             section.includes('Please select') ||
@@ -155,14 +173,12 @@ const QuestionnairePage: React.FC = () => {
           return;
         }
         
-        // Split section into lines and clean them
         const lines = section
           .split('\n')
           .map(line => line.trim())
           .filter(Boolean)
-          .filter(line => !line.startsWith('###')); // Remove section headers
+          .filter(line => !line.startsWith('###'));
         
-        // Find the question text
         let questionLine = '';
         const questionLines = lines.filter(line => 
           line.includes('?') && 
@@ -171,58 +187,52 @@ const QuestionnairePage: React.FC = () => {
         );
 
         if (questionLines.length > 0) {
-          // Take the longest question line (usually the most complete)
           questionLine = questionLines.reduce((a, b) => a.length > b.length ? a : b);
-          // Remove any markdown formatting from the question
           questionLine = questionLine.replace(/\*\*/g, '').trim();
         }
         
-        if (!questionLine) {
-          console.log(`No question found in section ${index + 1}`);
-          return;
-        }
+        if (!questionLine) return;
 
-        // Find all options
         const options: QuestionOption[] = [];
         const seenOptions = new Set<string>();
 
         lines.forEach(line => {
-          // Match various option formats with complete text including costs and details
           const optionPatterns = [
-            // A) or A. format with optional bullet and full details
             /^-?\s*[A-D][\.\)]\s*(.+?)(?:\s*$)/,
-            // Descriptive format with costs and details
             /^(?:Very|Highly|Mostly|Somewhat|Not|Low|Medium|High|Soft|Firm|Minimal|Regular|Important|Adjustable)\s+.+$/
           ];
 
           for (const pattern of optionPatterns) {
             const match = line.match(pattern);
             if (match) {
-              // Keep the full option text including costs and details
               let optionText = match[1] || line;
               
-              // Clean up the option text while preserving costs and details
               optionText = optionText
-                .replace(/\*\*/g, '')  // Remove markdown
-                .replace(/^-\s*/, '')  // Remove bullet points
+                .replace(/\*\*/g, '')
+                .replace(/^-\s*/, '')
                 .trim();
 
-              // Only add if it's a unique option and not empty
               if (!seenOptions.has(optionText) && optionText.length > 0) {
                 seenOptions.add(optionText);
-                options.push({ text: optionText });
-                console.log('Found option:', optionText);
+                
+                // Extract any additional description after a dash or colon
+                const [mainText, ...descriptionParts] = optionText.split(/[-–:]/).map(part => part.trim());
+                const description = descriptionParts.join(' ').trim();
+                
+                options.push({ 
+                  text: mainText,
+                  description: description || undefined,
+                  icon: getOptionIcon(mainText)
+                });
               }
               break;
             }
           }
         });
 
-        // Filter out any options that are actually questions
         const validOptions = options.filter(opt => !opt.text.includes('?'));
 
         if (validOptions.length >= 2) {
-          // Sort options to ensure A, B, C, D order
           validOptions.sort((a, b) => {
             const aMatch = a.text.match(/^[A-D][\.\)]/);
             const bMatch = b.text.match(/^[A-D][\.\)]/);
@@ -234,11 +244,10 @@ const QuestionnairePage: React.FC = () => {
 
           questions.push({
             question: questionLine.trim(),
-            options: validOptions
+            options: validOptions,
+            category: getCategoryFromQuestion(questionLine),
+            helpText: generateHelpText(questionLine)
           });
-          console.log(`Added question: "${questionLine.trim()}" with ${validOptions.length} options`);
-        } else {
-          console.log(`Skipping section ${index + 1} - insufficient valid options found`);
         }
       });
 
@@ -246,17 +255,47 @@ const QuestionnairePage: React.FC = () => {
         throw new Error('No valid questions could be parsed from the questionnaire');
       }
 
-      console.log(`Successfully parsed ${questions.length} questions`);
       return questions;
 
     } catch (error) {
       console.error('Error parsing questionnaire:', error);
-      console.error('Questionnaire text that failed to parse:', questionnaireText);
-      throw new Error(`Failed to parse questionnaire: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw error;
     }
+  }, []);
+
+  const getOptionIcon = (text: string): string => {
+    const lowercaseText = text.toLowerCase();
+    if (lowercaseText.includes('compact')) return '🚗';
+    if (lowercaseText.includes('sedan')) return '🚙';
+    if (lowercaseText.includes('suv')) return '🚘';
+    if (lowercaseText.includes('van')) return '🚐';
+    return '📍';
   };
 
-  const handleOptionSelect = (option: string) => {
+  const getCategoryFromQuestion = (question: string): string => {
+    const lowercaseQuestion = question.toLowerCase();
+    if (lowercaseQuestion.includes('space') || lowercaseQuestion.includes('cargo')) return 'Space & Capacity';
+    if (lowercaseQuestion.includes('price') || lowercaseQuestion.includes('budget')) return 'Budget';
+    if (lowercaseQuestion.includes('fuel') || lowercaseQuestion.includes('efficiency')) return 'Efficiency';
+    if (lowercaseQuestion.includes('safety') || lowercaseQuestion.includes('security')) return 'Safety';
+    return 'General';
+  };
+
+  const generateHelpText = (question: string): string => {
+    const lowercaseQuestion = question.toLowerCase();
+    if (lowercaseQuestion.includes('space')) {
+      return 'Consider your daily needs for passengers and cargo, including future requirements.';
+    }
+    if (lowercaseQuestion.includes('budget')) {
+      return 'Remember to factor in maintenance, insurance, and fuel costs beyond the purchase price.';
+    }
+    if (lowercaseQuestion.includes('fuel')) {
+      return 'Think about your typical driving patterns and local fuel prices.';
+    }
+    return '';
+  };
+
+  const handleOptionSelect = async (option: string) => {
     const currentQuestion = questionnaire[currentQuestionIndex];
     setUserAnswers(prev => ({
       ...prev,
@@ -264,22 +303,21 @@ const QuestionnairePage: React.FC = () => {
     }));
 
     setShowQuestion(false);
-    setTimeout(() => {
-      if (currentQuestionIndex < questionnaire.length - 1) {
-        setCurrentQuestionIndex(prev => prev + 1);
-        setShowQuestion(true);
-      } else {
-        generateRecommendation();
-      }
-    }, 300);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    if (currentQuestionIndex < questionnaire.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+      setShowQuestion(true);
+    } else {
+      generateRecommendation();
+    }
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = async () => {
     setShowQuestion(false);
-    setTimeout(() => {
-      setCurrentQuestionIndex(prev => prev - 1);
-      setShowQuestion(true);
-    }, 300);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setCurrentQuestionIndex(prev => prev - 1);
+    setShowQuestion(true);
   };
 
   const generateRecommendation = async () => {
@@ -290,14 +328,17 @@ const QuestionnairePage: React.FC = () => {
       const response = await axios.post('http://localhost:5001/generate-recommendation', {
         search_query: searchQuery,
         user_preferences: userAnswers
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
-      const recommendationLines = response.data.recommendation.split('\n')
+      const recommendationLines = response.data.recommendation
+        .split('\n')
         .filter((line: string) => line.trim().length > 0);
 
       setLoadingStage('Preparing detailed comparison questions...');
-      
-      // Short delay to show the transition message
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       setIsLoading(false);
@@ -323,49 +364,77 @@ const QuestionnairePage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="questionnaire-page loading">
-        <div className="loading-container">
-          <div className="loading-content">
-            <div className="loading-icon">
-              <div className="pulse-ring"></div>
-              <span className="icon">🎯</span>
-            </div>
-            <h2>{loadingStage}</h2>
-            <div className="progress-container">
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill"
-                  style={{ width: `${loadingProgress}%` }}
-                />
+      <motion.div 
+        className="questionnaire-page"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
+        <div className="questionnaire-container">
+          <div className="loading-container">
+            <div className="loading-content">
+              <div className="loading-icon">
+                <div className="pulse-ring"></div>
+                <span className="icon" role="img" aria-label="target">🎯</span>
               </div>
-              <span className="progress-text">{loadingProgress}%</span>
+              <h2>{loadingStage}</h2>
+              <div className="progress-container">
+                <div className="progress-bar">
+                  <motion.div 
+                    className="progress-fill"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${loadingProgress}%` }}
+                    transition={{ duration: 0.5 }}
+                  />
+                </div>
+                <span className="progress-text">{loadingProgress}%</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   if (showRankingQuestionnaire) {
     return (
-      <RankingQuestionnaire
-        products={products}
-        searchQuery={searchQuery}
-        onRankingComplete={handleRankingComplete}
-      />
+      <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
+        <RankingQuestionnaire
+          products={products}
+          searchQuery={searchQuery}
+          onRankingComplete={handleRankingComplete}
+        />
+      </motion.div>
     );
   }
 
   if (error) {
     return (
-      <div className="questionnaire-page error">
+      <motion.div 
+        className="questionnaire-page error"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
         <div className="error-container">
-          <span className="error-icon">⚠️</span>
+          <span className="error-icon" role="img" aria-label="warning">⚠️</span>
           <h2>Error</h2>
           <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Try Again</button>
+          <button 
+            onClick={() => window.location.reload()}
+            className="retry-button"
+          >
+            Try Again
+          </button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
@@ -373,88 +442,169 @@ const QuestionnairePage: React.FC = () => {
   const progress = ((currentQuestionIndex + 1) / questionnaire.length) * 100;
 
   return (
-    <div className="questionnaire-page">
+    <motion.div 
+      className="questionnaire-page"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageVariants}
+    >
       <div className="questionnaire-container">
-        <div className="questionnaire-header">
-          <h2>Personalizing recommendations for <span className="highlight">{searchQuery}</span></h2>
-          
-          <div className="progress-container">
-            <div className="progress-text">
-              <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
-              <span>{Math.round(progress)}% Complete</span>
-            </div>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+        <h2 className="main-title">
+          Personalizing recommendations for{' '}
+          <motion.span 
+            className="highlight"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            {searchQuery}
+          </motion.span>
+        </h2>
+        
+        <div className="progress-indicator">
+          <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
+          <span>{Math.round(progress)}% Complete</span>
+          <div className="progress-line">
+            <motion.div 
+              className="progress-fill"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.5 }}
+            />
           </div>
         </div>
 
-        <div className={`question-section ${showQuestion ? 'fade-in' : 'fade-out'}`}>
-          <div className="question-card">
-            <div className="question-number">
-              <span className="current">{currentQuestionIndex + 1}</span>
-              <span className="total">/{questionnaire.length}</span>
-            </div>
-            
-            <h3 className="question-text">{currentQuestion.question}</h3>
-            
-            <div className="options-grid">
-              {currentQuestion.options.map((option, index) => {
-                const optionLabel = String.fromCharCode(65 + index);
-                const isSelected = userAnswers[currentQuestion.question] === option.text;
-                
-                return (
-                  <button 
-                    key={index} 
-                    className={`option-button ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleOptionSelect(option.text)}
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={currentQuestionIndex}
+            className="question-section"
+            variants={questionVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+          >
+            <div className="question-card">
+              <div className="question-header">
+                <div className="question-number">
+                  <span className="current">{currentQuestionIndex + 1}</span>
+                  <span className="total">/{questionnaire.length}</span>
+                </div>
+                {currentQuestion.category && (
+                  <span className="question-category">{currentQuestion.category}</span>
+                )}
+              </div>
+              
+              <div className="question-content">
+                <h3 className="question-text">{currentQuestion.question}</h3>
+                {currentQuestion.helpText && (
+                  <motion.div 
+                    className={`help-text ${showHelpText ? 'visible' : ''}`}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ 
+                      opacity: showHelpText ? 1 : 0,
+                      height: showHelpText ? 'auto' : 0
+                    }}
                   >
-                    <div className="option-content">
-                      <span className="option-label">{optionLabel}</span>
-                      <span className="option-text">{option.text}</span>
-                    </div>
-                    {isSelected && <span className="check-mark">✓</span>}
-                  </button>
-                );
-              })}
+                    <p>{currentQuestion.helpText}</p>
+                  </motion.div>
+                )}
+                <button 
+                  className="help-button"
+                  onClick={() => setShowHelpText(!showHelpText)}
+                  aria-label={showHelpText ? "Hide help text" : "Show help text"}
+                >
+                  {showHelpText ? '❌' : '❔'}
+                </button>
+              </div>
+              
+              <div className="options-grid">
+                {currentQuestion.options.map((option, index) => {
+                  const optionLabel = String.fromCharCode(65 + index);
+                  const isSelected = userAnswers[currentQuestion.question] === option.text;
+                  
+                  return (
+                    <motion.button 
+                      key={index} 
+                      className={`option-button ${isSelected ? 'selected' : ''}`}
+                      onClick={() => handleOptionSelect(option.text)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <div className="option-content">
+                        <span className="option-label">{optionLabel}</span>
+                        <span className="option-icon" role="img" aria-hidden="true">
+                          {option.icon}
+                        </span>
+                        <div className="option-text-container">
+                          <span className="option-text">{option.text}</span>
+                          {option.description && (
+                            <span className="option-description">{option.description}</span>
+                          )}
+                        </div>
+                      </div>
+                      {isSelected && (
+                        <motion.span 
+                          className="check-mark"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                        >
+                          ✓
+                        </motion.span>
+                      )}
+                    </motion.button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </AnimatePresence>
 
         <div className="navigation-buttons">
           {currentQuestionIndex > 0 && (
-            <button 
+            <motion.button 
               className="nav-button previous"
               onClick={handlePrevious}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <span className="button-icon">←</span>
               Previous Question
-            </button>
+            </motion.button>
           )}
           {currentQuestionIndex < questionnaire.length - 1 && userAnswers[currentQuestion.question] && (
-            <button 
+            <motion.button 
               className="nav-button next"
               onClick={() => handleOptionSelect(userAnswers[currentQuestion.question])}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               Next Question
               <span className="button-icon">→</span>
-            </button>
+            </motion.button>
           )}
           {currentQuestionIndex === questionnaire.length - 1 && userAnswers[currentQuestion.question] && (
-            <button 
+            <motion.button 
               className="nav-button submit"
               onClick={generateRecommendation}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               Get Your Recommendation
               <span className="button-icon">✨</span>
-            </button>
+            </motion.button>
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

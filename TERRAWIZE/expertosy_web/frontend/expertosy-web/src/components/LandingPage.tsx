@@ -79,15 +79,28 @@ const LandingPage: React.FC = () => {
         search_query: searchQuery
       });
 
-      navigate('/questionnaire', {
-        state: {
-          searchQuery,
-          factors: response.data.factors
-        }
-      });
+      if (response.data.factors) {
+        navigate('/questionnaire', {
+          state: {
+            searchQuery,
+            factors: response.data.factors
+          }
+        });
+      } else {
+        setError('Received invalid response from server. Please try again.');
+      }
     } catch (error) {
       console.error('Error:', error);
-      setError('Failed to start the search. Please try again.');
+      if (axios.isAxiosError(error)) {
+        if (error.code === 'ERR_NETWORK') {
+          setError('Unable to connect to the server. Please ensure the backend is running.');
+        } else {
+          setError(`Server error: ${error.response?.data?.message || 'Please try again later.'}`);
+        }
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+    } finally {
       setIsLoading(false);
     }
   };
@@ -119,7 +132,7 @@ const LandingPage: React.FC = () => {
             Discover Your Perfect <span className="highlight">Product</span>
           </h1>
           <p className="subtitle">
-            Navigate through the stars of possibilities as our AI constellation guides you to your ideal choice
+            Skip hours of reaserch, we find what you want and why you want it with and we dont care about adds
           </p>
           
           <div className="search-container">
@@ -134,11 +147,30 @@ const LandingPage: React.FC = () => {
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 />
               </div>
-              <button className="search-button" onClick={handleSearch}>
-                <span>Begin Journey</span>
-                <span className="button-star">✨</span>
+              <button 
+                className="search-button" 
+                onClick={handleSearch}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <div className="loading-animation">
+                    <div className="loading-ring"></div>
+                    <span>Processing...</span>
+                  </div>
+                ) : (
+                  <>
+                    <span>Begin Journey</span>
+                    <span className="button-star">✨</span>
+                  </>
+                )}
               </button>
             </div>
+            {error && (
+              <div className="error-message">
+                <span className="error-icon">⚠️</span>
+                {error}
+              </div>
+            )}
           </div>
 
           <div className="popular-searches">
