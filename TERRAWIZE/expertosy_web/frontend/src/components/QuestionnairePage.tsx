@@ -5,6 +5,15 @@ import RankingQuestionnaire from './RankingQuestionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import './QuestionnairePage.css';
 
+interface ProductExplanation {
+  name: string;
+  price: string;
+  explanation: string;
+  advantages: string[];
+  situationalBenefits?: string;
+  affiliateLink?: string;
+}
+
 interface QuestionOption {
   text: string;
   description?: string;
@@ -306,7 +315,7 @@ const QuestionnairePage: React.FC = () => {
     }
   };
 
-  const handleRankingComplete = (rankedProducts: string[]) => {
+  const handleRankingComplete = (rankedProducts: ProductExplanation[]) => {
     if (!rankedProducts || rankedProducts.length === 0) {
       setError('Failed to generate ranked products. Please try again.');
       return;
@@ -407,7 +416,13 @@ const QuestionnairePage: React.FC = () => {
     );
   }
 
-  if (showRankingQuestionnaire && products.length > 0) {
+  if (showRankingQuestionnaire && (
+    <RankingQuestionnaire
+      products={recommendedProducts}
+      onComplete={handleRankingComplete}
+      onError={(error) => setError(error)}
+    />
+  )) {
     return (
       <motion.div
         initial="initial"
@@ -416,10 +431,9 @@ const QuestionnairePage: React.FC = () => {
         variants={pageVariants}
       >
         <RankingQuestionnaire
-          products={products}
-          searchQuery={searchQuery}
-          onRankingComplete={handleRankingComplete}
-          previousQuestions={questionnaire.map(q => q.question)}
+          products={recommendedProducts}
+          onComplete={handleRankingComplete}
+          onError={(error) => setError(error)}
         />
       </motion.div>
     );

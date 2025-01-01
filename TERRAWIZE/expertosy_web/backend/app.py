@@ -14,6 +14,7 @@ from asgiref.wsgi import WsgiToAsgi
 from fastapi import FastAPI, Request
 from starlette.responses import JSONResponse, Response
 from contextlib import asynccontextmanager
+from typing import List
 
 load_dotenv()
 
@@ -214,9 +215,26 @@ class ExpertosyRecommendationEngine:
     """
     Web-based recommendation engine with similar functionality to the CLI version
     """
-    def __init__(self, search_query: str):
+    def __init__(self, search_query: str = None):
+        """Initialize the recommendation engine."""
         self.search_query = search_query
         self.results = {}
+        self.openai_client = OpenAI()
+        
+    async def _get_completion(self, messages: List[dict]) -> str:
+        """Get completion from OpenAI API."""
+        try:
+            response = await asyncio.to_thread(
+                self.openai_client.chat.completions.create,
+                model="gpt-4o-mini",
+                messages=messages,
+                temperature=0.7,
+                max_tokens=2000
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            logging.error(f"Error getting completion: {str(e)}")
+            raise
 
     async def generate_factors(self, number_of_factors: int = 10) -> list:
         """Generate comprehensive factors for evaluating the item"""
@@ -238,13 +256,8 @@ class ExpertosyRecommendationEngine:
                 "content": "Provide factors separated by '*', without numbering or additional text."
             }
         ]
-        response = await self._create_chat_completion(
-            model="gpt-4o-mini",
-            maximum_tokens=500,
-            messages=messages
-        )
-        raw_text = response.choices[0].message.content.strip()
-        self.results["factors"] = raw_text.split('*')
+        response = await self._get_completion(messages)
+        self.results["factors"] = response.split('*')
         return self.results["factors"]
 
     async def create_questionnaire(self, factors: list) -> str:
@@ -288,18 +301,12 @@ class ExpertosyRecommendationEngine:
             }
         ]
         
-        response = await self._create_chat_completion(
-            model="gpt-4o-mini",
-            maximum_tokens=1500,
-            messages=messages
-        )
-        
-        questionnaire_text = response.choices[0].message.content.strip()
+        response = await self._get_completion(messages)
         
         # Log the response for debugging
-        logger.info(f"Generated questionnaire: {questionnaire_text}")
+        logger.info(f"Generated questionnaire: {response}")
         
-        return questionnaire_text
+        return response
 
     async def generate_recommendation(self, user_preferences: dict) -> str:
         """Generate 2 product names and prices based on user preferences"""
@@ -336,44 +343,17 @@ class ExpertosyRecommendationEngine:
             logger.info(f"Generating 10 product recommendations for {self.search_query}")
             logger.debug(f"User preferences: {preference_text}")
             
-            response = await self._create_chat_completion(
-                model="gpt-4o-mini",
-                maximum_tokens=500,
-                messages=messages
-            )
-            
-            recommendation = response.choices[0].message.content.strip()
+            response = await self._get_completion(messages)
             
             # Store the recommendation
-            self.results["recommendation"] = recommendation
-            return recommendation
+            self.results["recommendation"] = response
+            return response
             
         except Exception as e:
             logger.error(f"Error generating recommendations: {str(e)}")
             logger.error(f"Search query: {self.search_query}")
             logger.error(f"User preferences: {user_preferences}")
             raise Exception(f"Failed to generate recommendations: {str(e)}")
-
-    async def _create_chat_completion(self, model: str, maximum_tokens: int, messages: list):
-        """Helper method to create a chat completion with error handling"""
-        try:
-            result = await asyncio.to_thread(
-                client.chat.completions.create,
-                model=model,
-                max_tokens=maximum_tokens,
-                messages=messages,
-                temperature=0.7
-            )
-            
-            if not result or not result.choices or not result.choices[0].message:
-                raise Exception("Invalid response from OpenAI API")
-            
-            return result
-        except Exception as e:
-            logger.error(f"OpenAI API error: {str(e)}")
-            logger.error(f"Model: {model}")
-            logger.error(f"Messages: {messages}")
-            raise Exception(f"OpenAI API error: {str(e)}")
 
     async def generate_ranking_questionnaire(self, products: list, previous_questions: list = None) -> str:
         """Generate a questionnaire to rank products based on trade-offs"""
@@ -419,159 +399,89 @@ class ExpertosyRecommendationEngine:
                 }
             ]
             
-            response = await self._create_chat_completion(
-                model="gpt-4o-mini",
-                maximum_tokens=1500,
-                messages=messages
-            )
-            
-            questionnaire_text = response.choices[0].message.content.strip()
+            response = await self._get_completion(messages)
             
             # Log the response for debugging
-            logger.info(f"Generated ranking questionnaire: {questionnaire_text}")
+            logger.info(f"Generated ranking questionnaire: {response}")
             
-            return questionnaire_text
+            return response
             
         except Exception as e:
             logger.error(f"Error generating ranking questionnaire: {str(e)}")
             raise Exception(f"Failed to generate ranking questionnaire: {str(e)}")
 
-    async def rank_products(self, products: list, ranking_preferences: dict) -> list:
-        """Rank the products based on user's answers to the trade-off questions and provide explanations"""
-        max_retries = 3
-        retry_count = 0
-        
-        # Parse products to extract names and prices
-        parsed_products = []
-        for product in products:
+    async def rank_products(self, products: List[str], ranking_preferences: dict) -> List[dict]:
+        """Rank the products based on user preferences."""
+        try:
+            logging.info("Ranking products based on preferences")
+            
+            # Format the products and preferences for the prompt
+            products_text = "\n".join(products)
+            preferences_text = "\n".join([f"{k}: {v}" for k, v in ranking_preferences.items()])
+            
+            messages = [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a product ranking expert. Analyze the given products and user preferences, "
+                        "then return a JSON array of ranked products. Each product should include: name, price, "
+                        "explanation (why it's ranked here), and advantages (array of key benefits). "
+                        "Format the response as valid JSON. Do not include any markdown formatting or additional text."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": (
+                        f"Products to rank:\n{products_text}\n\n"
+                        f"User Preferences:\n{preferences_text}\n\n"
+                        "Please rank these products and provide a JSON response in this exact format:\n"
+                        '{"ranked_products": [\n'
+                        '  {\n'
+                        '    "name": "Product Name",\n'
+                        '    "price": "$1234",\n'
+                        '    "explanation": "Why this product is ranked here",\n'
+                        '    "advantages": ["benefit 1", "benefit 2"]\n'
+                        '  }\n'
+                        ']}'
+                    )
+                }
+            ]
+            
+            response = await self._get_completion(messages)
+            
+            response_text = response.replace('```json', '').replace('```', '').strip()
+            
+            # Clean and parse the response
             try:
-                # Remove the numbering and split by dash
-                parts = product.split('. ')[1].split(' - ')
-                name = parts[0].strip()
-                price = parts[1].strip()
-                parsed_products.append({"name": name, "price": price})
-            except Exception as e:
-                logger.error(f"Error parsing product: {product}")
-                logger.error(f"Error details: {str(e)}")
-                raise ValueError(f"Invalid product format: {product}")
-        
-        while retry_count < max_retries:
-            try:
-                products_text = "\n".join(products)
-                preferences_text = "\n".join([
-                    f"Question: {question}\nAnswer: {answer}"
-                    for question, answer in ranking_preferences.items()
-                ])
+                # Remove any markdown formatting
+                clean_response = response_text.replace('```json', '').replace('```', '').strip()
                 
-                messages = [
-                    {
-                        "role": "system",
-                        "content": (
-                            "You are an expert at ranking products based on user preferences about trade-offs. "
-                            "Return a JSON array of ranked products. Format your response EXACTLY like this example:\n"
-                            "[\n"
-                            "  {\n"
-                            "    \"name\": \"Example Product 1\",\n"
-                            "    \"price\": \"$999\",\n"
-                            "    \"explanation\": \"Short explanation here\",\n"
-                            "    \"advantages\": [\"First advantage\", \"Second advantage\"],\n"
-                            "    \"situationalBenefits\": \"When this might be better\"\n"
-                            "  },\n"
-                            "  {\n"
-                            "    \"name\": \"Example Product 2\",\n"
-                            "    \"price\": \"$899\",\n"
-                            "    \"explanation\": \"Another explanation\",\n"
-                            "    \"advantages\": [\"Another advantage\", \"One more advantage\"],\n"
-                            "    \"situationalBenefits\": \"Different use case\"\n"
-                            "  }\n"
-                            "]\n\n"
-                            "CRITICAL FORMATTING RULES:\n"
-                            "1. Start with '[' and end with ']'\n"
-                            "2. Use ONLY double quotes, never single quotes\n"
-                            "3. Each object must have ALL five fields shown above\n"
-                            "4. Advantages must be an array with quoted strings\n"
-                            "5. Add comma after each object except the last one\n"
-                            "6. Do not add any text before or after the JSON array\n"
-                            "7. Keep all text on one line (no line breaks)"
-                        )
-                    },
-                    {
-                        "role": "user",
-                        "content": (
-                            f"Rank these products based on the user's preferences:\n\n"
-                            f"Products:\n{products_text}\n\n"
-                            f"User's preferences:\n{preferences_text}\n\n"
-                            "Return ONLY a valid JSON array with the specified structure."
-                        )
-                    }
-                ]
+                # Parse the JSON response
+                result = json.loads(clean_response)
                 
-                logger.info(f"Attempt {retry_count + 1} of {max_retries}")
-                
-                response = await self._create_chat_completion(
-                    model="gpt-4o-mini",
-                    maximum_tokens=2000,
-                    messages=messages
-                )
-                
-                response_text = response.choices[0].message.content.strip()
-                logger.info(f"Raw response from OpenAI: {response_text}")
-                
-                # Clean up the response text
-                response_text = response_text.replace("```json", "").replace("```", "").strip()
-                response_text = response_text.replace("'", '"')
-                response_text = response_text.replace("\n", " ")
-                response_text = response_text.replace('""', '"')
-                
-                # Ensure arrays are properly formatted
-                response_text = response_text.replace('["', '["')
-                response_text = response_text.replace('"]', '"]')
-                response_text = response_text.replace('" ,', '",')
-                response_text = response_text.replace(' ,', ',')
-                
-                # Fix common JSON formatting issues
-                response_text = response_text.replace('",]', '"]')
-                response_text = response_text.replace('",}', '"}')
-                response_text = response_text.replace('\\"}', '"}')
-                response_text = response_text.replace('"{', '{')
-                response_text = response_text.replace('}"', '}')
-                
-                # Try to parse the JSON
-                try:
-                    ranked_products = json.loads(response_text)
+                if not isinstance(result, dict) or 'ranked_products' not in result:
+                    raise ValueError("Invalid response format")
                     
-                    # Validate the structure
-                    if not isinstance(ranked_products, list):
-                        raise ValueError("Response is not a JSON array")
-                    
-                    if len(ranked_products) != len(parsed_products):
-                        raise ValueError(f"Expected {len(parsed_products)} products, got {len(ranked_products)}")
-                    
-                    # Validate each product
-                    for product in ranked_products:
-                        if not all(key in product for key in ["name", "price", "explanation", "advantages", "situationalBenefits"]):
-                            raise ValueError("Missing required fields in product")
-                        if not isinstance(product["advantages"], list):
-                            raise ValueError("Advantages must be an array")
-                    
-                    return ranked_products
-                    
-                except json.JSONDecodeError as e:
-                    logger.error(f"JSON decode error: {str(e)}")
-                    logger.error(f"Position: {e.pos}")
-                    logger.error(f"Line: {e.lineno}, Column: {e.colno}")
-                    logger.error(f"Document: {e.doc}")
-                    retry_count += 1
-                    continue
+                ranked_products = result['ranked_products']
                 
-            except Exception as e:
-                logger.error(f"Error in rank_products: {str(e)}")
-                retry_count += 1
-                if retry_count >= max_retries:
-                    raise Exception(f"Failed to rank products after {max_retries} attempts: {str(e)}")
-                continue
-        
-        raise Exception("Failed to get valid response after maximum retries")
+                # Validate the structure of each product
+                for product in ranked_products:
+                    required_fields = ['name', 'price', 'explanation', 'advantages']
+                    if not all(field in product for field in required_fields):
+                        raise ValueError(f"Missing required fields in product: {product}")
+                    if not isinstance(product['advantages'], list):
+                        raise ValueError(f"Advantages must be an array for product: {product}")
+                
+                return ranked_products
+                
+            except json.JSONDecodeError as e:
+                logging.error(f"Failed to parse JSON response: {str(e)}")
+                logging.error(f"Response was: {response_text}")
+                raise ValueError("Failed to parse ranking response")
+                
+        except Exception as e:
+            logging.error(f"Error in rank_products: {str(e)}")
+            raise
 
 def get_affiliate_link(product_name):
     """Get affiliate link for a product if available."""
@@ -700,25 +610,29 @@ async def generate_ranking_questionnaire_route():
         logger.error(f"Error generating ranking questionnaire: {e}")
         return jsonify({"error": str(e)}), 500
 
-@flask_app.route('/rank-products', methods=['POST', 'OPTIONS'])
-async def rank_products_route():
-    """API endpoint to rank products based on trade-off preferences"""
-    if request.method == 'OPTIONS':
-        return jsonify({}), 200
-
-    data = request.json
-    products = data.get('products')
-    ranking_preferences = data.get('ranking_preferences')
-    
-    if not products or not ranking_preferences:
-        return jsonify({"error": "Products list and ranking preferences are required"}), 400
-    
+@flask_app.route('/rank-products', methods=['POST'])
+async def rank_products():
     try:
-        engine = ExpertosyRecommendationEngine(data.get('search_query', ''))
+        data = request.get_json()
+        if not data or 'products' not in data or 'ranking_preferences' not in data:
+            return jsonify({"error": "Missing required fields"}), 400
+
+        products = data['products']
+        ranking_preferences = data['ranking_preferences']
+
+        if not products or not ranking_preferences:
+            return jsonify({"error": "Products and ranking preferences cannot be empty"}), 400
+
+        engine = ExpertosyRecommendationEngine()
         ranked_products = await engine.rank_products(products, ranking_preferences)
+        
+        if not ranked_products:
+            return jsonify({"error": "Failed to rank products"}), 500
+            
         return jsonify({"ranked_products": ranked_products})
+        
     except Exception as e:
-        logger.error(f"Error ranking products: {e}")
+        logging.error(f"Error in rank_products endpoint: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 @flask_app.route('/test-ranking', methods=['GET'])
