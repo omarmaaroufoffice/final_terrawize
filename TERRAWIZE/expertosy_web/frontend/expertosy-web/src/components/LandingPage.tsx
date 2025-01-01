@@ -128,21 +128,22 @@ const LandingPage: React.FC = () => {
 
       <section className="hero-section">
         <div className="hero-content">
-          <h1 className="main-title">
-            <span className="title-line">Discover</span>
-            <span className="title-line">Your Perfect</span>
-            <span className="title-line highlight">Match</span>
-          </h1>
-          <div className="subtitle-container">
-            <p className="subtitle">
-              <span className="subtitle-icon">🚀</span>
-              Embark on a journey through the stars
-              <span className="subtitle-icon">✨</span>
-            </p>
-            <p className="subtitle-description">
-              Our AI-powered cosmic guide analyzes countless possibilities to find your ideal match, 
-              untainted by sponsored content or advertisements.
-            </p>
+          <div className="title-container">
+            <h1 className="main-title">
+              <span className="title-line">Discover</span>
+              <span className="title-line">Your Perfect</span>
+              <span className="title-line highlight">Expertosy Match</span>
+            </h1>
+            <div className="subtitle-container">
+              <div className="subtitle-content">
+                <div className="subtitle-icon-container">
+                  <span className="subtitle-icon">✨</span>
+                </div>
+                <div className="subtitle-description">
+                  Discover your perfect match with precision and clarity, free from sponsored noise
+                </div>
+              </div>
+            </div>
           </div>
           
           <div className="search-container">
@@ -151,7 +152,7 @@ const LandingPage: React.FC = () => {
                 <span className="search-icon">🔍</span>
                 <input
                   type="text"
-                  placeholder="What are you looking for?"
+                  placeholder="What are you looking to find?"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -184,7 +185,7 @@ const LandingPage: React.FC = () => {
           </div>
 
           <div className="popular-searches">
-            <h3>Popular Constellations</h3>
+            <h3>Popular Discoveries</h3>
             <div className="tags">
               {popularSearches.map((search, index) => (
                 <button

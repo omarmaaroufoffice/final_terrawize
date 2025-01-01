@@ -261,17 +261,24 @@
   animation: fadeInUp 1s ease-out;
 }
 
+.title-container {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
 .main-title {
-  font-size: 5rem;
-  font-weight: 800;
+  font-size: 6rem;
+  font-weight: 900;
   line-height: 1.1;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   color: var(--stellar-white);
-  text-shadow: 0 2px 10px rgba(74, 144, 226, 0.2);
+  text-shadow: 0 2px 20px rgba(74, 144, 226, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  letter-spacing: -2px;
 }
 
 .title-line {
@@ -290,8 +297,10 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
-  font-size: 6rem;
+  font-size: 5.5rem;
   letter-spacing: -2px;
+  padding: 0 1rem;
+  white-space: nowrap;
 }
 
 .highlight::after {
@@ -300,7 +309,7 @@
   bottom: -10px;
   left: 0;
   width: 100%;
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, transparent, var(--nova-gold), transparent);
   opacity: 0;
   transform: scaleX(0);
@@ -309,45 +318,53 @@
 
 .subtitle-container {
   max-width: 800px;
-  margin: 0 auto 3rem;
+  margin: 0 auto;
   text-align: center;
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.8s ease-out 1s forwards;
 }
 
-.subtitle {
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--starlight-blue);
-  margin-bottom: 1rem;
+.subtitle-content {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle-icon-container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(74, 144, 226, 0.1);
+  border-radius: 50%;
+  border: 2px solid rgba(74, 144, 226, 0.2);
+  animation: iconFloat 3s ease-in-out infinite;
 }
 
 .subtitle-icon {
-  font-size: 2rem;
-  animation: floatIcon 3s ease-in-out infinite;
+  font-size: 1.8rem;
 }
 
-.subtitle-icon:first-child {
-  animation-delay: 0s;
-}
-
-.subtitle-icon:last-child {
-  animation-delay: 1.5s;
+.subtitle-text {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--starlight-blue);
+  max-width: 500px;
+  line-height: 1.4;
 }
 
 .subtitle-description {
   font-size: 1.2rem;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.4;
   max-width: 600px;
   margin: 0 auto;
   position: relative;
-  padding: 1.5rem;
+  padding: 1rem;
   background: rgba(10, 17, 40, 0.3);
   border-radius: 16px;
   border: 1px solid rgba(74, 144, 226, 0.2);
@@ -408,11 +425,11 @@
 }
 
 @keyframes fadeInUp {
-  0% {
+  from {
     opacity: 0;
     transform: translateY(20px);
   }
-  100% {
+  to {
     opacity: 1;
     transform: translateY(0);
   }
@@ -420,27 +437,27 @@
 
 /* Search Container */
 .search-container {
-  max-width: 700px;
-  margin: 0 auto;
-  animation: searchAppear 1s ease-out 0.8s both;
+  max-width: 800px;
+  margin: 1.5rem auto;
+  padding: 0 2rem;
 }
 
 .search-box {
   display: flex;
   gap: 1rem;
-  background: var(--card-background);
+  background: rgba(10, 17, 40, 0.8);
   padding: 0.75rem;
-  border-radius: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  border: var(--card-border);
-  box-shadow: var(--card-shadow);
-  transition: var(--transition-smooth);
+  transition: all 0.3s ease;
 }
 
 .search-box:hover {
+  border-color: rgba(74, 144, 226, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
-  box-shadow: var(--card-hover-shadow);
-  border: var(--card-hover-border);
 }
 
 .search-input-wrapper {
@@ -452,46 +469,43 @@
 
 .search-icon {
   position: absolute;
-  left: 1rem;
+  left: 1.2rem;
   font-size: 1.2rem;
-  color: rgba(248, 250, 252, 0.85);
-  animation: iconPulse 2s infinite;
+  color: rgba(248, 250, 252, 0.8);
 }
 
 .search-box input {
-  flex: 1;
-  padding: 1rem 1rem 1rem 3rem;
+  width: 100%;
+  padding: 1.2rem 1.2rem 1.2rem 3.5rem;
   border: none;
-  border-radius: 8px;
-  background: rgba(248, 250, 252, 0.08);
-  color: #f8fafc;
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.05);
+  color: var(--stellar-white);
   font-size: 1.1rem;
-  transition: var(--transition-smooth);
+  transition: all 0.3s ease;
 }
 
 .search-box input:focus {
   outline: none;
-  background: rgba(248, 250, 252, 0.12);
-  box-shadow: 0 0 0 2px #34d399;
+  background: rgba(248, 250, 252, 0.08);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
 }
 
 .search-button {
   padding: 1rem 2rem;
   border: none;
-  border-radius: 8px;
-  background: var(--constellation-gradient);
-  color: #f8fafc;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--starlight-blue) 0%, var(--nova-gold) 100%);
+  color: var(--stellar-white);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--starburst-transition);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  box-shadow: var(--star-glow);
 }
 
 .search-button::before {
@@ -501,12 +515,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.2),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: 0.5s;
 }
 
@@ -515,8 +524,8 @@
 }
 
 .search-button:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(74, 144, 226, 0.4);
 }
 
 /* Loading Animation */
@@ -558,50 +567,51 @@
 
 /* Popular Searches */
 .popular-searches {
-  margin-top: 2rem;
-  animation: fadeIn 1s ease-in 1.2s both;
+  margin-top: 3rem;
+  text-align: center;
 }
 
 .popular-searches h3 {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   color: var(--stellar-white);
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
   opacity: 0.9;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
   justify-content: center;
+  padding: 0 2rem;
 }
 
 .tag {
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1.5rem;
   border: none;
-  border-radius: 20px;
-  background: rgba(10, 17, 40, 0.8);
+  border-radius: 30px;
+  background: rgba(10, 17, 40, 0.6);
   color: var(--stellar-white);
-  font-size: 0.9rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: var(--transition-smooth);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(74, 144, 226, 0.3);
-  box-shadow: 0 0 10px rgba(74, 144, 226, 0.1);
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  transition: all 0.3s ease;
 }
 
 .tag:hover {
-  background: rgba(107, 78, 113, 0.2);
-  border-color: var(--nova-gold);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-  transform: translateY(-3px) scale(1.05);
+  background: rgba(74, 144, 226, 0.15);
+  border-color: rgba(74, 144, 226, 0.4);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .tag-icon {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   animation: iconFloat 3s infinite ease-in-out;
 }
 
@@ -1075,11 +1085,16 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-title {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
   }
 
-  .subtitle {
-    font-size: 1.1rem;
+  .highlight {
+    font-size: 4rem;
+    letter-spacing: -1.5px;
+  }
+
+  .subtitle-text {
+    font-size: 1.4rem;
   }
 
   .search-box {
@@ -1088,46 +1103,34 @@
 
   .search-button {
     width: 100%;
-    justify-content: center;
   }
 
-  .feature-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .steps {
-    grid-template-columns: 1fr;
-  }
-
-  .step {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .trust-metrics {
-    grid-template-columns: 1fr;
+  .tag {
+    padding: 0.6rem 1.2rem;
   }
 }
 
 @media (max-width: 480px) {
-  .nav-header {
-    padding: 1rem;
-  }
-
-  .hero-section {
-    padding: 4rem 1rem;
-  }
-
   .main-title {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
 
-  .search-box input {
-    font-size: 1rem;
+  .highlight {
+    font-size: 3rem;
+    letter-spacing: -1px;
   }
 
-  .feature-card {
-    padding: 1.5rem;
+  .subtitle-text {
+    font-size: 1.2rem;
+  }
+
+  .subtitle-icon-container {
+    width: 40px;
+    height: 40px;
+  }
+
+  .subtitle-icon {
+    font-size: 1.4rem;
   }
 }
 
