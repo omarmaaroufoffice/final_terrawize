@@ -6,8 +6,9 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies and required Babel plugin
 RUN npm install
+RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object
 
 # Copy source code
 COPY . .
