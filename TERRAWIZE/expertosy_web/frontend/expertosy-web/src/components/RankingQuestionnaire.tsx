@@ -7,6 +7,7 @@ interface RankingQuestionnaireProps {
   products: string[];
   searchQuery: string;
   onRankingComplete: (rankedProducts: string[]) => void;
+  previousQuestions?: string[];
 }
 
 interface Question {
@@ -17,7 +18,8 @@ interface Question {
 const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   products,
   searchQuery,
-  onRankingComplete
+  onRankingComplete,
+  previousQuestions = []
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -74,7 +76,8 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
       try {
         const response = await axios.post('http://localhost:5001/generate-ranking-questionnaire', {
           products,
-          search_query: searchQuery
+          search_query: searchQuery,
+          previous_questions: previousQuestions
         });
 
         if (!mounted) return;
@@ -95,7 +98,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
       mounted = false;
       clearInterval(progressInterval);
     };
-  }, [products, searchQuery]);
+  }, [products, searchQuery, previousQuestions]);
 
   const parseQuestionnaire = (text: string): Question[] => {
     const questions: Question[] = [];

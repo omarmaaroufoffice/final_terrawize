@@ -32,7 +32,7 @@ class ExpertosyRecommendationEngine:
         self.search_query = search_query
         self.results = {}
 
-    async def generate_factors(self, number_of_factors: int = 20) -> list:
+    async def generate_factors(self, number_of_factors: int = 10) -> list:
         """Generate comprehensive factors for evaluating the item"""
         messages = [
             {
@@ -130,7 +130,7 @@ class ExpertosyRecommendationEngine:
                 {
                     "role": "system",
                     "content": (
-                        f"Based on all the user's answers, recommend by name and price only 20 {self.search_query}s "
+                        f"Based on all the user's answers, recommend by name and price only 10 {self.search_query}s "
                         "that would most likely fit this profile. Format each line as:\n"
                         "1. [Product Name] - $[Price]\n"
                         "2. [Product Name] - $[Price]\n"
@@ -147,7 +147,7 @@ class ExpertosyRecommendationEngine:
                 }
             ]
             
-            logger.info(f"Generating 20 product recommendations for {self.search_query}")
+            logger.info(f"Generating 10 product recommendations for {self.search_query}")
             logger.debug(f"User preferences: {preference_text}")
             
             response = await self._create_chat_completion(
@@ -189,23 +189,30 @@ class ExpertosyRecommendationEngine:
             logger.error(f"Messages: {messages}")
             raise Exception(f"OpenAI API error: {str(e)}")
 
-    async def generate_ranking_questionnaire(self, products: list) -> str:
+    async def generate_ranking_questionnaire(self, products: list, previous_questions: list = None) -> str:
         """Generate a questionnaire to rank products based on trade-offs"""
         try:
             products_text = "\n".join(products)
+            previous_questions_text = ""
+            
+            if previous_questions:
+                previous_questions_text = "\n\nPreviously asked questions (DO NOT duplicate these):\n" + "\n".join(
+                    [f"- {q}" for q in previous_questions]
+                )
             
             messages = [
                 {
                     "role": "system",
                     "content": (
                         "You are an expert at creating questionnaires that help rank products based on trade-offs. "
-                        "Create many multiple-choice questions that help understand user preferences regarding the key differences between these products.\n\n"
+                        "Create multiple-choice questions that help understand user preferences regarding the key differences between these products.\n\n"
                         "Format requirements:\n"
                         "1. Number each question as '1.', '2.', etc.\n"
                         "2. Each question MUST end with a question mark (?)\n"
                         "3. Format options exactly as 'A)', 'B)', 'C)', 'D)'\n"
                         "4. Focus on comparing price vs features, performance vs portability, etc.\n"
-                        "5. Make questions that help distinguish between the products' advantages and disadvantages.\n\n"
+                        "5. Make questions that help distinguish between the products' advantages and disadvantages.\n"
+                        "6. DO NOT duplicate any questions that were previously asked.\n\n"
                         "Example format:\n"
                         "1. What is your primary concern when choosing between these products?\n"
                         "A) Price and value for money\n"
@@ -217,9 +224,11 @@ class ExpertosyRecommendationEngine:
                 {
                     "role": "user",
                     "content": (
-                        f"Create a questionnaire to help rank these products based on their trade-offs:\n\n{products_text}\n\n"
+                        f"Create a questionnaire to help rank these products based on their trade-offs:\n\n{products_text}\n"
+                        f"{previous_questions_text}\n\n"
                         "Focus on the key differences between these specific products and create questions that will help determine the best match for the user. "
-                        "When wording the questions think about specific things that would rule out some of the products."
+                        "When wording the questions think about specific things that would rule out some of the products. "
+                        "IMPORTANT: Do not duplicate any of the previously asked questions or ask about the same topics in a different way."
                     )
                 }
             ]
@@ -496,13 +505,14 @@ async def generate_ranking_questionnaire_route():
 
     data = request.json
     products = data.get('products')
+    previous_questions = data.get('previous_questions', [])
     
     if not products:
         return jsonify({"error": "Products list is required"}), 400
     
     try:
         engine = ExpertosyRecommendationEngine(data.get('search_query', ''))
-        questionnaire = await engine.generate_ranking_questionnaire(products)
+        questionnaire = await engine.generate_ranking_questionnaire(products, previous_questions)
         return jsonify({"questionnaire": questionnaire})
     except Exception as e:
         logger.error(f"Error generating ranking questionnaire: {e}")

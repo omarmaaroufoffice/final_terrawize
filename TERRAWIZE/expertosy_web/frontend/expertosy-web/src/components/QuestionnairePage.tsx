@@ -34,6 +34,8 @@ const QuestionnairePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [showHelpText, setShowHelpText] = useState(false);
+  const [currentStage, setCurrentStage] = useState('analyzing');
+  const [recommendedProducts, setRecommendedProducts] = useState<string[]>([]);
 
   // Animation variants for framer-motion
   const pageVariants = {
@@ -331,6 +333,19 @@ const QuestionnairePage: React.FC = () => {
     });
   };
 
+  const handleQuestionnaireComplete = (answers: Record<string, string>) => {
+    setUserAnswers(answers);
+    setCurrentStage('recommendation');
+  };
+
+  const handleRecommendationComplete = (products: string[]) => {
+    // Extract questions from the questionnaire
+    const questions = questionnaire.map(q => q.question);
+    setRecommendedProducts(products);
+    setCurrentStage('ranking');
+    setShowRankingQuestionnaire(true);
+  };
+
   if (isLoading) {
     return (
       <motion.div 
@@ -409,9 +424,10 @@ const QuestionnairePage: React.FC = () => {
         variants={pageVariants}
       >
         <RankingQuestionnaire
-          products={products}
+          products={recommendedProducts}
           searchQuery={searchQuery}
           onRankingComplete={handleRankingComplete}
+          previousQuestions={questionnaire.map(q => q.question)}
         />
       </motion.div>
     );
