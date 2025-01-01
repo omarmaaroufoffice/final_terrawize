@@ -19,7 +19,7 @@ ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 
 # Expose the port the app runs on
-EXPOSE 5000
+EXPOSE 5001
 
 # Use gunicorn as the production WSGI server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "app:app"] 
+CMD ["gunicorn", "--bind", "0.0.0.0:5001", "--workers", "4", "app:app"] 

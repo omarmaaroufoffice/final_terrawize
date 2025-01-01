@@ -193,7 +193,7 @@ class ExpertosyRecommendationEngine:
                     "content": (
                         f"Create a questionnaire to help rank these products based on their trade-offs:\n\n{products_text}\n\n"
                         "Focus on the key differences between these specific products and create questions that will help determine the best match for the user."
-                    )
+                        "When wording the questions think about specific things that would rule out some of the products."
                 }
             ]
             

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './LandingPage.css';
@@ -8,11 +8,62 @@ const LandingPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+  const [activeFeature, setActiveFeature] = useState(0);
 
   const popularSearches = [
-    'laptop', 'smartphone', 'headphones', 'camera', 'smartwatch',
-    'gaming console', 'tablet', 'monitor', 'keyboard', 'mouse'
+    { name: 'laptop', icon: '💻' },
+    { name: 'smartphone', icon: '📱' },
+    { name: 'headphones', icon: '🎧' },
+    { name: 'camera', icon: '📸' },
+    { name: 'smartwatch', icon: '⌚' },
+    { name: 'gaming console', icon: '🎮' },
+    { name: 'tablet', icon: '📱' },
+    { name: 'monitor', icon: '🖥️' },
+    { name: 'keyboard', icon: '⌨️' },
+    { name: 'mouse', icon: '🖱️' }
   ];
+
+  const features = [
+    {
+      icon: '🎯',
+      title: 'Smart Recommendations',
+      description: 'AI-powered suggestions tailored to your unique preferences and needs'
+    },
+    {
+      icon: '🤖',
+      title: 'Advanced Analysis',
+      description: 'Deep learning algorithms process thousands of data points for accuracy'
+    },
+    {
+      icon: '💡',
+      title: 'Intelligent Comparison',
+      description: 'Smart feature comparison helps you make informed decisions'
+    },
+    {
+      icon: '⚡',
+      title: 'Lightning Fast',
+      description: 'Get instant, personalized recommendations in seconds'
+    }
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    const rotateFeatures = () => {
+      setActiveFeature((prev) => (prev + 1) % features.length);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    const featureInterval = setInterval(rotateFeatures, 3000);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(featureInterval);
+    };
+  }, [features.length]);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -48,118 +99,181 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="landing-page">
+      <div className={`nav-header ${scrolled ? 'scrolled' : ''}`}>
+        <div className="nav-content">
+          <div className="logo">
+            <span className="logo-icon">🎯</span>
+            <span className="logo-text">Expertosy</span>
+          </div>
+        </div>
+      </div>
+
       <div className="background-effects">
         <div className="gradient-overlay"></div>
         <div className="pattern-grid"></div>
         <div className="floating-circles">
-          {[...Array(5)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <div key={i} className={`circle circle-${i + 1}`}></div>
+          ))}
+        </div>
+        <div className="particle-network">
+          {[...Array(50)].map((_, i) => (
+            <div key={i} className="particle"></div>
           ))}
         </div>
       </div>
 
       <div className="content-container">
         <div className="hero-section">
-          <h1 className="main-title">
-            Find Your Perfect Match with
-            <span className="highlight"> AI-Powered</span> Recommendations
-          </h1>
-          
-          <p className="subtitle">
-            Tell us what you're looking for, and we'll guide you to the best choice through
-            personalized questions and expert analysis.
-          </p>
+          <div className="hero-content">
+            <h1 className="main-title">
+              Discover Your
+              <span className="highlight"> Perfect Match</span>
+              <br />
+              with AI-Powered Magic
+            </h1>
+            
+            <p className="subtitle">
+              Experience the future of product discovery. Our advanced AI analyzes millions of 
+              data points to find exactly what you need, tailored to your preferences.
+            </p>
 
-          <div className="search-container">
-            <div className="search-box">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="What are you looking to find? (e.g., laptop, smartphone, camera)"
-                className={error ? 'error' : ''}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              />
-              <button 
-                className="search-button"
-                onClick={handleSearch}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <div className="loading-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                ) : (
-                  <>
-                    <span className="button-text">Find My Match</span>
-                    <span className="button-icon">→</span>
-                  </>
-                )}
-              </button>
-            </div>
-            {error && <p className="error-message">{error}</p>}
-          </div>
-
-          <div className="popular-searches">
-            <h3>Popular Searches</h3>
-            <div className="tags">
-              {popularSearches.map((query, index) => (
-                <button
-                  key={index}
-                  className="tag"
-                  onClick={() => handlePopularSearch(query)}
+            <div className="search-container">
+              <div className="search-box">
+                <div className="search-input-wrapper">
+                  <span className="search-icon">🔍</span>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="What are you looking to find? (e.g., laptop, smartphone, camera)"
+                    className={error ? 'error' : ''}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  />
+                </div>
+                <button 
+                  className="search-button"
+                  onClick={handleSearch}
+                  disabled={isLoading}
                 >
-                  {query}
+                  {isLoading ? (
+                    <div className="loading-animation">
+                      <div className="loading-ring"></div>
+                      <div className="loading-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="button-text">Find My Perfect Match</span>
+                      <span className="button-icon">→</span>
+                    </>
+                  )}
                 </button>
-              ))}
+              </div>
+              {error && <p className="error-message">{error}</p>}
+            </div>
+
+            <div className="popular-searches">
+              <h3>Popular Discoveries</h3>
+              <div className="tags">
+                {popularSearches.map((item, index) => (
+                  <button
+                    key={index}
+                    className="tag"
+                    onClick={() => handlePopularSearch(item.name)}
+                  >
+                    <span className="tag-icon">{item.icon}</span>
+                    <span className="tag-text">{item.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         <div className="features-section">
+          <div className="section-header">
+            <h2>Why Choose Us</h2>
+            <p>Experience the power of AI-driven recommendations</p>
+          </div>
           <div className="feature-grid">
-            <div className="feature-card">
-              <div className="feature-icon">🎯</div>
-              <h3>Personalized Recommendations</h3>
-              <p>Get tailored suggestions based on your specific needs and preferences.</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">🤖</div>
-              <h3>AI-Powered Analysis</h3>
-              <p>Advanced algorithms analyze thousands of options to find your perfect match.</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">💡</div>
-              <h3>Smart Comparison</h3>
-              <p>Compare features and trade-offs to make informed decisions.</p>
-            </div>
-            <div className="feature-card">
-              <div className="feature-icon">⚡</div>
-              <h3>Quick Results</h3>
-              <p>Get instant recommendations after answering a few simple questions.</p>
-            </div>
+            {features.map((feature, index) => (
+              <div 
+                key={index} 
+                className={`feature-card ${index === activeFeature ? 'active' : ''}`}
+              >
+                <div className="feature-icon-wrapper">
+                  <span className="feature-icon">{feature.icon}</span>
+                </div>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+                <div className="feature-hover-effect"></div>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="how-it-works">
-          <h2>How It Works</h2>
+          <div className="section-header">
+            <h2>How It Works</h2>
+            <p>Three simple steps to find your perfect match</p>
+          </div>
           <div className="steps">
             <div className="step">
-              <div className="step-number">1</div>
-              <h3>Tell Us What You Need</h3>
-              <p>Enter what you're looking for, and we'll start the search process.</p>
+              <div className="step-content">
+                <div className="step-number">1</div>
+                <h3>Tell Us What You Need</h3>
+                <p>Share your requirements and let our AI understand your needs</p>
+              </div>
+              <div className="step-illustration">
+                <div className="step-icon">🎯</div>
+              </div>
             </div>
             <div className="step">
-              <div className="step-number">2</div>
-              <h3>Answer Questions</h3>
-              <p>Respond to personalized questions about your preferences and needs.</p>
+              <div className="step-content">
+                <div className="step-number">2</div>
+                <h3>Answer Smart Questions</h3>
+                <p>Our AI asks targeted questions to understand your preferences</p>
+              </div>
+              <div className="step-illustration">
+                <div className="step-icon">💭</div>
+              </div>
             </div>
             <div className="step">
-              <div className="step-number">3</div>
-              <h3>Get Recommendations</h3>
-              <p>Receive a curated list of the best matches for your requirements.</p>
+              <div className="step-content">
+                <div className="step-number">3</div>
+                <h3>Get Perfect Matches</h3>
+                <p>Receive personalized recommendations tailored just for you</p>
+              </div>
+              <div className="step-illustration">
+                <div className="step-icon">✨</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="trust-section">
+          <div className="trust-content">
+            <div className="trust-header">
+              <h2>Trusted by Thousands</h2>
+              <p>Join our growing community of satisfied users</p>
+            </div>
+            <div className="trust-metrics">
+              <div className="metric">
+                <div className="metric-value">50k+</div>
+                <div className="metric-label">Recommendations</div>
+              </div>
+              <div className="metric">
+                <div className="metric-value">98%</div>
+                <div className="metric-label">Satisfaction Rate</div>
+              </div>
+              <div className="metric">
+                <div className="metric-value">10k+</div>
+                <div className="metric-label">Happy Users</div>
+              </div>
             </div>
           </div>
         </div>
