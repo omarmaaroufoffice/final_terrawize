@@ -2,28 +2,26 @@ import multiprocessing
 import os
 
 # Gunicorn configuration
-bind = "0.0.0.0:8080"
+bind = f"0.0.0.0:{os.getenv('PORT', '8080')}"
 workers = multiprocessing.cpu_count() * 2 + 1
-worker_class = "sync"  # Use sync workers for Flask's async support
+worker_class = 'sync'  # Using sync workers instead of uvicorn
 timeout = 120
 keepalive = 5
 max_requests = 1000
 max_requests_jitter = 50
-
-# Logging
-accesslog = "-"
-errorlog = "-"
-loglevel = "info"
-
-# SSL (if needed)
-# keyfile = "path/to/keyfile"
-# certfile = "path/to/certfile"
-
-# Worker process naming
-proc_name = "expertosy_backend"
-
-# Preload app for better performance
+reload = False  # Disable auto-reload in production
 preload_app = True
+daemon = False
+accesslog = '-'
+errorlog = '-'
+loglevel = 'info'
 
-# Clean up worker processes
-worker_tmp_dir = "/dev/shm" 
+# SSL Configuration (if needed)
+# keyfile = '/path/to/keyfile'
+# certfile = '/path/to/certfile'
+
+# Process Naming
+proc_name = 'expertosy_backend'
+
+# Server Mechanics
+graceful_timeout = 30 
