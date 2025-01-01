@@ -26,10 +26,23 @@ CORS(app, resources={r"/*": {"origins": [
     "https://api.expertosy.com"
 ]}}, supports_credentials=True)
 
-# Add a health check endpoint
-@app.route('/health', methods=['GET'])
+@app.route('/')
+def root():
+    """Root endpoint for health checks"""
+    return jsonify({
+        "status": "healthy",
+        "service": "expertosy-backend",
+        "version": "1.0.0"
+    })
+
+@app.route('/health')
 def health_check():
-    return jsonify({"status": "healthy"}), 200
+    """Health check endpoint"""
+    return jsonify({
+        "status": "healthy",
+        "service": "expertosy-backend",
+        "version": "1.0.0"
+    })
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
