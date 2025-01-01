@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api';
 import './LandingPage.css';
 
 interface PopularSearch {
@@ -75,14 +75,14 @@ const LandingPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('/api/generate-factors', {
-        search_query: searchQuery
+      const response = await api.post('/generate-factors', {
+        search_query: searchQuery.trim()
       });
 
       if (response.data.factors) {
         navigate('/questionnaire', {
           state: {
-            searchQuery,
+            searchQuery: searchQuery.trim(),
             factors: response.data.factors
           }
         });
@@ -90,12 +90,12 @@ const LandingPage: React.FC = () => {
         setError('Received invalid response from server. Please try again.');
       }
     } catch (error: any) {
-      console.error('Error:', error);
+      console.error('Error generating questionnaire:', error);
       if (error?.isAxiosError) {
         if (error.code === 'ERR_NETWORK') {
           setError('Unable to connect to the server. Please try again later.');
         } else {
-          setError(`Server error: ${error.response?.data?.message || 'Please try again later.'}`);
+          setError(error.response?.data?.error || 'An error occurred. Please try again.');
         }
       } else {
         setError('An unexpected error occurred. Please try again.');
@@ -107,7 +107,7 @@ const LandingPage: React.FC = () => {
 
   const handlePopularSearch = (search: PopularSearch) => {
     setSearchQuery(search.name);
-    handleSearch();
+    setTimeout(() => handleSearch(), 0);
   };
 
   return (
