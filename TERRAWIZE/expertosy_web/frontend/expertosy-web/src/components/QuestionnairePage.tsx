@@ -217,7 +217,8 @@ const QuestionnairePage: React.FC = () => {
           questions.push({
             question: questionLine,
             options: options,
-            helpText: undefined
+            category: getCategoryFromQuestion(questionLine),
+            helpText: generateHelpText(questionLine)
           });
         }
       });
@@ -512,7 +513,7 @@ const QuestionnairePage: React.FC = () => {
                   <span className="current">{currentQuestionIndex + 1}</span>
                   <span className="total">/{questionnaire.length}</span>
                 </div>
-                {currentQuestion.category && (
+                {currentQuestion?.category && (
                   <span className="question-category">{currentQuestion.category}</span>
                 )}
               </div>
