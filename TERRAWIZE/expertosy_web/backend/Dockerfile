@@ -19,6 +19,8 @@ ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
 
+# Expose the port the app runs on
+EXPOSE ${PORT:-8080}
 
 # Use gunicorn as the production server
-CMD gunicorn --bind "0.0.0.0::-8080}" --workers 4 --timeout 120 --log-file - app:app 
+CMD gunicorn --bind "0.0.0.0:${PORT:-8080}" --workers 4 --timeout 120 --log-file - app:app 
