@@ -18,9 +18,23 @@ COPY . .
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
+ENV GUNICORN_CMD_ARGS="--access-logfile=- --error-logfile=- --log-level=info"
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
 
 # Expose the port the app runs on
 EXPOSE ${PORT:-8080}
 
-# Use gunicorn as the production server
-CMD gunicorn --bind "0.0.0.0:${PORT:-8080}" --workers 4 --timeout 120 --log-file - app:app
+# Use gunicorn as the production server with gevent worker
+CMD gunicorn --bind "0.0.0.0:${PORT:-8080}" \
+    --workers 4 \
+    --worker-class gevent \
+    --timeout 120 \
+    --keep-alive 65 \
+    --log-file=- \
+    --access-logfile=- \
+    --error-logfile=- \
+    --log-level=info \
+    app:app
