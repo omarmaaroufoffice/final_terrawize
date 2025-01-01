@@ -131,18 +131,21 @@
 }
 
 .product-card {
+  position: relative;
   background: linear-gradient(
     135deg,
     rgba(10, 17, 40, 0.8) 0%,
     rgba(74, 144, 226, 0.1) 100%
   );
-  backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2rem;
+  margin-bottom: 2rem;
   border: 1px solid rgba(74, 144, 226, 0.3);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 0 30px rgba(74, 144, 226, 0.1);
+  transition: all 0.3s ease;
 }
 
 .product-card::before {
@@ -159,13 +162,16 @@
     var(--nova-gold),
     transparent
   );
+  border-radius: 20px 20px 0 0;
+  opacity: 0.6;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
+  border-color: rgba(74, 144, 226, 0.5);
   box-shadow: 
-    0 12px 40px rgba(74, 144, 226, 0.2),
-    inset 0 0 50px rgba(74, 144, 226, 0.15);
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    inset 0 0 40px rgba(74, 144, 226, 0.15);
+  transform: translateY(-5px);
 }
 
 .rank-badge {
@@ -339,4 +345,76 @@
   .product-price {
     font-size: 1.1rem;
   }
+}
+
+.product-explanation {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.explanation-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-bottom: 1.2rem;
+  padding: 0.8rem;
+  background: rgba(10, 17, 40, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(74, 144, 226, 0.15);
+}
+
+.advantages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+
+.advantage-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  padding: 0.6rem 1rem;
+  background: rgba(10, 17, 40, 0.3);
+  border-radius: 8px;
+  border: 1px solid rgba(74, 144, 226, 0.1);
+  transition: all 0.3s ease;
+}
+
+.advantage-item:hover {
+  background: rgba(74, 144, 226, 0.1);
+  border-color: rgba(74, 144, 226, 0.2);
+  transform: translateX(5px);
+}
+
+.advantage-icon {
+  color: var(--starlight-blue);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.situational-benefits {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 17, 40, 0.6) 0%,
+    rgba(74, 144, 226, 0.1) 100%
+  );
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--nova-gold);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  line-height: 1.5;
+}
+
+.benefits-icon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
 } 

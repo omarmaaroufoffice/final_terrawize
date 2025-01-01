@@ -156,8 +156,9 @@ const QuestionnairePage: React.FC = () => {
     const questions: Question[] = [];
     
     try {
+      // Split by question numbers (1., 2., etc.)
       const sections = questionnaireText
-        .split(/(?:####|###)\s*\d+\.|(?:\*\*\d+\.)/g)
+        .split(/(?:\d+\.)/g)
         .filter(Boolean)
         .map(section => section.trim());
       
@@ -165,7 +166,7 @@ const QuestionnairePage: React.FC = () => {
         throw new Error('No sections found in questionnaire');
       }
 
-      sections.forEach((section, index) => {
+      sections.forEach((section) => {
         if (section.includes('Thank you') || 
             section.includes('### Comprehensive') || 
             section.includes('Please select') ||
@@ -176,90 +177,55 @@ const QuestionnairePage: React.FC = () => {
         const lines = section
           .split('\n')
           .map(line => line.trim())
-          .filter(Boolean)
-          .filter(line => !line.startsWith('###'));
+          .filter(Boolean);
         
-        let questionLine = '';
-        const questionLines = lines.filter(line => 
-          line.includes('?') && 
-          !line.startsWith('-') && 
-          !line.startsWith('*')
-        );
-
-        if (questionLines.length > 0) {
-          questionLine = questionLines.reduce((a, b) => a.length > b.length ? a : b);
-          questionLine = questionLine
-            .replace(/\*\*/g, '')
-            .replace(/\?+/g, '')
-            .trim();
-        }
+        // Find the question line (should be the first non-empty line)
+        const questionLine = lines[0]?.replace(/\*\*/g, '').trim();
         
         if (!questionLine) return;
 
         const options: QuestionOption[] = [];
         const seenOptions = new Set<string>();
 
-        lines.forEach(line => {
-          const optionPatterns = [
-            /^-?\s*[A-D][\.\)]\s*(.+?)(?:\s*$)/,
-            /^(?:Very|Highly|Mostly|Somewhat|Not|Low|Medium|High|Soft|Firm|Minimal|Regular|Important|Adjustable)\s+.+$/
-          ];
-
-          for (const pattern of optionPatterns) {
-            const match = line.match(pattern);
-            if (match) {
-              let optionText = match[1] || line;
+        // Process remaining lines for options
+        lines.slice(1).forEach(line => {
+          // Match options starting with A), B), C), D)
+          const optionMatch = line.match(/^([A-D]\))\s*(.+)$/);
+          
+          if (optionMatch) {
+            const optionText = optionMatch[2].trim();
+            
+            if (!seenOptions.has(optionText) && optionText.length > 0) {
+              seenOptions.add(optionText);
               
-              optionText = optionText
-                .replace(/\*\*/g, '')
-                .replace(/^-\s*/, '')
-                .trim();
-
-              if (!seenOptions.has(optionText) && optionText.length > 0) {
-                seenOptions.add(optionText);
-                
-                // Extract any additional description after a dash or colon
-                const [mainText, ...descriptionParts] = optionText.split(/[-–:]/).map(part => part.trim());
-                const description = descriptionParts.join(' ').trim();
-                
-                options.push({ 
-                  text: mainText,
-                  description: description || undefined,
-                  icon: getOptionIcon(mainText)
-                });
-              }
-              break;
+              // Extract any additional description after a dash or colon
+              const [mainText, ...descriptionParts] = optionText.split(/[-–:]/).map(part => part.trim());
+              const description = descriptionParts.join(' ').trim();
+              
+              options.push({ 
+                text: mainText,
+                description: description || undefined,
+                icon: getOptionIcon(mainText)
+              });
             }
           }
         });
 
-        const validOptions = options.filter(opt => !opt.text.includes('?'));
-
-        if (validOptions.length >= 2) {
-          validOptions.sort((a, b) => {
-            const aMatch = a.text.match(/^[A-D][\.\)]/);
-            const bMatch = b.text.match(/^[A-D][\.\)]/);
-            if (aMatch && bMatch) {
-              return aMatch[0].charCodeAt(0) - bMatch[0].charCodeAt(0);
-            }
-            return 0;
-          });
-
+        if (options.length >= 2) {
           questions.push({
-            question: questionLine.trim(),
-            options: validOptions,
-            category: getCategoryFromQuestion(questionLine),
-            helpText: generateHelpText(questionLine)
+            question: questionLine,
+            options: options,
+            helpText: undefined
           });
         }
       });
-
+      
       if (questions.length === 0) {
         throw new Error('No valid questions could be parsed from the questionnaire');
       }
-
+      
       return questions;
-
+      
     } catch (error) {
       console.error('Error parsing questionnaire:', error);
       throw error;

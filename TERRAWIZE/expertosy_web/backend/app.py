@@ -66,17 +66,39 @@ class ExpertosyRecommendationEngine:
         messages = [
             {
                 "role": "system",
-                "content": f"You are an expert at creating questionnaires for {self.search_query}. "
-                "Generate exactly 2 questions for a questionnaire with multiple-choice questions. "
-                "Format each question with a clear text and 4 lettered options (A, B, C, D). "
-                "Include cost ranges or relevant details for each option when applicable."
+                "content": (
+                    f"You are an expert at creating questionnaires for {self.search_query}. "
+                    "Generate exactly 2 questions for a questionnaire with multiple-choice questions. "
+                    "Format each question with a clear text and 4 lettered options (A, B, C, D). "
+                    "Include cost ranges or relevant details for each option when applicable.\n\n"
+                    "Format requirements:\n"
+                    "1. Number each question as '1.', '2.'\n"
+                    "2. Each question should be clear and direct\n"
+                    "3. Format options exactly as 'A)', 'B)', 'C)', 'D)'\n"
+                    "4. Each option should be on a new line\n"
+                    "5. Do not include any additional text or formatting\n\n"
+                    "Example format:\n"
+                    "1. What is your preferred price range?\n"
+                    "A) $0-$500\n"
+                    "B) $501-$1000\n"
+                    "C) $1001-$1500\n"
+                    "D) $1501 or more\n\n"
+                    "2. What is your primary use case?\n"
+                    "A) Personal use\n"
+                    "B) Professional work\n"
+                    "C) Gaming\n"
+                    "D) Content creation"
+                )
             },
             {
                 "role": "user",
-                "content": f"Create a questionnaire for {self.search_query} using these factors: {', '.join(factors)}. "
-                "Ensure each question has 4 options labeled A, B, C, D. "
-                "Include cost ranges or specific details for each option. "
-                "The questionnaire should help determine the user's precise preferences."
+                "content": (
+                    f"Create a questionnaire for {self.search_query} using these factors: {', '.join(factors)}. "
+                    "Follow the exact format shown in the example. "
+                    "Ensure each question has 4 options labeled A), B), C), D). "
+                    "Include cost ranges or specific details for each option. "
+                    "The questionnaire should help determine the user's precise preferences."
+                )
             }
         ]
         
@@ -87,6 +109,10 @@ class ExpertosyRecommendationEngine:
         )
         
         questionnaire_text = response.choices[0].message.content.strip()
+        
+        # Log the response for debugging
+        logger.info(f"Generated questionnaire: {questionnaire_text}")
+        
         return questionnaire_text
 
     async def generate_recommendation(self, user_preferences: dict) -> str:
@@ -216,48 +242,145 @@ class ExpertosyRecommendationEngine:
             raise Exception(f"Failed to generate ranking questionnaire: {str(e)}")
 
     async def rank_products(self, products: list, ranking_preferences: dict) -> list:
-        """Rank the products based on user's answers to the trade-off questions"""
-        try:
-            products_text = "\n".join(products)
-            preferences_text = "\n".join([
-                f"Question: {question}\nAnswer: {answer}"
-                for question, answer in ranking_preferences.items()
-            ])
-            
-            messages = [
-                {
-                    "role": "system",
-                    "content": (
-                        "You are an expert at ranking products based on user preferences about trade-offs. "
-                        "Analyze the user's answers and rank the products from best to worst match. "
-                        "Consider the trade-offs between features, price, and other characteristics. "
-                        "Return ONLY the ranked list in order from best to worst match, maintaining the exact same format as the input products. "
-                        "Do not add any additional text or explanations. Just return the ranked list."
-                    )
-                },
-                {
-                    "role": "user",
-                    "content": (
-                        f"Based on these user preferences about trade-offs:\n\n{preferences_text}\n\n"
-                        f"Rank these products from best to worst match:\n\n{products_text}\n\n"
-                        "Return ONLY the ranked list in the exact same format as above, ordered from best to worst match. "
-                        "Do not add any additional text or explanations."
-                    )
-                }
-            ]
-            
-            response = await self._create_chat_completion(
-                model="gpt-4o-mini",
-                maximum_tokens=1000,
-                messages=messages
-            )
-            
-            ranked_products = response.choices[0].message.content.strip().split('\n')
-            return ranked_products
-            
-        except Exception as e:
-            logger.error(f"Error ranking products: {str(e)}")
-            raise Exception(f"Failed to rank products: {str(e)}")
+        """Rank the products based on user's answers to the trade-off questions and provide explanations"""
+        max_retries = 3
+        retry_count = 0
+        
+        # Parse products to extract names and prices
+        parsed_products = []
+        for product in products:
+            try:
+                # Remove the numbering and split by dash
+                parts = product.split('. ')[1].split(' - ')
+                name = parts[0].strip()
+                price = parts[1].strip()
+                parsed_products.append({"name": name, "price": price})
+            except Exception as e:
+                logger.error(f"Error parsing product: {product}")
+                logger.error(f"Error details: {str(e)}")
+                raise ValueError(f"Invalid product format: {product}")
+        
+        while retry_count < max_retries:
+            try:
+                products_text = "\n".join(products)
+                preferences_text = "\n".join([
+                    f"Question: {question}\nAnswer: {answer}"
+                    for question, answer in ranking_preferences.items()
+                ])
+                
+                messages = [
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are an expert at ranking products based on user preferences about trade-offs. "
+                            "Your task is to return a valid JSON array containing ranked products. "
+                            "For each product, provide:\n"
+                            "1. A clear explanation of why it was ranked in that position\n"
+                            "2. 2-3 key advantages of this product\n"
+                            "3. For products ranked 2nd and lower, explain specific situations where this product might be a better choice\n\n"
+                            "IMPORTANT: Your response must be a valid JSON array. Format each object exactly as shown:\n"
+                            "[\n"
+                            "  {\n"
+                            "    \"name\": \"Product Name\",\n"
+                            "    \"price\": \"Price\",\n"
+                            "    \"explanation\": \"Why this product is ranked here\",\n"
+                            "    \"advantages\": [\"advantage1\", \"advantage2\", \"advantage3\"],\n"
+                            "    \"situationalBenefits\": \"When this might be a better choice\"\n"
+                            "  }\n"
+                            "]\n\n"
+                            "Rules:\n"
+                            "1. Use ONLY double quotes for strings\n"
+                            "2. Include ALL required fields\n"
+                            "3. Ensure advantages is ALWAYS an array\n"
+                            "4. Do not include any text before or after the JSON array\n"
+                            "5. Keep explanations concise but informative"
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": (
+                            f"Based on these user preferences about trade-offs:\n\n{preferences_text}\n\n"
+                            f"Rank and explain these products:\n\n{products_text}\n\n"
+                            "Return ONLY a valid JSON array as specified, with no additional text."
+                        )
+                    }
+                ]
+                
+                logger.info(f"Attempt {retry_count + 1} of {max_retries}")
+                logger.info(f"Parsed products: {parsed_products}")
+                logger.info(f"User preferences: {ranking_preferences}")
+                
+                response = await self._create_chat_completion(
+                    model="gpt-4o-mini",
+                    maximum_tokens=2000,
+                    messages=messages
+                )
+                
+                try:
+                    # Parse the response as JSON
+                    import json
+                    response_text = response.choices[0].message.content.strip()
+                    logger.info(f"Raw response from OpenAI: {response_text}")
+                    
+                    # Remove any potential markdown code block syntax
+                    response_text = response_text.replace("```json", "").replace("```", "").strip()
+                    
+                    # Try to fix common JSON formatting issues
+                    response_text = response_text.replace("'", '"')
+                    response_text = response_text.replace("\n", " ")
+                    
+                    # Try to find the JSON array if there's additional text
+                    import re
+                    json_match = re.search(r'\[.*\]', response_text)
+                    if json_match:
+                        response_text = json_match.group(0)
+                    
+                    ranked_products = json.loads(response_text)
+                    
+                    if not isinstance(ranked_products, list):
+                        raise ValueError("Response is not a JSON array")
+                    
+                    if len(ranked_products) != len(parsed_products):
+                        raise ValueError(f"Expected {len(parsed_products)} products, got {len(ranked_products)}")
+                    
+                    # Validate the structure of each product
+                    for i, product in enumerate(ranked_products):
+                        if not isinstance(product, dict):
+                            raise ValueError(f"Product {i} is not a JSON object")
+                        
+                        required_fields = ["name", "price", "explanation", "advantages"]
+                        for field in required_fields:
+                            if field not in product:
+                                raise ValueError(f"Product {i} missing required field: {field}")
+                            if not isinstance(product[field], (str, list)):
+                                raise ValueError(f"Product {i} field {field} has invalid type")
+                        
+                        if not isinstance(product["advantages"], list):
+                            product["advantages"] = [product["advantages"]]
+                        
+                        # Ensure all products are in the response
+                        if not any(p["name"] in product["name"] for p in parsed_products):
+                            raise ValueError(f"Product {i} does not match any input products")
+                    
+                    # Log the successfully parsed and validated products
+                    logger.info(f"Successfully ranked products: {json.dumps(ranked_products, indent=2)}")
+                    
+                    return ranked_products
+                    
+                except (json.JSONDecodeError, ValueError) as e:
+                    logger.error(f"Validation error on attempt {retry_count + 1}: {str(e)}")
+                    logger.error(f"Response text: {response_text}")
+                    retry_count += 1
+                    if retry_count >= max_retries:
+                        raise Exception(f"Failed to get valid response after {max_retries} attempts: {str(e)}")
+                    continue
+                
+            except Exception as e:
+                logger.error(f"Error on attempt {retry_count + 1}: {str(e)}")
+                retry_count += 1
+                if retry_count >= max_retries:
+                    raise Exception(f"Failed to rank products after {max_retries} attempts: {str(e)}")
+                continue
 
 @app.route('/generate-factors', methods=['POST', 'OPTIONS'])
 async def generate_factors_route():
@@ -366,6 +489,95 @@ async def rank_products_route():
     except Exception as e:
         logger.error(f"Error ranking products: {e}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/test-ranking', methods=['GET'])
+async def test_ranking_route():
+    """Test endpoint to verify ranking functionality with multiple scenarios"""
+    try:
+        test_cases = [
+            {
+                "products": [
+                    "1. Honda Odyssey - $35,000",
+                    "2. Toyota Sienna - $36,000"
+                ],
+                "preferences": {
+                    "What is your primary concern when choosing between these minivans?": "A) Fuel efficiency and environmental impact",
+                    "Which feature matters most to you in a family vehicle?": "B) Advanced safety features and driver assistance"
+                }
+            },
+            {
+                "products": [
+                    "1. MacBook Pro 14\" - $1,999",
+                    "2. Dell XPS 15 - $1,799",
+                    "3. Lenovo ThinkPad X1 - $1,699"
+                ],
+                "preferences": {
+                    "What's your main priority when choosing a laptop?": "A) Performance and processing power",
+                    "How important is battery life vs weight/portability?": "C) Balance of both is essential"
+                }
+            },
+            {
+                "products": [
+                    "1. iPhone 15 Pro - $999",
+                    "2. Samsung Galaxy S23 - $899",
+                    "3. Google Pixel 8 - $799",
+                    "4. OnePlus 11 - $699"
+                ],
+                "preferences": {
+                    "What's most important to you in a smartphone?": "B) Camera quality and photo features",
+                    "How do you prioritize software updates and ecosystem?": "A) Regular updates and ecosystem integration"
+                }
+            }
+        ]
+
+        results = []
+        engine = ExpertosyRecommendationEngine("Test Products")
+
+        for i, test_case in enumerate(test_cases, 1):
+            logger.info(f"\n=== Running Test Case {i} ===")
+            logger.info(f"Products: {test_case['products']}")
+            logger.info(f"Preferences: {test_case['preferences']}")
+
+            try:
+                ranked_products = await engine.rank_products(
+                    test_case["products"],
+                    test_case["preferences"]
+                )
+                results.append({
+                    "test_case": i,
+                    "status": "success",
+                    "products": test_case["products"],
+                    "preferences": test_case["preferences"],
+                    "ranked_results": ranked_products
+                })
+                logger.info(f"Test Case {i} Successful")
+            except Exception as e:
+                results.append({
+                    "test_case": i,
+                    "status": "failed",
+                    "error": str(e),
+                    "products": test_case["products"],
+                    "preferences": test_case["preferences"]
+                })
+                logger.error(f"Test Case {i} Failed: {str(e)}")
+
+        # Calculate success rate
+        success_count = sum(1 for r in results if r["status"] == "success")
+        success_rate = (success_count / len(test_cases)) * 100
+
+        return jsonify({
+            "total_tests": len(test_cases),
+            "successful_tests": success_count,
+            "success_rate": f"{success_rate:.2f}%",
+            "detailed_results": results
+        })
+
+    except Exception as e:
+        logger.error(f"Error in test suite: {str(e)}")
+        return jsonify({
+            "error": "Test suite failed",
+            "message": str(e)
+        }), 500
 
 def create_app():
     """Application factory for Flask"""

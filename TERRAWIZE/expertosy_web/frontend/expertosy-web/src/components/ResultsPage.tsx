@@ -3,12 +3,20 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './ResultsPage.css';
 
+interface ProductExplanation {
+  name: string;
+  price: string;
+  explanation: string;
+  advantages: string[];
+  situationalBenefits?: string;
+}
+
 const ResultsPage: React.FC = () => {
   const location = useLocation();
   const state = location.state as { 
     searchQuery: string;
     userPreferences: Record<string, string>;
-    recommendation: string[];
+    recommendation: ProductExplanation[];
   };
 
   const pageVariants = {
@@ -106,49 +114,72 @@ const ResultsPage: React.FC = () => {
         </div>
 
         <div className="recommendations-list">
-          {state.recommendation.map((product, index) => {
-            const [name, price] = product.split(' - ');
-            const productName = name.split('.')[1]?.trim() || name;
-            
-            return (
-              <motion.div
-                key={index}
-                className="product-card"
-                custom={index}
-                variants={cardVariants}
-                initial="initial"
-                animate="animate"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+          {state.recommendation.map((product, index) => (
+            <motion.div
+              key={index}
+              className="product-card"
+              custom={index}
+              variants={cardVariants}
+              initial="initial"
+              animate="animate"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <motion.div 
+                className="rank-badge"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
               >
-                <motion.div 
-                  className="rank-badge"
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
-                >
-                  {index + 1}
-                </motion.div>
-                <div className="product-details">
-                  <h3 className="product-name">{productName}</h3>
-                  <p className="product-price">{price}</p>
-                </div>
+                {index + 1}
               </motion.div>
-            );
-          })}
+              <div className="product-details">
+                <h3 className="product-name">{product.name}</h3>
+                <p className="product-price">{product.price}</p>
+                <motion.div 
+                  className="product-explanation"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.1 + 0.7 }}
+                >
+                  <p className="explanation-text">{product.explanation}</p>
+                  <div className="advantages-list">
+                    {product.advantages.map((advantage, i) => (
+                      <motion.div 
+                        key={i}
+                        className="advantage-item"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 + 0.8 + (i * 0.1) }}
+                      >
+                        <span className="advantage-icon">✦</span>
+                        {advantage}
+                      </motion.div>
+                    ))}
+                  </div>
+                  {product.situationalBenefits && (
+                    <motion.div 
+                      className="situational-benefits"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.1 + 1.2 }}
+                    >
+                      <span className="benefits-icon">💡</span>
+                      {product.situationalBenefits}
+                    </motion.div>
+                  )}
+                </motion.div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
-        <motion.div 
-          className="action-buttons"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
+        <div className="action-buttons">
           <Link to="/" className="back-button">Start New Search</Link>
-        </motion.div>
+        </div>
       </motion.div>
     </motion.div>
   );
-}
+};
 
 export default ResultsPage; 

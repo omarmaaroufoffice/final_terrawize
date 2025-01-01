@@ -129,11 +129,21 @@ const LandingPage: React.FC = () => {
       <section className="hero-section">
         <div className="hero-content">
           <h1 className="main-title">
-            Discover Your Perfect <span className="highlight">Product</span>
+            <span className="title-line">Discover</span>
+            <span className="title-line">Your Perfect</span>
+            <span className="title-line highlight">Match</span>
           </h1>
-          <p className="subtitle">
-            Skip hours of reaserch, we find what you want and why you want it with and we dont care about adds
-          </p>
+          <div className="subtitle-container">
+            <p className="subtitle">
+              <span className="subtitle-icon">🚀</span>
+              Embark on a journey through the stars
+              <span className="subtitle-icon">✨</span>
+            </p>
+            <p className="subtitle-description">
+              Our AI-powered cosmic guide analyzes countless possibilities to find your ideal match, 
+              untainted by sponsored content or advertisements.
+            </p>
+          </div>
           
           <div className="search-container">
             <div className="search-box">
