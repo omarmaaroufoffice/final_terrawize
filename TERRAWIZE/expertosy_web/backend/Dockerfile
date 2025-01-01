@@ -22,13 +22,13 @@ ENV GUNICORN_CMD_ARGS="--access-logfile=- --error-logfile=- --log-level=info"
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Expose the port the app runs on
-EXPOSE ${PORT:-8080}
+EXPOSE 8080
 
 # Use gunicorn as the production server with gevent worker
-CMD gunicorn --bind "0.0.0.0:${PORT:-8080}" \
+CMD gunicorn --bind "0.0.0.0:8080" \
     --workers 4 \
     --worker-class gevent \
     --timeout 120 \
