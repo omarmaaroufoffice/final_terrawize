@@ -320,42 +320,25 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   return (
     <motion.div 
       className="ranking-questionnaire"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
     >
       <div className="space-stars" />
-      <div className="products-background">
-        <div className="products-grid left">
-          {products.slice(0, 5).map((product, index) => (
-            <div key={`left-${index}`}>
-              {renderProductCard(product, index)}
-            </div>
-          ))}
-        </div>
-        <div className="products-grid right">
-          {products.slice(5).map((product, index) => (
-            <div key={`right-${index}`}>
-              {renderProductCard(product, index + 5)}
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="questionnaire-container">
         <motion.div 
           className="questionnaire-header"
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ duration: 0.3 }}
         >
           <h2>Help us rank these products for you</h2>
           <motion.p 
             className={`remaining-questions ${remainingQuestions === 0 ? 'final-question' : ''}`}
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
           >
             {remainingQuestions === 0 
               ? "Last question to get your final ranking! 🚀" 
@@ -373,71 +356,49 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
                 className="progress-fill"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.3 }}
               />
             </div>
           </div>
         </motion.div>
 
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={currentQuestionIndex}
-            className={`question-container ${showQuestion ? 'show' : ''}`}
-            variants={questionVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 200, damping: 25 },
-              opacity: { duration: 0.3 }
-            }}
-          >
-            <div className="question-number">
-              Question {currentQuestionIndex + 1}
-            </div>
-            <h3 className="question-text">{currentQuestion.question}</h3>
-            
-            <div className="options-container">
-              {currentQuestion.options.map((option, index) => {
-                const isSelected = userAnswers[currentQuestion.question] === option.text;
-                const optionLabel = String.fromCharCode(65 + index);
-                
-                return (
-                  <motion.button
-                    key={index}
-                    className={`option-button ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleOptionSelect(option.text)}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ 
-                      delay: index * 0.08,
-                      duration: 0.2
-                    }}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                  >
-                    <span className="option-label">{optionLabel}</span>
-                    {option.text}
-                    {isSelected && (
-                      <motion.span 
-                        className="check-mark"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ 
-                          type: "spring", 
-                          stiffness: 400, 
-                          damping: 25 
-                        }}
-                      >
-                        ✓
-                      </motion.span>
-                    )}
-                  </motion.button>
-                );
-              })}
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        <div className={`question-container ${showQuestion ? 'show' : ''}`}>
+          <div className="question-number">
+            Question {currentQuestionIndex + 1}
+          </div>
+          <h3 className="question-text">{currentQuestion.question}</h3>
+          
+          <div className="options-container">
+            {currentQuestion.options.map((option, index) => {
+              const isSelected = userAnswers[currentQuestion.question] === option.text;
+              const optionLabel = String.fromCharCode(65 + index);
+              
+              return (
+                <motion.button
+                  key={index}
+                  className={`option-button ${isSelected ? 'selected' : ''}`}
+                  onClick={() => handleOptionSelect(option.text)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <span className="option-label">{optionLabel}</span>
+                  {option.text}
+                  {isSelected && (
+                    <motion.span 
+                      className="check-mark"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                    >
+                      ✓
+                    </motion.span>
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </motion.div>
   );
