@@ -188,7 +188,10 @@ const QuestionnairePage: React.FC = () => {
 
         if (questionLines.length > 0) {
           questionLine = questionLines.reduce((a, b) => a.length > b.length ? a : b);
-          questionLine = questionLine.replace(/\*\*/g, '').trim();
+          questionLine = questionLine
+            .replace(/\*\*/g, '')
+            .replace(/\?+$/, '?')
+            .trim();
         }
         
         if (!questionLine) return;
