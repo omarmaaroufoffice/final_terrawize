@@ -476,15 +476,7 @@ const QuestionnairePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Personalizing recommendations for{' '}
-            <motion.span 
-              className="highlight"
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              {searchQuery}
-            </motion.span>
+            Personalizing recommendations for You
           </motion.h2>
         </div>
         
