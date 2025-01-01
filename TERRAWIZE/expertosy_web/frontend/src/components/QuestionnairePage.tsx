@@ -93,7 +93,9 @@ const QuestionnairePage: React.FC = () => {
       try {
         setIsLoading(true);
         setError(null);
-        const response = await api.post('/generate-factors', { query: searchQuery });
+        const response = await api.post('/generate-factors', { 
+          search_query: searchQuery 
+        });
         if (response.data && Array.isArray(response.data)) {
           setQuestionnaire(response.data);
           setShowQuestion(true);

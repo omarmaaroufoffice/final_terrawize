@@ -79,7 +79,7 @@ const LandingPage: React.FC = () => {
         search_query: searchQuery.trim()
       });
 
-      if (response.data.factors) {
+      if (response.data && Array.isArray(response.data.factors) && response.data.factors.length > 0) {
         navigate('/questionnaire', {
           state: {
             searchQuery: searchQuery.trim(),
@@ -87,7 +87,8 @@ const LandingPage: React.FC = () => {
           }
         });
       } else {
-        setError('Received invalid response from server. Please try again.');
+        console.error('Invalid response format:', response.data);
+        setError('Received invalid response format from server. Please try again.');
       }
     } catch (error: any) {
       console.error('Error generating questionnaire:', error);
@@ -95,7 +96,9 @@ const LandingPage: React.FC = () => {
         if (error.code === 'ERR_NETWORK') {
           setError('Unable to connect to the server. Please try again later.');
         } else {
-          setError(error.response?.data?.error || 'An error occurred. Please try again.');
+          const errorMessage = error.response?.data?.error || 'An error occurred. Please try again.';
+          console.error('Server error:', errorMessage);
+          setError(errorMessage);
         }
       } else {
         setError('An unexpected error occurred. Please try again.');
