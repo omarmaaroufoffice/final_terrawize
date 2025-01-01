@@ -116,11 +116,31 @@
   font-size: 1.2rem;
   color: var(--text-secondary);
   margin: 0;
-  padding: 1rem 2rem;
+  padding: 1rem;
   background: rgba(10, 17, 40, 0.4);
   border-radius: 16px;
   display: inline-block;
   border: 1px solid rgba(74, 144, 226, 0.15);
+  max-width: 100%;
+  word-wrap: break-word;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .subtitle {
+    font-size: 1rem;
+    padding: 0.75rem;
+    width: 90%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .subtitle {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    width: 95%;
+  }
 }
 
 .recommendations-list {
@@ -653,5 +673,37 @@
   .loading-stage {
     font-size: 0.9rem;
     padding: 0.6rem 1rem;
+  }
+}
+
+.results-title {
+  font-size: 2.5rem;
+  text-align: center;
+  line-height: 1.3;
+  margin: 1rem 0;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.search-query {
+  color: var(--primary-color);
+  display: inline-block;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .results-title {
+    font-size: 1.8rem;
+    padding: 0 1rem;
+  }
+  
+  .search-query {
+    display: inline;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-title {
+    font-size: 1.5rem;
   }
 } 

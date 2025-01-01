@@ -194,11 +194,12 @@ const ResultsPage: React.FC = () => {
       >
         <div className="results-header">
           <motion.h1
+            className="results-title"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Your Perfect {state.searchQuery} Match
+            Your Perfect <span className="search-query">{state.searchQuery}</span> Match
           </motion.h1>
           <motion.p 
             className="subtitle"
