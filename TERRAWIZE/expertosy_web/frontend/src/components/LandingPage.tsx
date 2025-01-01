@@ -108,9 +108,42 @@ const LandingPage: React.FC = () => {
     }
   };
 
-  const handlePopularSearch = (search: PopularSearch) => {
+  const handlePopularSearch = async (search: PopularSearch) => {
     setSearchQuery(search.name);
-    setTimeout(() => handleSearch(), 0);
+    setIsLoading(true);
+    
+    try {
+      const response = await api.post('/generate-factors', {
+        search_query: search.name.trim()
+      });
+
+      if (response.data && Array.isArray(response.data.factors) && response.data.factors.length > 0) {
+        navigate('/questionnaire', {
+          state: {
+            searchQuery: search.name.trim(),
+            factors: response.data.factors
+          }
+        });
+      } else {
+        console.error('Invalid response format:', response.data);
+        setError('Received invalid response format from server. Please try again.');
+      }
+    } catch (error: any) {
+      console.error('Error generating questionnaire:', error);
+      if (error?.isAxiosError) {
+        if (error.code === 'ERR_NETWORK') {
+          setError('Unable to connect to the server. Please try again later.');
+        } else {
+          const errorMessage = error.response?.data?.error || 'An error occurred. Please try again.';
+          console.error('Server error:', errorMessage);
+          setError(errorMessage);
+        }
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
