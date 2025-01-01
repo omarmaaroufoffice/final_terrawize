@@ -1,35 +1,39 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:18.17-alpine AS builder
 
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies and required Babel plugin
-RUN npm install
-RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object
+# Install all dependencies (including dev dependencies)
+RUN npm ci
+RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object@7.21.11
 
 # Copy source code
 COPY . .
 
-# Build the application
-RUN npm run build
+# Set environment variables for build
+ENV NODE_ENV=production
+ENV GENERATE_SOURCEMAP=false
+
+# Build the application with explicit environment
+RUN NODE_ENV=production npm run build
 
 # Production stage
-FROM node:18-alpine
+FROM node:18.17-alpine
 
 WORKDIR /app
 
-# Copy package files and install production dependencies
+# Copy package files and install only production dependencies
 COPY package*.json ./
-RUN npm install --production
+RUN npm ci --only=production
 
 # Copy built files and server
 COPY --from=builder /app/build ./build
 COPY server.js .
 
-# Set environment variables
+# Set production environment
 ENV NODE_ENV=production
 
 # Expose the port (will be overridden by Railway's PORT)
