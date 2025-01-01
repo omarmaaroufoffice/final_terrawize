@@ -384,6 +384,14 @@
     padding: 0.75rem;
     font-size: 1rem;
   }
+
+  .shop-now-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -502,4 +510,34 @@
 .benefits-icon {
   font-size: 1.2rem;
   filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4));
+}
+
+.shop-now-button {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.shop-now-button:hover {
+  background: linear-gradient(135deg, #357abd 0%, #2868a0 100%);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .shop-now-button {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+  }
 } 

@@ -32,7 +32,7 @@ class ExpertosyRecommendationEngine:
         self.search_query = search_query
         self.results = {}
 
-    async def generate_factors(self, number_of_factors: int = 2) -> list:
+    async def generate_factors(self, number_of_factors: int = 20) -> list:
         """Generate comprehensive factors for evaluating the item"""
         messages = [
             {
@@ -41,7 +41,7 @@ class ExpertosyRecommendationEngine:
             },
             {
                 "role": "user",
-                "content": f"List {number_of_factors} unique and exactly 2 factors for evaluating for what is most important to the user when choosing a {self.search_query}."
+                "content": f"List {number_of_factors} unique and comprehensive factors for evaluating for what is most important to the user when choosing a {self.search_query}."
                 "Focus on the key differences between the different {self.search_query} and create factors that will help determine the best match for the user."
                 "Its basically the facotrs that you would think about when choosing a {self.search_query}."
                 "The factors should be in the form of a question that the user would ask themselves when choosing a {self.search_query}."
@@ -68,7 +68,7 @@ class ExpertosyRecommendationEngine:
                 "role": "system",
                 "content": (
                     f"You are an expert at creating questionnaires for {self.search_query}. "
-                    "Generate exactly 2 questions for a questionnaire with multiple-choice questions. "
+                    "Generate many questions for a questionnaire with multiple-choice questions. "
                     "Format each question with a clear text and 4 lettered options (A, B, C, D). "
                     "Include cost ranges or relevant details for each option when applicable.\n\n"
                     "Format requirements:\n"
@@ -130,7 +130,7 @@ class ExpertosyRecommendationEngine:
                 {
                     "role": "system",
                     "content": (
-                        f"Based on all the user's answers, recommend by name and price only 2 {self.search_query}s "
+                        f"Based on all the user's answers, recommend by name and price only 20 {self.search_query}s "
                         "that would most likely fit this profile. Format each line as:\n"
                         "1. [Product Name] - $[Price]\n"
                         "2. [Product Name] - $[Price]\n"
@@ -141,13 +141,13 @@ class ExpertosyRecommendationEngine:
                 {
                     "role": "user",
                     "content": (
-                        f"Based on these preferences, list exactly 2 {self.search_query}s with ONLY their names and prices:\n\n"
+                        f"Based on these preferences, list 20 {self.search_query}s with ONLY their names and prices:\n\n"
                         f"{preference_text}"
                     )
                 }
             ]
             
-            logger.info(f"Generating 2 product recommendations for {self.search_query}")
+            logger.info(f"Generating 20 product recommendations for {self.search_query}")
             logger.debug(f"User preferences: {preference_text}")
             
             response = await self._create_chat_completion(
@@ -199,7 +199,7 @@ class ExpertosyRecommendationEngine:
                     "role": "system",
                     "content": (
                         "You are an expert at creating questionnaires that help rank products based on trade-offs. "
-                        "Create exactly 2 multiple-choice questions that help understand user preferences regarding the key differences between these products.\n\n"
+                        "Create many multiple-choice questions that help understand user preferences regarding the key differences between these products.\n\n"
                         "Format requirements:\n"
                         "1. Number each question as '1.', '2.', etc.\n"
                         "2. Each question MUST end with a question mark (?)\n"
@@ -381,6 +381,45 @@ class ExpertosyRecommendationEngine:
                 if retry_count >= max_retries:
                     raise Exception(f"Failed to rank products after {max_retries} attempts: {str(e)}")
                 continue
+
+def get_affiliate_link(product_name):
+    """Get affiliate link for a product if available."""
+    # This is a placeholder function. You should implement your own affiliate link logic here.
+    # For example, you could:
+    # 1. Query your affiliate network's API
+    # 2. Look up in a database of affiliate links
+    # 3. Generate dynamic affiliate links based on product names
+    # Return None if no affiliate link is available
+    return None
+
+def rank_products(products, user_preferences):
+    try:
+        # ... existing code ...
+
+        # Parse the response and add affiliate links
+        ranked_products = []
+        for product in parsed_response:
+            product_data = {
+                "name": product["name"],
+                "price": product["price"],
+                "explanation": product["explanation"],
+                "advantages": product["advantages"],
+                "situationalBenefits": product.get("situationalBenefits")
+            }
+            
+            # Try to get an affiliate link for the product
+            affiliate_link = get_affiliate_link(product["name"])
+            if affiliate_link:
+                product_data["affiliateLink"] = affiliate_link
+            
+            ranked_products.append(product_data)
+
+        return jsonify({"success": True, "ranked_products": ranked_products})
+
+    except Exception as e:
+        print(f"Error in rank_products: {str(e)}")
+        traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/generate-factors', methods=['POST', 'OPTIONS'])
 async def generate_factors_route():

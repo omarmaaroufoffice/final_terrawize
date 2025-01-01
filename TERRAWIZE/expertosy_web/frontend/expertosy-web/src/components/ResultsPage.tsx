@@ -9,6 +9,7 @@ interface ProductExplanation {
   explanation: string;
   advantages: string[];
   situationalBenefits?: string;
+  affiliateLink?: string;
 }
 
 const ResultsPage: React.FC = () => {
@@ -167,6 +168,21 @@ const ResultsPage: React.FC = () => {
                       <span className="benefits-icon">💡</span>
                       {product.situationalBenefits}
                     </motion.div>
+                  )}
+                  {product.affiliateLink && (
+                    <motion.a
+                      href={product.affiliateLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shop-now-button"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 + 1.3 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      🛍️ Shop Now
+                    </motion.a>
                   )}
                 </motion.div>
               </div>
