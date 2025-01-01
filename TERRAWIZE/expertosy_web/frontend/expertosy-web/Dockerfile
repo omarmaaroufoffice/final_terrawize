@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install all dependencies (including dev dependencies)
-RUN npm ci
+RUN npm install
 RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object@7.21.11
 
 # Copy source code
@@ -25,9 +25,9 @@ FROM node:18.17-alpine
 
 WORKDIR /app
 
-# Copy package files and install only production dependencies
+# Copy package files and install production dependencies
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # Copy built files and server
 COPY --from=builder /app/build ./build
