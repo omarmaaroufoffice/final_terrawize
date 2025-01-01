@@ -60,6 +60,7 @@ async def dispatch_flask(request: Request, call_next):
         response_body = []
         response_headers = []
         response_status = [200]
+        response_started = [False]
         
         async def receive():
             body = await request.body()
@@ -70,24 +71,60 @@ async def dispatch_flask(request: Request, call_next):
             }
         
         async def send(message):
+            nonlocal response_started
             if message["type"] == "http.response.start":
+                response_started[0] = True
                 response_status[0] = message["status"]
                 response_headers.extend(message.get("headers", []))
             elif message["type"] == "http.response.body":
-                response_body.append(message.get("body", b""))
+                if not response_started[0]:
+                    response_status[0] = 200
+                body = message.get("body", b"")
+                if isinstance(body, str):
+                    body = body.encode('utf-8')
+                elif isinstance(body, dict):
+                    body = json.dumps(body).encode('utf-8')
+                elif isinstance(body, bytes):
+                    pass
+                else:
+                    body = str(body).encode('utf-8')
+                response_body.append(body)
         
         await wsgi_app(scope, receive, send)
         
         # Combine all response parts
         body = b"".join(response_body)
+        
+        # Try to decode JSON responses
+        content_type = None
+        for key, value in response_headers:
+            if key.lower() == b'content-type':
+                content_type = value.decode('utf-8')
+                break
+        
+        if content_type and 'application/json' in content_type:
+            try:
+                decoded_body = body.decode('utf-8')
+                if decoded_body:
+                    body = json.loads(decoded_body)
+                    return JSONResponse(
+                        content=body,
+                        status_code=response_status[0]
+                    )
+            except Exception as e:
+                logger.error(f"Error decoding JSON response: {e}")
+                pass
+        
         return Response(
             content=body,
             status_code=response_status[0],
-            headers=dict(response_headers)
+            headers=dict(response_headers),
+            media_type=content_type
         )
         
     except Exception as e:
         logger.error(f"Error in dispatch_flask: {e}")
+        logger.error(traceback.format_exc())
         return JSONResponse(
             status_code=500,
             content={"error": str(e)}
