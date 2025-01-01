@@ -1,20 +1,34 @@
 /* Base Styles and Variables */
 :root {
-  --primary-gradient: linear-gradient(135deg, #4a90e2 0%, #34d399 100%);
-  --secondary-gradient: linear-gradient(135deg, #f87171 0%, #4a90e2 100%);
-  --background-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  --text-primary: #f8fafc;
+  /* Core Colors */
+  --space-dark: #0A1128;
+  --cosmic-purple: #6B4E71;
+  --starlight-blue: #4A90E2;
+  --nova-gold: #FFD700;
+  --stellar-white: #F8FAFC;
+  
+  /* Gradients */
+  --constellation-gradient: linear-gradient(135deg, var(--starlight-blue) 0%, var(--nova-gold) 100%);
+  --nebula-gradient: linear-gradient(135deg, var(--cosmic-purple) 0%, var(--starlight-blue) 100%);
+  --space-gradient: linear-gradient(135deg, var(--space-dark) 0%, var(--cosmic-purple) 100%);
+  
+  /* Backgrounds */
+  --background-dark: var(--space-gradient);
+  --card-background: rgba(10, 17, 40, 0.95);
+  --card-hover-background: rgba(107, 78, 113, 0.15);
+  
+  /* Text Colors */
+  --text-primary: var(--stellar-white);
   --text-secondary: rgba(248, 250, 252, 0.85);
-  --accent-color: #34d399;
-  --glass-background: rgba(255, 255, 255, 0.08);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --card-background: rgba(30, 41, 59, 0.95);
-  --card-hover-background: rgba(51, 65, 85, 0.95);
-  --card-border: 1px solid rgba(248, 250, 252, 0.15);
-  --card-hover-border: 1px solid rgba(248, 250, 252, 0.25);
-  --card-hover-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  
+  /* Special Effects */
+  --star-glow: 0 0 20px rgba(255, 215, 0, 0.3);
+  --constellation-line: 1px solid rgba(74, 144, 226, 0.3);
+  --nebula-blur: blur(20px);
+  
+  /* Animations */
+  --float-transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --starburst-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Main Layout */
@@ -79,20 +93,40 @@
   right: 0;
   bottom: 0;
   overflow: hidden;
-  pointer-events: none;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  background: var(--space-gradient);
 }
 
-.gradient-overlay {
+.constellation-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(1px 1px at 20px 30px, var(--starlight-blue) 50%, transparent 100%),
+    radial-gradient(1px 1px at 40px 70px, var(--nova-gold) 50%, transparent 100%),
+    radial-gradient(1px 1px at 50px 160px, var(--stellar-white) 50%, transparent 100%),
+    radial-gradient(1px 1px at 80px 120px, var(--starlight-blue) 50%, transparent 100%),
+    radial-gradient(1px 1px at 110px 130px, var(--nova-gold) 50%, transparent 100%),
+    radial-gradient(1px 1px at 140px 80px, var(--stellar-white) 50%, transparent 100%);
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: starTwinkle 4s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+.nebula-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 20%, rgba(74, 144, 226, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(52, 211, 153, 0.05) 0%, transparent 50%);
-  opacity: 1;
+    radial-gradient(circle at 20% 20%, rgba(107, 78, 113, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(74, 144, 226, 0.2) 0%, transparent 50%);
+  filter: var(--nebula-blur);
+  mix-blend-mode: screen;
+  opacity: 0.8;
 }
 
 /* Remove pattern-grid and replace with subtle gradient accents */
@@ -309,18 +343,19 @@
   padding: 1rem 2rem;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, #4a90e2 0%, #34d399 100%);
+  background: var(--constellation-gradient);
   color: #f8fafc;
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition-smooth);
+  transition: var(--starburst-transition);
   display: flex;
   align-items: center;
   gap: 0.5rem;
   position: relative;
   overflow: hidden;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--star-glow);
 }
 
 .search-button::before {
@@ -344,8 +379,8 @@
 }
 
 .search-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(52, 211, 153, 0.3);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
 }
 
 /* Loading Animation */
@@ -473,9 +508,9 @@
 }
 
 .feature-card {
-  background: rgba(30, 41, 59, 0.98);
-  border: 1px solid rgba(74, 144, 226, 0.2);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: var(--card-background);
+  border: var(--constellation-line);
+  box-shadow: var(--star-glow);
   backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 2.5rem;
@@ -483,7 +518,7 @@
   position: relative;
   overflow: hidden;
   transform: translateY(0);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--float-transition);
 }
 
 .feature-card::before {
@@ -504,10 +539,9 @@
 
 .feature-card:hover {
   transform: translateY(-10px);
-  border-color: rgba(74, 144, 226, 0.4);
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(74, 144, 226, 0.1);
+  background: var(--card-hover-background);
+  border-color: var(--starlight-blue);
+  box-shadow: 0 0 40px rgba(74, 144, 226, 0.2);
 }
 
 .feature-icon-wrapper {
@@ -955,4 +989,185 @@
   .feature-card {
     padding: 1.5rem;
   }
+}
+
+/* New Animations */
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes constellationForm {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes nebulaFlow {
+  0%, 100% {
+    filter: var(--nebula-blur) hue-rotate(0deg);
+  }
+  50% {
+    filter: var(--nebula-blur) hue-rotate(30deg);
+  }
+}
+
+.search-button::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--constellation-gradient);
+  z-index: -1;
+  border-radius: 10px;
+  opacity: 0;
+  transition: var(--starburst-transition);
+}
+
+.search-button:hover::after {
+  opacity: 0.4;
+}
+
+/* Floating Constellations */
+.floating-constellations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.constellation {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle at center, var(--starlight-blue) 1px, transparent 1px) 0 0 / 20px 20px,
+              radial-gradient(circle at center, var(--nova-gold) 1px, transparent 1px) 10px 10px / 20px 20px;
+  opacity: 0.3;
+  animation: constellationFloat 20s infinite linear;
+  transform-origin: center;
+}
+
+.constellation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    transparent 45%, 
+    var(--starlight-blue) 45%, 
+    var(--starlight-blue) 55%, 
+    transparent 55%
+  );
+  opacity: 0.2;
+  animation: constellationGlow 4s infinite ease-in-out;
+}
+
+/* Enhanced Button Styles */
+.search-button {
+  background: var(--constellation-gradient);
+  box-shadow: var(--star-glow);
+  transition: var(--starburst-transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.button-star {
+  position: relative;
+  margin-left: 8px;
+  animation: starPulse 2s infinite ease-in-out;
+}
+
+/* Enhanced Tag Styles */
+.tag {
+  background: rgba(10, 17, 40, 0.8);
+  border: 1px solid var(--starlight-blue);
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.1);
+  transition: var(--float-transition);
+}
+
+.tag:hover {
+  background: rgba(107, 78, 113, 0.2);
+  border-color: var(--nova-gold);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.tag-icon {
+  animation: iconFloat 3s infinite ease-in-out;
+}
+
+/* New Animations */
+@keyframes constellationFloat {
+  0% {
+    transform: rotate(0deg) translateX(50px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(50px) rotate(-360deg);
+  }
+}
+
+@keyframes constellationGlow {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Enhanced Loading Animation */
+.loading-animation {
+  position: relative;
+}
+
+.loading-ring {
+  border-color: var(--nova-gold);
+  border-top-color: transparent;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.loading-dots span {
+  background: var(--starlight-blue);
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
 } 
