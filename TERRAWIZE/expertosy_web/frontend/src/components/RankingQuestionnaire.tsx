@@ -4,10 +4,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RankingQuestion } from '../types';
 import './RankingQuestionnaire.css';
 
+interface ProductExplanation {
+  name: string;
+  price: string;
+  explanation: string;
+  advantages: string[];
+  situationalBenefits?: string;
+  affiliateLink?: string;
+}
+
 interface RankingQuestionnaireProps {
   products: string[];
-  searchQuery: string;
-  onRankingComplete: (rankedProducts: string[]) => void;
+  searchQuery?: string;
+  onRankingComplete: (rankedProducts: ProductExplanation[]) => void;
   previousQuestions?: string[];
 }
 

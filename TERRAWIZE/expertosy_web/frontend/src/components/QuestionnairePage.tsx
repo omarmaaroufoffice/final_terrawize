@@ -45,6 +45,7 @@ const QuestionnairePage: React.FC = () => {
   const [showHelpText, setShowHelpText] = useState(false);
   const [currentStage, setCurrentStage] = useState('analyzing');
   const [recommendedProducts, setRecommendedProducts] = useState<string[]>([]);
+  const [showInitialRecommendations, setShowInitialRecommendations] = useState(false);
 
   // Animation variants for framer-motion
   const pageVariants = {
@@ -304,10 +305,9 @@ const QuestionnairePage: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       setIsLoading(false);
-      setShowRankingQuestionnaire(true);
       setProducts(recommendationLines);
       setRecommendedProducts(recommendationLines);
-      
+      setShowInitialRecommendations(true);
     } catch (error) {
       console.error('Error generating recommendation:', error);
       setIsLoading(false);
@@ -416,13 +416,71 @@ const QuestionnairePage: React.FC = () => {
     );
   }
 
-  if (showRankingQuestionnaire && (
-    <RankingQuestionnaire
-      products={recommendedProducts}
-      onComplete={handleRankingComplete}
-      onError={(error) => setError(error)}
-    />
-  )) {
+  if (showInitialRecommendations) {
+    return (
+      <motion.div 
+        className="questionnaire-page"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
+        <div className="questionnaire-container">
+          <div className="title-container">
+            <motion.h2 
+              className="main-title"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              Here are your initial recommendations
+            </motion.h2>
+          </div>
+          
+          <motion.div 
+            className="recommendations-list"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            {recommendedProducts.map((product, index) => {
+              const [name, price] = product.split(' - ');
+              return (
+                <motion.div
+                  key={index}
+                  className="recommendation-item"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className="product-name">{name}</div>
+                  <div className="product-price">{price}</div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          <motion.button
+            className="nav-button next"
+            onClick={() => {
+              setShowInitialRecommendations(false);
+              setShowRankingQuestionnaire(true);
+            }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            Continue to Detailed Ranking
+            <span className="button-icon">→</span>
+          </motion.button>
+        </div>
+      </motion.div>
+    );
+  }
+
+  if (showRankingQuestionnaire) {
     return (
       <motion.div
         initial="initial"
@@ -432,8 +490,9 @@ const QuestionnairePage: React.FC = () => {
       >
         <RankingQuestionnaire
           products={recommendedProducts}
-          onComplete={handleRankingComplete}
-          onError={(error) => setError(error)}
+          onRankingComplete={handleRankingComplete}
+          searchQuery={searchQuery}
+          previousQuestions={questionnaire.map(q => q.question)}
         />
       </motion.div>
     );
