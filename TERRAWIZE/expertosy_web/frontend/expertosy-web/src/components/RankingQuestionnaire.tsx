@@ -169,15 +169,25 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
 
   const submitRankingPreferences = async () => {
     try {
+      setIsLoading(true);
+      setLoadingStage('Finalizing your personalized ranking...');
+
       const response = await axios.post('http://localhost:5001/rank-products', {
         products,
         ranking_preferences: userAnswers,
         search_query: searchQuery
       });
 
-      onRankingComplete(response.data.ranked_products);
+      if (response.data.ranked_products) {
+        onRankingComplete(response.data.ranked_products);
+      } else {
+        throw new Error('No ranked products received from server');
+      }
     } catch (error) {
       console.error('Error ranking products:', error);
+      setIsLoading(false);
+      // Show error state
+      setQuestionnaire([]);
     }
   };
 

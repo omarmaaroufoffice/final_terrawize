@@ -326,11 +326,20 @@ const QuestionnairePage: React.FC = () => {
   };
 
   const handleRankingComplete = (rankedProducts: string[]) => {
+    if (!rankedProducts || rankedProducts.length === 0) {
+      setError('Failed to generate ranked products. Please try again.');
+      return;
+    }
+
     navigate('/results', {
       state: {
         searchQuery,
         userPreferences: userAnswers,
-        recommendation: rankedProducts
+        recommendation: rankedProducts,
+        initialAnswers: questionnaire.map(q => ({
+          question: q.question,
+          answer: userAnswers[q.question]
+        }))
       }
     });
   };
