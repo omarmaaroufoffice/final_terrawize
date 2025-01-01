@@ -102,19 +102,6 @@ const LandingPage: React.FC = () => {
       <div className="background-effects">
         <div className="constellation-grid" />
         <div className="nebula-overlay" />
-        <div className="floating-constellations">
-          {[...Array(5)].map((_, index) => (
-            <div 
-              key={index} 
-              className="constellation"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${index * 0.5}s`
-              }}
-            />
-          ))}
-        </div>
       </div>
       
       <nav className="nav-header">
@@ -172,28 +159,6 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      <div className="features-section">
-        <div className="section-header">
-          <h2>Why Choose Us</h2>
-          <p>Experience the power of AI-driven recommendations</p>
-        </div>
-        <div className="feature-grid">
-          {features.map((feature, index) => (
-            <div 
-              key={index} 
-              className={`feature-card ${index === activeFeature ? 'active' : ''}`}
-            >
-              <div className="feature-icon-wrapper">
-                <span className="feature-icon">{feature.icon}</span>
-              </div>
-              <h3>{feature.title}</h3>
-              <p>{feature.description}</p>
-              <div className="feature-hover-effect"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       <div className="how-it-works">
         <div className="section-header">
           <h2>How It Works</h2>
@@ -233,26 +198,25 @@ const LandingPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="trust-section">
-        <div className="trust-content">
-          <div className="trust-header">
-            <h2>Trusted by Thousands</h2>
-            <p>Join our growing community of satisfied users</p>
-          </div>
-          <div className="trust-metrics">
-            <div className="metric">
-              <div className="metric-value">50k+</div>
-              <div className="metric-label">Recommendations</div>
+      <div className="features-section">
+        <div className="section-header">
+          <h2>Why Choose Us</h2>
+          <p>Experience the power of AI-driven recommendations</p>
+        </div>
+        <div className="feature-grid">
+          {features.map((feature, index) => (
+            <div 
+              key={index} 
+              className={`feature-card ${index === activeFeature ? 'active' : ''}`}
+            >
+              <div className="feature-icon-wrapper">
+                <span className="feature-icon">{feature.icon}</span>
+              </div>
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+              <div className="feature-hover-effect"></div>
             </div>
-            <div className="metric">
-              <div className="metric-value">98%</div>
-              <div className="metric-label">Satisfaction Rate</div>
-            </div>
-            <div className="metric">
-              <div className="metric-value">10k+</div>
-              <div className="metric-label">Happy Users</div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

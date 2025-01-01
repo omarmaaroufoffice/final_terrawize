@@ -80,7 +80,7 @@
 .logo-text {
   font-size: 1.25rem;
   font-weight: 700;
-  background: var(--primary-gradient);
+  background: var(--constellation-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -111,7 +111,6 @@
     radial-gradient(1px 1px at 140px 80px, var(--stellar-white) 50%, transparent 100%);
   background-repeat: repeat;
   background-size: 200px 200px;
-  animation: starTwinkle 4s ease-in-out infinite;
   opacity: 0.5;
 }
 
@@ -127,6 +126,15 @@
   filter: var(--nebula-blur);
   mix-blend-mode: screen;
   opacity: 0.8;
+}
+
+/* Remove unused classes */
+.floating-constellations {
+  display: none;
+}
+
+.constellation {
+  display: none;
 }
 
 /* Remove pattern-grid and replace with subtle gradient accents */
@@ -258,15 +266,14 @@
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 1.5rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--stellar-white);
+  text-shadow: 0 2px 10px rgba(74, 144, 226, 0.2);
   animation: titleReveal 1.5s ease-out;
 }
 
 .highlight {
   display: inline-block;
-  background: var(--primary-gradient);
+  background: var(--constellation-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
@@ -428,8 +435,9 @@
 
 .popular-searches h3 {
   font-size: 1.1rem;
-  color: var(--text-secondary);
+  color: var(--stellar-white);
   margin-bottom: 1rem;
+  opacity: 0.9;
 }
 
 .tags {
@@ -443,8 +451,8 @@
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 20px;
-  background: var(--card-background);
-  color: #f8fafc;
+  background: rgba(10, 17, 40, 0.8);
+  color: var(--stellar-white);
   font-size: 0.9rem;
   cursor: pointer;
   transition: var(--transition-smooth);
@@ -452,27 +460,28 @@
   align-items: center;
   gap: 0.5rem;
   backdrop-filter: blur(5px);
-  border: var(--card-border);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.1);
 }
 
 .tag:hover {
-  background: var(--card-hover-background);
-  border: var(--card-hover-border);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px) scale(1.05);
+  background: rgba(107, 78, 113, 0.2);
+  border-color: var(--nova-gold);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+  transform: translateY(-3px) scale(1.05);
 }
 
 .tag-icon {
   font-size: 1.1rem;
+  animation: iconFloat 3s infinite ease-in-out;
 }
 
 /* Features Section */
 .features-section {
-  padding: 8rem 2rem;
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, rgba(10, 17, 40, 0.98) 0%, var(--space-dark) 100%);
   position: relative;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(17, 24, 39, 0.98) 100%);
-  z-index: 1;
+  overflow: hidden;
 }
 
 .section-header {
@@ -482,15 +491,15 @@
 }
 
 .section-header h2 {
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: 800;
   margin-bottom: 1.5rem;
-  color: #f8fafc;
-  text-shadow: 0 2px 10px rgba(52, 211, 153, 0.2);
+  color: var(--stellar-white);
+  text-shadow: 0 2px 10px rgba(74, 144, 226, 0.2);
 }
 
 .section-header p {
-  color: rgba(248, 250, 252, 0.9);
+  color: var(--text-secondary);
   font-size: 1.25rem;
   max-width: 600px;
   margin: 0 auto;
@@ -508,9 +517,9 @@
 }
 
 .feature-card {
-  background: var(--card-background);
-  border: var(--constellation-line);
-  box-shadow: var(--star-glow);
+  background: rgba(10, 17, 40, 0.95);
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(12px);
   border-radius: 24px;
   padding: 2.5rem;
@@ -576,7 +585,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin: 1.5rem 0 1rem;
-  color: #f8fafc;
+  color: var(--stellar-white);
   transition: color 0.3s ease;
 }
 
@@ -587,7 +596,7 @@
 }
 
 .feature-card p {
-  color: rgba(248, 250, 252, 0.8);
+  color: var(--text-secondary);
   font-size: 1.1rem;
   line-height: 1.6;
   margin: 0;
@@ -612,10 +621,12 @@
 
 /* How It Works Section */
 .how-it-works {
-  padding: 8rem 2rem;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(17, 24, 39, 0.98) 100%);
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, var(--space-dark) 0%, rgba(10, 17, 40, 0.98) 100%);
   position: relative;
   overflow: hidden;
+  border-top: 1px solid rgba(74, 144, 226, 0.2);
+  border-bottom: 1px solid rgba(74, 144, 226, 0.2);
 }
 
 .how-it-works::before {
@@ -713,7 +724,7 @@
 .step-content h3 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--stellar-white);
   margin: 0;
   transition: color 0.3s ease;
 }
@@ -725,7 +736,7 @@
 }
 
 .step-content p {
-  color: rgba(248, 250, 252, 0.8);
+  color: var(--text-secondary);
   font-size: 1.1rem;
   line-height: 1.6;
   margin: 0;
@@ -1170,4 +1181,43 @@
 .loading-dots span {
   background: var(--starlight-blue);
   box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Keep only essential animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes buttonGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(74, 144, 226, 0.5);
+  }
 } 
