@@ -100,13 +100,14 @@ const QuestionnairePage: React.FC = () => {
           return;
         }
         
-        const response = await api.post('/generate-factors', { 
+        const response = await api.post('/create-questionnaire', { 
           search_query: searchQuery.trim(),
           factors: state.factors
         });
 
-        if (response.data && Array.isArray(response.data.questions)) {
-          setQuestionnaire(response.data.questions);
+        if (response.data && response.data.questionnaire) {
+          const parsedQuestionnaire = parseQuestionnaire(response.data.questionnaire);
+          setQuestionnaire(parsedQuestionnaire);
           setShowQuestion(true);
         } else {
           console.error('Invalid response format:', response.data);
