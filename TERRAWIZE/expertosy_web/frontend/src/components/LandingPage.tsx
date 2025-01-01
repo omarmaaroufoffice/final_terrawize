@@ -75,7 +75,7 @@ const LandingPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8080/generate-factors', {
+      const response = await axios.post('PORT', {
         search_query: searchQuery
       });
 
