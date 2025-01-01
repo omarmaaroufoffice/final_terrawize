@@ -78,6 +78,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start server with a longer timeout
+console.log(`Starting server on port ${port}`);
 const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
 });
