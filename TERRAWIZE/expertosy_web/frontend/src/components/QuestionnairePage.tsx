@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../config/api';
 import RankingQuestionnaire from './RankingQuestionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import './QuestionnairePage.css';
@@ -91,54 +91,18 @@ const QuestionnairePage: React.FC = () => {
 
     const generateQuestionnaire = async () => {
       try {
-        if (!mounted) return;
-        
-        console.log('Generating questionnaire for:', state.searchQuery);
-        console.log('With factors:', state.factors);
-
-        const questionnaireResponse = await axios.post('http://localhost:8080/create-questionnaire', {
-          search_query: state.searchQuery,
-          factors: state.factors
-        }, {
-          timeout: 60000,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!mounted) return;
-
-        if (!questionnaireResponse.data?.questionnaire) {
-          throw new Error('No questionnaire data received from server');
+        setIsLoading(true);
+        setError(null);
+        const response = await api.post('/generate-factors', { query: searchQuery });
+        if (response.data && Array.isArray(response.data)) {
+          setQuestionnaire(response.data);
+          setShowQuestion(true);
         }
-
-        const parsedQuestionnaire = parseQuestionnaire(questionnaireResponse.data.questionnaire);
-
-        if (!parsedQuestionnaire || parsedQuestionnaire.length === 0) {
-          throw new Error('No questions were parsed from the response');
-        }
-
-        if (!mounted) return;
-        setQuestionnaire(parsedQuestionnaire);
+      } catch (err) {
+        console.error('Error generating questionnaire:', err);
+        setError('Failed to generate questionnaire. Please try again.');
+      } finally {
         setIsLoading(false);
-        setTimeout(() => setShowQuestion(true), 300);
-      } catch (error) {
-        if (!mounted) return;
-        
-        console.error('Error in generateQuestionnaire:', error);
-        
-        if (retryCount < 3) {
-          setRetryCount(prev => prev + 1);
-          setLoadingStage('Retrying... Please wait');
-          setTimeout(() => generateQuestionnaire(), 2000);
-        } else {
-          setIsLoading(false);
-          setError(
-            axios.isAxiosError(error)
-              ? `Network error: ${error.message}`
-              : 'Failed to generate questionnaire. Please try again.'
-          );
-        }
       }
     };
 
@@ -297,13 +261,9 @@ const QuestionnairePage: React.FC = () => {
       setLoadingStage('Generating primary list of candidates...');
       setIsLoading(true);
 
-      const response = await axios.post('http://localhost:8080/generate-recommendation', {
+      const response = await api.post('/generate-recommendation', {
         search_query: searchQuery,
         user_preferences: userAnswers
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
       });
 
       const recommendationLines = response.data.recommendation
