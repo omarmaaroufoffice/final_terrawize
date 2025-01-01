@@ -30,6 +30,24 @@ async def lifespan(app):
 # Create Flask app
 flask_app = Flask(__name__)
 
+# Configure CORS properly
+CORS(flask_app, 
+     resources={r"/*": {
+         "origins": [
+             "http://localhost:3000",
+             "http://localhost:8080",
+             "https://expertosy.com",
+             "https://www.expertosy.com",
+             "https://app.expertosy.com",
+             "https://api.expertosy.com"
+         ],
+         "methods": ["GET", "POST", "OPTIONS"],
+         "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+         "supports_credentials": True,
+         "expose_headers": ["Content-Range", "X-Content-Range"]
+     }},
+     supports_credentials=True)
+
 # Create FastAPI app with lifespan support
 fastapi_app = FastAPI(lifespan=lifespan)
 
@@ -44,13 +62,32 @@ async def dispatch_flask(request: Request, call_next):
         return await call_next(request)
     
     try:
+        # Add CORS headers to all responses
+        if request.method == "OPTIONS":
+            return JSONResponse(
+                content={},
+                headers={
+                    "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization, Access-Control-Allow-Credentials",
+                    "Access-Control-Allow-Credentials": "true",
+                    "Access-Control-Max-Age": "86400",
+                }
+            )
+        
         # Handle health check endpoint directly in FastAPI
         if path == "/health":
-            return JSONResponse(content={
-                "status": "healthy",
-                "service": "expertosy-backend",
-                "version": "1.0.0"
-            })
+            return JSONResponse(
+                content={
+                    "status": "healthy",
+                    "service": "expertosy-backend",
+                    "version": "1.0.0"
+                },
+                headers={
+                    "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                    "Access-Control-Allow-Credentials": "true"
+                }
+            )
         
         # For all other routes, use the Flask app
         scope = request.scope
@@ -109,11 +146,21 @@ async def dispatch_flask(request: Request, call_next):
                     body = json.loads(decoded_body)
                     return JSONResponse(
                         content=body,
-                        status_code=response_status[0]
+                        status_code=response_status[0],
+                        headers={
+                            "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                            "Access-Control-Allow-Credentials": "true"
+                        }
                     )
             except Exception as e:
                 logger.error(f"Error decoding JSON response: {e}")
                 pass
+        
+        # Add CORS headers to the response headers
+        response_headers.extend([
+            (b"Access-Control-Allow-Origin", request.headers.get("origin", "https://expertosy.com").encode()),
+            (b"Access-Control-Allow-Credentials", b"true")
+        ])
         
         return Response(
             content=body,
@@ -127,20 +174,15 @@ async def dispatch_flask(request: Request, call_next):
         logger.error(traceback.format_exc())
         return JSONResponse(
             status_code=500,
-            content={"error": str(e)}
+            content={"error": str(e)},
+            headers={
+                "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                "Access-Control-Allow-Credentials": "true"
+            }
         )
 
 # Use the FastAPI app as our main ASGI application
 asgi_app = fastapi_app
-
-CORS(flask_app, resources={r"/*": {"origins": [
-    "http://localhost:3000",
-    "http://localhost:8080",
-    "https://expertosy.com",
-    "https://www.expertosy.com",
-    "https://app.expertosy.com",
-    "https://api.expertosy.com"
-]}}, supports_credentials=True, allow_headers=["Content-Type", "Authorization"])
 
 @flask_app.route('/')
 def root():
