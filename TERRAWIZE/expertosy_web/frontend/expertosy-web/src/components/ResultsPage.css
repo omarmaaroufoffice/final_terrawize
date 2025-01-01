@@ -312,38 +312,123 @@
   }
 
   .results-container {
-    padding: 1.5rem;
+    padding: 1rem;
+    margin: 1rem;
   }
 
-  .results-header h1 {
-    font-size: 2rem;
-    padding: 0.5rem 2rem;
+  .results-header {
+    margin-bottom: 1.5rem;
   }
 
-  .results-header h1::before,
-  .results-header h1::after {
-    width: 40px;
+  .results-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
   }
 
-  .subtitle {
+  .results-subtitle {
     font-size: 1rem;
-    padding: 0.8rem 1.5rem;
   }
 
-  .recommendations-list {
+  .ranked-products {
     gap: 1rem;
   }
 
   .product-card {
-    padding: 1.5rem;
+    padding: 1rem;
+  }
+
+  .product-rank {
+    font-size: 1.2rem;
+    width: 30px;
+    height: 30px;
   }
 
   .product-name {
     font-size: 1.2rem;
+    margin-bottom: 0.5rem;
   }
 
   .product-price {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .product-explanation {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .advantages-list {
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .advantage-item {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .situational-benefits {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .action-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-page {
+    padding: 0.75rem;
+  }
+
+  .results-container {
+    padding: 0.75rem;
+    margin: 0.5rem;
+  }
+
+  .results-title {
+    font-size: 1.5rem;
+  }
+
+  .product-card {
+    padding: 0.75rem;
+  }
+
+  .product-name {
     font-size: 1.1rem;
+  }
+
+  .product-explanation {
+    font-size: 0.85rem;
+  }
+
+  .advantage-item {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  /* Improve touch targets */
+  .action-button {
+    min-height: 44px;
+  }
+}
+
+/* Handle notch devices */
+@supports (padding: max(0px)) {
+  .results-page {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 }
 
