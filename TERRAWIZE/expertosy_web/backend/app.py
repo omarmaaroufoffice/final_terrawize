@@ -24,7 +24,7 @@ CORS(app, resources={r"/*": {"origins": [
     "https://www.expertosy.com",
     "https://app.expertosy.com",
     "https://api.expertosy.com"
-]}}, supports_credentials=True)
+]}}, supports_credentials=True, allow_headers=["Content-Type", "Authorization"])
 
 @app.route('/')
 def root():
