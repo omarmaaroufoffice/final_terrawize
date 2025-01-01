@@ -41,7 +41,7 @@ class ExpertosyRecommendationEngine:
             },
             {
                 "role": "user",
-                "content": f"List {number_of_factors} unique and comprehensive factors for evaluating for what is most important to the user when choosing a {self.search_query}."
+                "content": f"List {number_of_factors} unique and exactly 2 factors for evaluating for what is most important to the user when choosing a {self.search_query}."
                 "Focus on the key differences between the different {self.search_query} and create factors that will help determine the best match for the user."
                 "Its basically the facotrs that you would think about when choosing a {self.search_query}."
                 "The factors should be in the form of a question that the user would ask themselves when choosing a {self.search_query}."
@@ -67,7 +67,7 @@ class ExpertosyRecommendationEngine:
             {
                 "role": "system",
                 "content": f"You are an expert at creating questionnaires for {self.search_query}. "
-                "Generate a comprehensive questionnaire with multiple-choice questions. "
+                "Generate exactly 2 questions for a questionnaire with multiple-choice questions. "
                 "Format each question with a clear text and 4 lettered options (A, B, C, D). "
                 "Include cost ranges or relevant details for each option when applicable."
             },
@@ -90,7 +90,7 @@ class ExpertosyRecommendationEngine:
         return questionnaire_text
 
     async def generate_recommendation(self, user_preferences: dict) -> str:
-        """Generate 10 product names and prices based on user preferences"""
+        """Generate 2 product names and prices based on user preferences"""
         try:
             preference_text = (
                 f"I am looking for a {self.search_query} with the following preferences:\n"
@@ -104,24 +104,24 @@ class ExpertosyRecommendationEngine:
                 {
                     "role": "system",
                     "content": (
-                        f"Based on all the user's answers, recommend by name and price only 10 {self.search_query}s "
+                        f"Based on all the user's answers, recommend by name and price only 2 {self.search_query}s "
                         "that would most likely fit this profile. Format each line as:\n"
                         "1. [Product Name] - $[Price]\n"
                         "2. [Product Name] - $[Price]\n"
-                        "... and so on until 10.\n"
+                        "... and so on until 2.\n"
                         "ONLY include the name and price. NO descriptions or additional details."
                     )
                 },
                 {
                     "role": "user",
                     "content": (
-                        f"Based on these preferences, list exactly 10 {self.search_query}s with ONLY their names and prices:\n\n"
+                        f"Based on these preferences, list exactly 2 {self.search_query}s with ONLY their names and prices:\n\n"
                         f"{preference_text}"
                     )
                 }
             ]
             
-            logger.info(f"Generating 10 product recommendations for {self.search_query}")
+            logger.info(f"Generating 2 product recommendations for {self.search_query}")
             logger.debug(f"User preferences: {preference_text}")
             
             response = await self._create_chat_completion(
@@ -173,7 +173,7 @@ class ExpertosyRecommendationEngine:
                     "role": "system",
                     "content": (
                         "You are an expert at creating questionnaires that help rank products based on trade-offs. "
-                        "Create exactly 5 multiple-choice questions that help understand user preferences regarding the key differences between these products.\n\n"
+                        "Create exactly 2 multiple-choice questions that help understand user preferences regarding the key differences between these products.\n\n"
                         "Format requirements:\n"
                         "1. Number each question as '1.', '2.', etc.\n"
                         "2. Each question MUST end with a question mark (?)\n"

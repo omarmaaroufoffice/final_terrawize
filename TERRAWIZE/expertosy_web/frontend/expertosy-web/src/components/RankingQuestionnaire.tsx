@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { motion, AnimatePresence } from 'framer-motion';
 import './RankingQuestionnaire.css';
 
 interface RankingQuestionnaireProps {
@@ -26,16 +27,27 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [showQuestion, setShowQuestion] = useState(false);
 
+  const pageVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 }
+  };
+
+  const questionVariants = {
+    enter: { x: 100, opacity: 0 },
+    center: { x: 0, opacity: 1 },
+    exit: { x: -100, opacity: 0 }
+  };
+
   useEffect(() => {
     let mounted = true;
     
-    // Enhanced loading stages for better UX
     const loadingStages = [
-      { text: 'Analyzing product specifications...', duration: 1000 },
-      { text: 'Comparing key features...', duration: 1000 },
-      { text: 'Identifying important trade-offs...', duration: 1000 },
-      { text: `Preparing ${products.length} questions for final ranking...`, duration: 1000 },
-      { text: 'Finalizing comparison criteria...', duration: 500 }
+      { text: '✨ Analyzing your preferences...', duration: 1000 },
+      { text: '🔍 Evaluating product matches...', duration: 1500 },
+      { text: '⚖️ Calculating optimal rankings...', duration: 1000 },
+      { text: '🎯 Fine-tuning recommendations...', duration: 1000 },
+      { text: '🌟 Preparing your personalized ranking...', duration: 500 }
     ];
 
     let currentProgress = 0;
@@ -164,14 +176,12 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
     const [name, price] = product.split(' - ');
     const number = name.split('.')[0];
     const productName = name.split('.')[1].trim();
+    const rotation = Math.random() * 6 - 3;
 
     return (
       <div 
         className="product-card"
-        style={{
-          animationDelay: `${index * 0.1}s`,
-          transform: `rotate(${Math.random() * 10 - 5}deg)`
-        }}
+        style={{ '--rotation': `${rotation}deg` } as any}
       >
         <div className="product-number">{number}</div>
         <h3 className="product-name">{productName}</h3>
@@ -182,29 +192,109 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
 
   if (isLoading) {
     return (
-      <div className="ranking-questionnaire loading">
-        <div className="loading-container" data-testid="loading-indicator">
-          <div className="loading-spinner"></div>
-          <div className="loading-stage">
-            <div className="loading-progress-bar">
-              <div className="progress" style={{ width: `${loadingProgress}%` }}></div>
+      <motion.div 
+        className="ranking-questionnaire"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
+        <div className="questionnaire-container">
+          <div className="space-background" />
+          <div className="loading-container">
+            <div className="loading-content">
+              <div className="loading-icon">
+                <div className="pulse-ring"></div>
+                <span className="icon" role="img" aria-label="star">🌟</span>
+              </div>
+              
+              <motion.h2
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {loadingStage}
+              </motion.h2>
+
+              <motion.div 
+                className="loading-progress-container"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <div className="loading-progress-bar">
+                  <motion.div 
+                    className="loading-progress-fill"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${loadingProgress}%` }}
+                    transition={{ duration: 0.5 }}
+                  />
+                </div>
+                <div className="loading-progress-text">
+                  <span>Analyzing...</span>
+                  <span>{loadingProgress}%</span>
+                </div>
+              </motion.div>
+
+              <motion.div 
+                className="loading-stage"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <p>
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    ✨ Crafting Your Perfect Ranking ✨
+                  </motion.span>
+                </p>
+              </motion.div>
             </div>
-            <p>{loadingStage}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   if (questionnaire.length === 0) {
     return (
-      <div className="ranking-questionnaire error">
-        <div className="error-container">
-          <span className="error-icon">⚠️</span>
-          <h2>Could not generate ranking questions</h2>
-          <p>We couldn't create comparison questions for these products.</p>
+      <motion.div 
+        className="ranking-questionnaire"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
+        <div className="questionnaire-container">
+          <div className="error-container">
+            <motion.span 
+              className="error-icon"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            >
+              ⚠️
+            </motion.span>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              Could not generate ranking questions
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              We couldn't create comparison questions for these products.
+            </motion.p>
+          </div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
@@ -213,7 +303,14 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   const remainingQuestions = questionnaire.length - (currentQuestionIndex + 1);
 
   return (
-    <div className="ranking-questionnaire">
+    <motion.div 
+      className="ranking-questionnaire"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageVariants}
+    >
+      <div className="space-stars" />
       <div className="products-background">
         <div className="products-grid left">
           {products.slice(0, 5).map((product, index) => (
@@ -232,14 +329,24 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
       </div>
 
       <div className="questionnaire-container">
-        <div className="questionnaire-header">
+        <motion.div 
+          className="questionnaire-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <h2>Help us rank these products for you</h2>
-          <p className="remaining-questions">
+          <motion.p 
+            className={`remaining-questions ${remainingQuestions === 0 ? 'final-question' : ''}`}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
             {remainingQuestions === 0 
-              ? "Last question to get your final ranking!" 
+              ? "Last question to get your final ranking! 🚀" 
               : `${remainingQuestions} question${remainingQuestions === 1 ? '' : 's'} left to get your final ranking`
             }
-          </p>
+          </motion.p>
           
           <div className="progress-container">
             <div className="progress-text">
@@ -247,32 +354,70 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
               <span>{Math.round(progress)}% Complete</span>
             </div>
             <div className="progress-bar">
-              <div 
+              <motion.div 
                 className="progress-fill"
-                style={{ width: `${progress}%` }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5 }}
               />
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className={`question-container ${showQuestion ? 'show' : ''}`}>
-          <div className="question-number">Question {currentQuestionIndex + 1}</div>
-          <h3 className="question-text">{currentQuestion.question}</h3>
-          
-          <div className="options-container">
-            {currentQuestion.options.map((option, index) => (
-              <button
-                key={index}
-                className="option-button"
-                onClick={() => handleOptionSelect(option.text)}
-              >
-                {option.text}
-              </button>
-            ))}
-          </div>
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={currentQuestionIndex}
+            className={`question-container ${showQuestion ? 'show' : ''}`}
+            variants={questionVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+          >
+            <div className="question-number">
+              Question {currentQuestionIndex + 1}
+            </div>
+            <h3 className="question-text">{currentQuestion.question}</h3>
+            
+            <div className="options-container">
+              {currentQuestion.options.map((option, index) => {
+                const isSelected = userAnswers[currentQuestion.question] === option.text;
+                const optionLabel = String.fromCharCode(65 + index);
+                
+                return (
+                  <motion.button
+                    key={index}
+                    className={`option-button ${isSelected ? 'selected' : ''}`}
+                    onClick={() => handleOptionSelect(option.text)}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="option-label">{optionLabel}</span>
+                    {option.text}
+                    {isSelected && (
+                      <motion.span 
+                        className="check-mark"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      >
+                        ✓
+                      </motion.span>
+                    )}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
