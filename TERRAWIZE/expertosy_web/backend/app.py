@@ -468,42 +468,45 @@ class ExpertosyRecommendationEngine:
                         "role": "system",
                         "content": (
                             "You are an expert at ranking products based on user preferences about trade-offs. "
-                            "Your task is to return a valid JSON array containing ranked products. "
-                            "For each product, provide:\n"
-                            "1. A clear explanation of why it was ranked in that position\n"
-                            "2. 2-3 key advantages of this product\n"
-                            "3. For products ranked 2nd and lower, explain specific situations where this product might be a better choice\n\n"
-                            "IMPORTANT: Your response must be a valid JSON array. Format each object exactly as shown:\n"
+                            "Return a JSON array of ranked products. Format your response EXACTLY like this example:\n"
                             "[\n"
                             "  {\n"
-                            "    \"name\": \"Product Name\",\n"
-                            "    \"price\": \"Price\",\n"
-                            "    \"explanation\": \"Why this product is ranked here\",\n"
-                            "    \"advantages\": [\"advantage1\", \"advantage2\", \"advantage3\"],\n"
-                            "    \"situationalBenefits\": \"When this might be a better choice\"\n"
+                            "    \"name\": \"Example Product 1\",\n"
+                            "    \"price\": \"$999\",\n"
+                            "    \"explanation\": \"Short explanation here\",\n"
+                            "    \"advantages\": [\"First advantage\", \"Second advantage\"],\n"
+                            "    \"situationalBenefits\": \"When this might be better\"\n"
+                            "  },\n"
+                            "  {\n"
+                            "    \"name\": \"Example Product 2\",\n"
+                            "    \"price\": \"$899\",\n"
+                            "    \"explanation\": \"Another explanation\",\n"
+                            "    \"advantages\": [\"Another advantage\", \"One more advantage\"],\n"
+                            "    \"situationalBenefits\": \"Different use case\"\n"
                             "  }\n"
                             "]\n\n"
-                            "Rules:\n"
-                            "1. Use ONLY double quotes for strings\n"
-                            "2. Include ALL required fields\n"
-                            "3. Ensure advantages is ALWAYS an array\n"
-                            "4. Do not include any text before or after the JSON array\n"
-                            "5. Keep explanations concise but informative"
+                            "CRITICAL FORMATTING RULES:\n"
+                            "1. Start with '[' and end with ']'\n"
+                            "2. Use ONLY double quotes, never single quotes\n"
+                            "3. Each object must have ALL five fields shown above\n"
+                            "4. Advantages must be an array with quoted strings\n"
+                            "5. Add comma after each object except the last one\n"
+                            "6. Do not add any text before or after the JSON array\n"
+                            "7. Keep all text on one line (no line breaks)"
                         )
                     },
                     {
                         "role": "user",
                         "content": (
-                            f"Based on these user preferences about trade-offs:\n\n{preferences_text}\n\n"
-                            f"Rank and explain these products:\n\n{products_text}\n\n"
-                            "Return ONLY a valid JSON array as specified, with no additional text."
+                            f"Rank these products based on the user's preferences:\n\n"
+                            f"Products:\n{products_text}\n\n"
+                            f"User's preferences:\n{preferences_text}\n\n"
+                            "Return ONLY a valid JSON array with the specified structure."
                         )
                     }
                 ]
                 
                 logger.info(f"Attempt {retry_count + 1} of {max_retries}")
-                logger.info(f"Parsed products: {parsed_products}")
-                logger.info(f"User preferences: {ranking_preferences}")
                 
                 response = await self._create_chat_completion(
                     model="gpt-4o-mini",
@@ -511,71 +514,64 @@ class ExpertosyRecommendationEngine:
                     messages=messages
                 )
                 
+                response_text = response.choices[0].message.content.strip()
+                logger.info(f"Raw response from OpenAI: {response_text}")
+                
+                # Clean up the response text
+                response_text = response_text.replace("```json", "").replace("```", "").strip()
+                response_text = response_text.replace("'", '"')
+                response_text = response_text.replace("\n", " ")
+                response_text = response_text.replace('""', '"')
+                
+                # Ensure arrays are properly formatted
+                response_text = response_text.replace('["', '["')
+                response_text = response_text.replace('"]', '"]')
+                response_text = response_text.replace('" ,', '",')
+                response_text = response_text.replace(' ,', ',')
+                
+                # Fix common JSON formatting issues
+                response_text = response_text.replace('",]', '"]')
+                response_text = response_text.replace('",}', '"}')
+                response_text = response_text.replace('\\"}', '"}')
+                response_text = response_text.replace('"{', '{')
+                response_text = response_text.replace('}"', '}')
+                
+                # Try to parse the JSON
                 try:
-                    # Parse the response as JSON
-                    import json
-                    response_text = response.choices[0].message.content.strip()
-                    logger.info(f"Raw response from OpenAI: {response_text}")
-                    
-                    # Remove any potential markdown code block syntax
-                    response_text = response_text.replace("```json", "").replace("```", "").strip()
-                    
-                    # Try to fix common JSON formatting issues
-                    response_text = response_text.replace("'", '"')
-                    response_text = response_text.replace("\n", " ")
-                    
-                    # Try to find the JSON array if there's additional text
-                    import re
-                    json_match = re.search(r'\[.*\]', response_text)
-                    if json_match:
-                        response_text = json_match.group(0)
-                    
                     ranked_products = json.loads(response_text)
                     
+                    # Validate the structure
                     if not isinstance(ranked_products, list):
                         raise ValueError("Response is not a JSON array")
                     
                     if len(ranked_products) != len(parsed_products):
                         raise ValueError(f"Expected {len(parsed_products)} products, got {len(ranked_products)}")
                     
-                    # Validate the structure of each product
-                    for i, product in enumerate(ranked_products):
-                        if not isinstance(product, dict):
-                            raise ValueError(f"Product {i} is not a JSON object")
-                        
-                        required_fields = ["name", "price", "explanation", "advantages"]
-                        for field in required_fields:
-                            if field not in product:
-                                raise ValueError(f"Product {i} missing required field: {field}")
-                            if not isinstance(product[field], (str, list)):
-                                raise ValueError(f"Product {i} field {field} has invalid type")
-                        
+                    # Validate each product
+                    for product in ranked_products:
+                        if not all(key in product for key in ["name", "price", "explanation", "advantages", "situationalBenefits"]):
+                            raise ValueError("Missing required fields in product")
                         if not isinstance(product["advantages"], list):
-                            product["advantages"] = [product["advantages"]]
-                        
-                        # Ensure all products are in the response
-                        if not any(p["name"] in product["name"] for p in parsed_products):
-                            raise ValueError(f"Product {i} does not match any input products")
-                    
-                    # Log the successfully parsed and validated products
-                    logger.info(f"Successfully ranked products: {json.dumps(ranked_products, indent=2)}")
+                            raise ValueError("Advantages must be an array")
                     
                     return ranked_products
                     
-                except (json.JSONDecodeError, ValueError) as e:
-                    logger.error(f"Validation error on attempt {retry_count + 1}: {str(e)}")
-                    logger.error(f"Response text: {response_text}")
+                except json.JSONDecodeError as e:
+                    logger.error(f"JSON decode error: {str(e)}")
+                    logger.error(f"Position: {e.pos}")
+                    logger.error(f"Line: {e.lineno}, Column: {e.colno}")
+                    logger.error(f"Document: {e.doc}")
                     retry_count += 1
-                    if retry_count >= max_retries:
-                        raise Exception(f"Failed to get valid response after {max_retries} attempts: {str(e)}")
                     continue
                 
             except Exception as e:
-                logger.error(f"Error on attempt {retry_count + 1}: {str(e)}")
+                logger.error(f"Error in rank_products: {str(e)}")
                 retry_count += 1
                 if retry_count >= max_retries:
                     raise Exception(f"Failed to rank products after {max_retries} attempts: {str(e)}")
                 continue
+        
+        raise Exception("Failed to get valid response after maximum retries")
 
 def get_affiliate_link(product_name):
     """Get affiliate link for a product if available."""
@@ -820,4 +816,4 @@ def create_app():
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8080))
-    app.run(host='0.0.0.0', port=port) 
+    flask_app.run(host='0.0.0.0', port=port) 
