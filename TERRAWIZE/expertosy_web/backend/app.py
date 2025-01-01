@@ -11,7 +11,8 @@ from openai import OpenAI
 import traceback
 import httpx
 from asgiref.wsgi import WsgiToAsgi
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from starlette.responses import JSONResponse, Response
 from contextlib import asynccontextmanager
 
 load_dotenv()
@@ -26,23 +27,71 @@ async def lifespan(app):
     yield
     logger.info("Shutting down application...")
 
-# Create FastAPI app with lifespan support
-fastapi_app = FastAPI(lifespan=lifespan)
-
 # Create Flask app
 flask_app = Flask(__name__)
+
+# Create FastAPI app with lifespan support
+fastapi_app = FastAPI(lifespan=lifespan)
 
 # Convert Flask app to ASGI
 wsgi_app = WsgiToAsgi(flask_app)
 
 # Mount Flask app under FastAPI
 @fastapi_app.middleware("http")
-async def dispatch_flask(request, call_next):
-    if request.url.path.startswith("/docs") or request.url.path.startswith("/openapi"):
-        response = await call_next(request)
-    else:
-        response = await wsgi_app(request.scope, request.receive, request.send)
-    return response
+async def dispatch_flask(request: Request, call_next):
+    path = request.url.path
+    if path.startswith("/docs") or path.startswith("/openapi"):
+        return await call_next(request)
+    
+    try:
+        # Handle health check endpoint directly in FastAPI
+        if path == "/health":
+            return JSONResponse(content={
+                "status": "healthy",
+                "service": "expertosy-backend",
+                "version": "1.0.0"
+            })
+        
+        # For all other routes, use the Flask app
+        scope = request.scope
+        scope["type"] = "http"
+        
+        # Create a response buffer
+        response_body = []
+        response_headers = []
+        response_status = [200]
+        
+        async def receive():
+            body = await request.body()
+            return {
+                "type": "http.request",
+                "body": body,
+                "more_body": False
+            }
+        
+        async def send(message):
+            if message["type"] == "http.response.start":
+                response_status[0] = message["status"]
+                response_headers.extend(message.get("headers", []))
+            elif message["type"] == "http.response.body":
+                response_body.append(message.get("body", b""))
+        
+        await wsgi_app(scope, receive, send)
+        
+        # Combine all response parts
+        body = b"".join(response_body)
+        return Response(
+            content=body,
+            status_code=response_status[0],
+            headers=dict(response_headers)
+        )
+        
+    except Exception as e:
+        logger.error(f"Error in dispatch_flask: {e}")
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e)}
+        )
 
 # Use the FastAPI app as our main ASGI application
 asgi_app = fastapi_app
