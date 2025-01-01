@@ -80,7 +80,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
           return;
         }
 
-        const response = await axios.post('http://localhost:5001/generate-ranking-questionnaire', {
+        const response = await axios.post('http://localhost:8080/generate-ranking-questionnaire', {
           products,
           search_query: searchQuery,
           previous_questions: previousQuestions
@@ -172,7 +172,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
       setIsLoading(true);
       setLoadingStage('Finalizing your personalized ranking...');
 
-      const response = await axios.post('http://localhost:5001/rank-products', {
+      const response = await axios.post('http://localhost:8080/rank-products', {
         products,
         ranking_preferences: userAnswers,
         search_query: searchQuery

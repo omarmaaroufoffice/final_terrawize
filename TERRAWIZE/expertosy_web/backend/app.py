@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:5001"]}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "http://localhost:8080"]}}, supports_credentials=True)
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
@@ -633,4 +633,4 @@ def create_app():
     return app
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True) 
+    app.run(host='0.0.0.0', port=8080, debug=True) 

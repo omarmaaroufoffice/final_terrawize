@@ -96,7 +96,7 @@ const QuestionnairePage: React.FC = () => {
         console.log('Generating questionnaire for:', state.searchQuery);
         console.log('With factors:', state.factors);
 
-        const questionnaireResponse = await axios.post('http://localhost:5001/create-questionnaire', {
+        const questionnaireResponse = await axios.post('http://localhost:8080/create-questionnaire', {
           search_query: state.searchQuery,
           factors: state.factors
         }, {
@@ -297,7 +297,7 @@ const QuestionnairePage: React.FC = () => {
       setLoadingStage('Generating primary list of candidates...');
       setIsLoading(true);
 
-      const response = await axios.post('http://localhost:5001/generate-recommendation', {
+      const response = await axios.post('http://localhost:8080/generate-recommendation', {
         search_query: searchQuery,
         user_preferences: userAnswers
       }, {
