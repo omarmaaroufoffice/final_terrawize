@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../config/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import './RankingQuestionnaire.css';
 
@@ -80,7 +80,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
           return;
         }
 
-        const response = await axios.post('http://localhost:8080/generate-ranking-questionnaire', {
+        const response = await api.post('/generate-ranking-questionnaire', {
           products,
           search_query: searchQuery,
           previous_questions: previousQuestions
@@ -172,7 +172,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
       setIsLoading(true);
       setLoadingStage('Finalizing your personalized ranking...');
 
-      const response = await axios.post('http://localhost:8080/rank-products', {
+      const response = await api.post('/rank-products', {
         products,
         ranking_preferences: userAnswers,
         search_query: searchQuery
