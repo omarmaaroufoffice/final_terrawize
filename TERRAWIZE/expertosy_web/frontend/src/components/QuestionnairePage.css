@@ -1000,4 +1000,45 @@
   .product-price {
     font-size: 1rem;
   }
+}
+
+.continue-button {
+  margin: 1rem auto 2rem;
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  background: linear-gradient(45deg, var(--starlight-blue), var(--nova-gold));
+  border: none;
+  border-radius: 30px;
+  color: var(--space-dark);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+  width: fit-content;
+  min-width: 300px;
+  transition: all 0.3s ease;
+}
+
+.continue-button:hover {
+  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.5);
+  transform: translateY(-2px);
+}
+
+.continue-button .button-icon {
+  font-size: 1.4rem;
+  transition: transform 0.3s ease;
+}
+
+.continue-button:hover .button-icon {
+  transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+  .continue-button {
+    font-size: 1.1rem;
+    padding: 0.8rem 1.5rem;
+    min-width: 250px;
+  }
 } 

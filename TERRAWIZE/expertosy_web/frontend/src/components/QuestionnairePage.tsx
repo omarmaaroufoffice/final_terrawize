@@ -437,6 +437,22 @@ const QuestionnairePage: React.FC = () => {
             </motion.h2>
           </div>
           
+          <motion.button
+            className="nav-button next continue-button"
+            onClick={() => {
+              setShowInitialRecommendations(false);
+              setShowRankingQuestionnaire(true);
+            }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            Continue to Detailed Ranking
+            <span className="button-icon">→</span>
+          </motion.button>
+
           <motion.div 
             className="recommendations-list"
             initial={{ opacity: 0 }}
@@ -459,22 +475,6 @@ const QuestionnairePage: React.FC = () => {
               );
             })}
           </motion.div>
-
-          <motion.button
-            className="nav-button next"
-            onClick={() => {
-              setShowInitialRecommendations(false);
-              setShowRankingQuestionnaire(true);
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Continue to Detailed Ranking
-            <span className="button-icon">→</span>
-          </motion.button>
         </div>
       </motion.div>
     );
