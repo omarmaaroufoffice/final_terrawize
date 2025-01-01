@@ -11,14 +11,25 @@ from openai import OpenAI
 import traceback
 import httpx
 from asgiref.wsgi import WsgiToAsgi
+from contextlib import asynccontextmanager
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app):
+    """Async context manager for lifespan management"""
+    # Startup
+    logger.info("Starting up application...")
+    yield
+    # Shutdown
+    logger.info("Shutting down application...")
+
 app = Flask(__name__)
-asgi_app = WsgiToAsgi(app)  # Convert WSGI app to ASGI
+# Convert WSGI app to ASGI with lifespan support
+asgi_app = WsgiToAsgi(app, lifespan=lifespan)
 
 CORS(app, resources={r"/*": {"origins": [
     "http://localhost:3000",
