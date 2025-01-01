@@ -12,7 +12,12 @@ app.use(compression());
 
 // Enable CORS
 app.use(cors({
-  origin: ['https://expertosy.com', 'https://www.expertosy.com', 'http://localhost:3000'],
+  origin: [
+    'https://expertosy.com',
+    'https://www.expertosy.com',
+    'https://app.expertosy.com',
+    'http://localhost:3000'
+  ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
