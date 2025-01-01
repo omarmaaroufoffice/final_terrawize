@@ -541,7 +541,7 @@ const QuestionnairePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Personalizing recommendations for You
+            Personalizing
           </motion.h2>
         </div>
         
