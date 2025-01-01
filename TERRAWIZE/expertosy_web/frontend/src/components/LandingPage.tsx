@@ -133,8 +133,6 @@ const LandingPage: React.FC = () => {
         <div className="hero-content">
           <div className="title-container">
             <h1 className="main-title">
-              <span className="title-line">Discover</span>
-              <span className="title-line">Your Perfect</span>
               <span className="title-line highlight">Expertosy Match</span>
             </h1>
             <div className="subtitle-container">
