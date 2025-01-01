@@ -41,5 +41,4 @@ CMD ["uvicorn", "app:asgi_app", \
      "--workers", "4", \
      "--log-level", "info", \
      "--loop", "auto", \
-     "--http", "h11", \
-     "--lifespan", "on"]
+     "--http", "h11"]

@@ -11,28 +11,43 @@ from openai import OpenAI
 import traceback
 import httpx
 from asgiref.wsgi import WsgiToAsgi
-from starlette.middleware.lifespan import LifespanMiddleware
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__)
-# Convert WSGI app to ASGI
-asgi_app = WsgiToAsgi(app)
-
-# Add lifespan middleware
+@asynccontextmanager
 async def lifespan(app):
     """Lifespan context for the application"""
     logger.info("Starting up application...")
     yield
     logger.info("Shutting down application...")
 
-# Wrap the ASGI app with lifespan support
-asgi_app = LifespanMiddleware(asgi_app, lifespan)
+# Create FastAPI app with lifespan support
+fastapi_app = FastAPI(lifespan=lifespan)
 
-CORS(app, resources={r"/*": {"origins": [
+# Create Flask app
+flask_app = Flask(__name__)
+
+# Convert Flask app to ASGI
+wsgi_app = WsgiToAsgi(flask_app)
+
+# Mount Flask app under FastAPI
+@fastapi_app.middleware("http")
+async def dispatch_flask(request, call_next):
+    if request.url.path.startswith("/docs") or request.url.path.startswith("/openapi"):
+        response = await call_next(request)
+    else:
+        response = await wsgi_app(request.scope, request.receive, request.send)
+    return response
+
+# Use the FastAPI app as our main ASGI application
+asgi_app = fastapi_app
+
+CORS(flask_app, resources={r"/*": {"origins": [
     "http://localhost:3000",
     "http://localhost:8080",
     "https://expertosy.com",
@@ -41,7 +56,7 @@ CORS(app, resources={r"/*": {"origins": [
     "https://api.expertosy.com"
 ]}}, supports_credentials=True, allow_headers=["Content-Type", "Authorization"])
 
-@app.route('/')
+@flask_app.route('/')
 def root():
     """Root endpoint for health checks"""
     return jsonify({
@@ -50,7 +65,7 @@ def root():
         "version": "1.0.0"
     })
 
-@app.route('/health')
+@flask_app.route('/health')
 def health_check():
     """Health check endpoint"""
     return jsonify({
@@ -473,7 +488,7 @@ def rank_products(products, user_preferences):
         traceback.print_exc()
         return jsonify({"success": False, "error": str(e)}), 500
 
-@app.route('/generate-factors', methods=['POST', 'OPTIONS'])
+@flask_app.route('/generate-factors', methods=['POST', 'OPTIONS'])
 async def generate_factors_route():
     """API endpoint to generate factors for a given search query"""
     if request.method == 'OPTIONS':
@@ -493,7 +508,7 @@ async def generate_factors_route():
         logger.error(f"Error generating factors: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/create-questionnaire', methods=['POST', 'OPTIONS'])
+@flask_app.route('/create-questionnaire', methods=['POST', 'OPTIONS'])
 async def create_questionnaire_route():
     """API endpoint to create a questionnaire based on factors"""
     if request.method == 'OPTIONS':
@@ -519,7 +534,7 @@ async def create_questionnaire_route():
         logger.error(f"Traceback: {traceback.format_exc()}")
         return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 500
 
-@app.route('/generate-recommendation', methods=['POST', 'OPTIONS'])
+@flask_app.route('/generate-recommendation', methods=['POST', 'OPTIONS'])
 async def generate_recommendation_route():
     """API endpoint to generate a recommendation based on user preferences"""
     if request.method == 'OPTIONS':
@@ -540,7 +555,7 @@ async def generate_recommendation_route():
         logger.error(f"Error generating recommendation: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/generate-ranking-questionnaire', methods=['POST', 'OPTIONS'])
+@flask_app.route('/generate-ranking-questionnaire', methods=['POST', 'OPTIONS'])
 async def generate_ranking_questionnaire_route():
     """API endpoint to generate a questionnaire for ranking products"""
     if request.method == 'OPTIONS':
@@ -561,7 +576,7 @@ async def generate_ranking_questionnaire_route():
         logger.error(f"Error generating ranking questionnaire: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/rank-products', methods=['POST', 'OPTIONS'])
+@flask_app.route('/rank-products', methods=['POST', 'OPTIONS'])
 async def rank_products_route():
     """API endpoint to rank products based on trade-off preferences"""
     if request.method == 'OPTIONS':
@@ -582,7 +597,7 @@ async def rank_products_route():
         logger.error(f"Error ranking products: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/test-ranking', methods=['GET'])
+@flask_app.route('/test-ranking', methods=['GET'])
 async def test_ranking_route():
     """Test endpoint to verify ranking functionality with multiple scenarios"""
     try:
@@ -673,7 +688,7 @@ async def test_ranking_route():
 
 def create_app():
     """Application factory for Flask"""
-    return app
+    return flask_app
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 8080))
