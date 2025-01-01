@@ -11,25 +11,26 @@ from openai import OpenAI
 import traceback
 import httpx
 from asgiref.wsgi import WsgiToAsgi
-from contextlib import asynccontextmanager
+from starlette.middleware.lifespan import LifespanMiddleware
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-@asynccontextmanager
+app = Flask(__name__)
+# Convert WSGI app to ASGI
+asgi_app = WsgiToAsgi(app)
+
+# Add lifespan middleware
 async def lifespan(app):
-    """Async context manager for lifespan management"""
-    # Startup
+    """Lifespan context for the application"""
     logger.info("Starting up application...")
     yield
-    # Shutdown
     logger.info("Shutting down application...")
 
-app = Flask(__name__)
-# Convert WSGI app to ASGI with lifespan support
-asgi_app = WsgiToAsgi(app, lifespan=lifespan)
+# Wrap the ASGI app with lifespan support
+asgi_app = LifespanMiddleware(asgi_app, lifespan)
 
 CORS(app, resources={r"/*": {"origins": [
     "http://localhost:3000",
