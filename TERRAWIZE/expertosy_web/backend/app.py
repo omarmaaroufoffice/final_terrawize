@@ -10,6 +10,7 @@ from flask_cors import CORS
 from openai import OpenAI
 import traceback
 import httpx
+from asgiref.wsgi import WsgiToAsgi
 
 load_dotenv()
 
@@ -17,6 +18,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+asgi_app = WsgiToAsgi(app)  # Convert WSGI app to ASGI
+
 CORS(app, resources={r"/*": {"origins": [
     "http://localhost:3000",
     "http://localhost:8080",

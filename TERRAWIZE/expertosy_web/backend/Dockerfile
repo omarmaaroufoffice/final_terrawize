@@ -5,6 +5,7 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements and install Python dependencies
@@ -18,7 +19,6 @@ COPY . .
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
-ENV GUNICORN_CMD_ARGS="--access-logfile=- --error-logfile=- --log-level=info"
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
@@ -27,14 +27,5 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
 # Expose the port the app runs on
 EXPOSE 8080
 
-# Use gunicorn as the production server with gevent worker
-CMD gunicorn --bind "0.0.0.0:8080" \
-    --workers 4 \
-    --worker-class gevent \
-    --timeout 120 \
-    --keep-alive 65 \
-    --log-file=- \
-    --access-logfile=- \
-    --error-logfile=- \
-    --log-level=info \
-    app:app
+# Use uvicorn as the production server
+CMD ["uvicorn", "app:asgi_app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4", "--log-level", "info"]
