@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../config/api';
 import { motion, AnimatePresence } from 'framer-motion';
+import { RankingQuestion } from '../types';
 import './RankingQuestionnaire.css';
 
 interface RankingQuestionnaireProps {
@@ -8,11 +9,6 @@ interface RankingQuestionnaireProps {
   searchQuery: string;
   onRankingComplete: (rankedProducts: string[]) => void;
   previousQuestions?: string[];
-}
-
-interface Question {
-  question: string;
-  options: { text: string }[];
 }
 
 const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
@@ -24,7 +20,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingStage, setLoadingStage] = useState('');
-  const [questionnaire, setQuestionnaire] = useState<Question[]>([]);
+  const [questionnaire, setQuestionnaire] = useState<RankingQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [showQuestion, setShowQuestion] = useState(false);
@@ -106,8 +102,8 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
     };
   }, [products, searchQuery, previousQuestions]);
 
-  const parseQuestionnaire = (text: string): Question[] => {
-    const questions: Question[] = [];
+  const parseQuestionnaire = (text: string): RankingQuestion[] => {
+    const questions: RankingQuestion[] = [];
     console.log('Raw questionnaire text:', text); // Debug log
 
     // Split by question numbers (1., 2., etc.)

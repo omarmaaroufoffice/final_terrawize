@@ -96,10 +96,17 @@ const QuestionnairePage: React.FC = () => {
         
         // Use the factors from state instead of making another API call
         if (state.factors && Array.isArray(state.factors)) {
-          // Transform factors into Question objects
+          // Transform factors into Question objects with default options
           const questions = state.factors.map(factor => ({
             question: factor,
-            options: [] // Options will be populated later
+            options: [
+              { text: 'Very Important', description: 'This factor is crucial to my decision', icon: '⭐⭐⭐' },
+              { text: 'Important', description: 'This factor matters significantly', icon: '⭐⭐' },
+              { text: 'Somewhat Important', description: 'This factor is worth considering', icon: '⭐' },
+              { text: 'Not Important', description: 'This factor is not a priority', icon: '✖️' }
+            ],
+            category: getCategoryFromQuestion(factor),
+            helpText: generateHelpText(factor)
           }));
           setQuestionnaire(questions);
           setShowQuestion(true);
