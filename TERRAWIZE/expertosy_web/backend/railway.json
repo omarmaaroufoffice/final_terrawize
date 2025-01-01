@@ -12,7 +12,7 @@
     "healthcheckInterval": 30,
     "healthcheckRetries": 3,
     "numReplicas": 1,
-    "startCommand": "gunicorn --bind \"0.0.0.0::-8080}\" --workers 4 --timeout 120 --log-file - app:app",
+    "startCommand": "gunicorn --bind \"0.0.0.0:${PORT:-8080}\" --workers 4 --timeout 120 --log-file - app:app",
     "envs": {
       "FLASK_ENV": "production",
       "PYTHONUNBUFFERED": "1"
