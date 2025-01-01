@@ -94,29 +94,21 @@ const QuestionnairePage: React.FC = () => {
         setIsLoading(true);
         setError(null);
         
-        // Use the factors from state instead of making another API call
-        if (state.factors && Array.isArray(state.factors)) {
-          // Transform factors into Question objects with default options
-          const questions = state.factors.map(factor => ({
-            question: factor,
-            options: [
-              { text: 'Very Important', description: 'This factor is crucial to my decision', icon: '⭐⭐⭐' },
-              { text: 'Important', description: 'This factor matters significantly', icon: '⭐⭐' },
-              { text: 'Somewhat Important', description: 'This factor is worth considering', icon: '⭐' },
-              { text: 'Not Important', description: 'This factor is not a priority', icon: '✖️' }
-            ],
-            category: getCategoryFromQuestion(factor),
-            helpText: generateHelpText(factor)
-          }));
-          setQuestionnaire(questions);
+        const response = await api.post('/generate-factors', { 
+          search_query: searchQuery,
+          factors: state.factors
+        });
+
+        if (response.data && Array.isArray(response.data.questions)) {
+          setQuestionnaire(response.data.questions);
           setShowQuestion(true);
         } else {
-          console.error('Invalid factors format:', state.factors);
-          setError('Received invalid factors format. Please try again.');
+          console.error('Invalid response format:', response.data);
+          setError('Received invalid response format from server. Please try again.');
         }
       } catch (err) {
-        console.error('Error setting up questionnaire:', err);
-        setError('Failed to set up questionnaire. Please try again.');
+        console.error('Error generating questionnaire:', err);
+        setError('Failed to generate questionnaire. Please try again.');
       } finally {
         setIsLoading(false);
       }
