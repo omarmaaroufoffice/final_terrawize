@@ -1,11 +1,10 @@
 import React from 'react';
-import Logo from './Logo';
 import './Navigation.css';
 
 const Navigation: React.FC = () => {
   return (
     <nav className="navigation">
-      <Logo />
+      {/* Empty navigation bar with just the logo */}
     </nav>
   );
 };
