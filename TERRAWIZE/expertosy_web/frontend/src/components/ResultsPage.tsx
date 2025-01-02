@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './ResultsPage.css';
+import Navigation from './shared/Navigation';
 
 interface ProductExplanation {
   name: string;
@@ -179,14 +180,8 @@ const ResultsPage: React.FC = () => {
   }
 
   return (
-    <motion.div 
-      className="results-page"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
-    >
-      <div className="space-stars" />
+    <div className="results-page">
+      <Navigation />
       <motion.div 
         className="results-container"
         variants={containerVariants}
@@ -295,7 +290,7 @@ const ResultsPage: React.FC = () => {
           <Link to="/" className="back-button">Start New Search</Link>
         </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

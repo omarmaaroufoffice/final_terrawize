@@ -5,6 +5,7 @@ import { getLocationFromIP } from '../services/locationService';
 import RankingQuestionnaire from './RankingQuestionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import './QuestionnairePage.css';
+import Navigation from './shared/Navigation';
 
 interface ProductExplanation {
   name: string;
@@ -535,13 +536,8 @@ const QuestionnairePage: React.FC = () => {
   const progress = ((currentQuestionIndex + 1) / questionnaire.length) * 100;
 
   return (
-    <motion.div 
-      className="questionnaire-page"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
-    >
+    <div className="questionnaire-page">
+      <Navigation />
       <div className="questionnaire-container">
         <div className="progress-indicator">
           <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
@@ -645,7 +641,7 @@ const QuestionnairePage: React.FC = () => {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

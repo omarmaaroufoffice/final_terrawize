@@ -1,13 +1,8 @@
 .questionnaire-page {
   min-height: 100vh;
-  padding: 1rem;
-  padding-top: calc(var(--nav-height) + 1rem);
-  background: var(--background-dark);
-  color: var(--text-primary);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  box-sizing: border-box;
+  padding: 2rem 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .questionnaire-container {
@@ -803,33 +798,6 @@
   }
 }
 
-/* Space Background Effect */
-.space-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(1px 1px at 20px 30px, var(--starlight-blue) 50%, transparent 100%),
-    radial-gradient(1px 1px at 40px 70px, var(--nova-gold) 50%, transparent 100%),
-    radial-gradient(1px 1px at 50px 160px, var(--starlight-blue) 50%, transparent 100%),
-    radial-gradient(1px 1px at 90px 40px, var(--nova-gold) 50%, transparent 100%),
-    radial-gradient(1px 1px at 130px 80px, var(--starlight-blue) 50%, transparent 100%);
-  background-repeat: repeat;
-  animation: spaceDrift 60s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes spaceDrift {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 200px 200px;
-  }
-}
-
 /* Error State */
 .error-container {
   text-align: center;
@@ -1247,4 +1215,13 @@
     letter-spacing: 0.2px;
     margin-bottom: 0.5rem;
   }
+}
+
+/* Remove space background section */
+.space-background {
+  display: none;
+}
+
+.space-stars {
+  display: none;
 } 
