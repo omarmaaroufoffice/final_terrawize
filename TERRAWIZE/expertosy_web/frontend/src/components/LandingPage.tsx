@@ -29,7 +29,17 @@ const LandingPage: React.FC = () => {
       name: 'Laptops', 
       icon: (
         <div className="custom-icon">
-          <div className="icon-laptop" />
+          <div className="icon-laptop">
+            <div className="icon-laptop-screen">
+              <div className="icon-laptop-glow"></div>
+            </div>
+            <div className="icon-laptop-base"></div>
+            <div className="icon-laptop-keyboard">
+              <div className="icon-laptop-key"></div>
+              <div className="icon-laptop-key"></div>
+              <div className="icon-laptop-key"></div>
+            </div>
+          </div>
         </div>
       )
     },
@@ -37,7 +47,13 @@ const LandingPage: React.FC = () => {
       name: 'Smartphones', 
       icon: (
         <div className="custom-icon">
-          <div className="icon-phone" />
+          <div className="icon-phone">
+            <div className="icon-phone-screen">
+              <div className="icon-phone-glow"></div>
+            </div>
+            <div className="icon-phone-button"></div>
+            <div className="icon-phone-camera"></div>
+          </div>
         </div>
       )
     },
@@ -45,7 +61,15 @@ const LandingPage: React.FC = () => {
       name: 'Cameras', 
       icon: (
         <div className="custom-icon">
-          <div className="icon-camera" />
+          <div className="icon-camera">
+            <div className="icon-camera-body">
+              <div className="icon-camera-lens">
+                <div className="icon-camera-aperture"></div>
+              </div>
+              <div className="icon-camera-flash"></div>
+            </div>
+            <div className="icon-camera-grip"></div>
+          </div>
         </div>
       )
     },
@@ -53,7 +77,16 @@ const LandingPage: React.FC = () => {
       name: 'Smart Watches', 
       icon: (
         <div className="custom-icon">
-          <div className="icon-watch" />
+          <div className="icon-watch">
+            <div className="icon-watch-face">
+              <div className="icon-watch-screen">
+                <div className="icon-watch-glow"></div>
+              </div>
+              <div className="icon-watch-button"></div>
+            </div>
+            <div className="icon-watch-band-top"></div>
+            <div className="icon-watch-band-bottom"></div>
+          </div>
         </div>
       )
     }
@@ -411,7 +444,15 @@ const LandingPage: React.FC = () => {
               <div className="step-icon">
                 <div className="custom-icon">
                   <div className="icon-input">
-                    <div className="icon-input-cursor" />
+                    <div className="icon-input-frame">
+                      <div className="icon-input-glow"></div>
+                    </div>
+                    <div className="icon-input-cursor"></div>
+                    <div className="icon-input-particles">
+                      <div className="icon-input-particle"></div>
+                      <div className="icon-input-particle"></div>
+                      <div className="icon-input-particle"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -427,7 +468,18 @@ const LandingPage: React.FC = () => {
               <div className="step-icon">
                 <div className="custom-icon">
                   <div className="icon-questions">
-                    <div className="icon-questions-dots" />
+                    <div className="icon-questions-orbit">
+                      <div className="icon-questions-dot"></div>
+                      <div className="icon-questions-dot"></div>
+                      <div className="icon-questions-dot"></div>
+                      <div className="icon-questions-dot"></div>
+                    </div>
+                    <div className="icon-questions-center"></div>
+                    <div className="icon-questions-rings">
+                      <div className="icon-questions-ring"></div>
+                      <div className="icon-questions-ring"></div>
+                      <div className="icon-questions-ring"></div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -443,7 +495,16 @@ const LandingPage: React.FC = () => {
               <div className="step-icon">
                 <div className="custom-icon">
                   <div className="icon-match">
-                    <div className="icon-match-check" />
+                    <div className="icon-match-circle">
+                      <div className="icon-match-glow"></div>
+                    </div>
+                    <div className="icon-match-check"></div>
+                    <div className="icon-match-particles">
+                      <div className="icon-match-particle"></div>
+                      <div className="icon-match-particle"></div>
+                      <div className="icon-match-particle"></div>
+                      <div className="icon-match-particle"></div>
+                    </div>
                   </div>
                 </div>
               </div>
