@@ -1566,10 +1566,10 @@
 .icon-headphone::before {
   content: '';
   position: absolute;
-  top: 4px;
+  top: 6px;
   left: 4px;
   right: 4px;
-  height: 12px;
+  height: 10px;
   border: 2px solid currentColor;
   border-radius: 12px 12px 0 0;
 }
