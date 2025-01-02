@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../config/api';
+import { getLocationFromIP } from '../services/locationService';
 import RankingQuestionnaire from './RankingQuestionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import './QuestionnairePage.css';
@@ -46,6 +47,7 @@ const QuestionnairePage: React.FC = () => {
   const [currentStage, setCurrentStage] = useState('analyzing');
   const [recommendedProducts, setRecommendedProducts] = useState<string[]>([]);
   const [showInitialRecommendations, setShowInitialRecommendations] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ country: string; city: string; region: string } | null>(null);
 
   // Animation variants for framer-motion
   const pageVariants = {
@@ -59,6 +61,19 @@ const QuestionnairePage: React.FC = () => {
     center: { x: 0, opacity: 1 },
     exit: { x: -100, opacity: 0 }
   };
+
+  // Add location detection on component mount
+  useEffect(() => {
+    const detectLocation = async () => {
+      try {
+        const locationData = await getLocationFromIP();
+        setUserLocation(locationData);
+      } catch (error) {
+        console.error('Error detecting location:', error);
+      }
+    };
+    detectLocation();
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -123,7 +138,8 @@ const QuestionnairePage: React.FC = () => {
         
         const response = await api.post('/create-questionnaire', { 
           search_query: searchQuery.trim(),
-          factors: state.factors
+          factors: state.factors,
+          location: userLocation
         });
 
         if (response.data && response.data.questionnaire) {
@@ -143,7 +159,7 @@ const QuestionnairePage: React.FC = () => {
     };
 
     generateQuestionnaire();
-  }, [searchQuery, location.state, retryCount]);
+  }, [searchQuery, location.state, retryCount, userLocation]);
 
   const parseQuestionnaire = useCallback((questionnaireText: string): Question[] => {
     if (!questionnaireText) {
@@ -294,7 +310,8 @@ const QuestionnairePage: React.FC = () => {
 
       const response = await api.post('/generate-recommendation', {
         search_query: searchQuery,
-        user_preferences: userAnswers
+        user_preferences: userAnswers,
+        location: userLocation
       });
 
       const recommendationLines = response.data.recommendation
@@ -327,7 +344,8 @@ const QuestionnairePage: React.FC = () => {
         initialAnswers: questionnaire.map(q => ({
           question: q.question,
           answer: userAnswers[q.question]
-        }))
+        })),
+        userLocation
       }
     });
   };
@@ -424,14 +442,7 @@ const QuestionnairePage: React.FC = () => {
       >
         <div className="questionnaire-container">
           <div className="title-container">
-            <motion.h2 
-              className="main-title"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              Here are your initial recommendations
-            </motion.h2>
+            
           </div>
           
           <motion.button
@@ -490,6 +501,7 @@ const QuestionnairePage: React.FC = () => {
           onRankingComplete={handleRankingComplete}
           searchQuery={searchQuery}
           previousQuestions={questionnaire.map(q => q.question)}
+          userLocation={userLocation || undefined}
         />
       </motion.div>
     );
@@ -531,17 +543,6 @@ const QuestionnairePage: React.FC = () => {
       variants={pageVariants}
     >
       <div className="questionnaire-container">
-        <div className="title-container">
-          <motion.h2 
-            className="main-title"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            Personalizing
-          </motion.h2>
-        </div>
-        
         <div className="progress-indicator">
           <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>
           <span>{Math.round(progress)}% Complete</span>
