@@ -276,11 +276,6 @@ const LandingPage: React.FC = () => {
           <div className="title-container">
             <div className="main-title">
               <span className="gradient-text">Expertosy</span>
-              <div className="separator-container">
-                <div className="separator-ring"></div>
-                <div className="separator-ring"></div>
-                <div className="separator-ring"></div>
-              </div>
               <span className="accent-text">Match</span>
             </div>
           </div>
