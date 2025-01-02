@@ -113,19 +113,19 @@ button {
   flex-direction: column;
 }
 
-/* Add padding to account for fixed navigation */
+/* Remove navigation padding */
 .app > *:not(nav) {
-  padding-top: 70px; /* Adjust this value based on your navigation height */
+  padding-top: 0;
 }
 
 @media (max-width: 768px) {
   .app > *:not(nav) {
-    padding-top: 60px;
+    padding-top: 0;
   }
 }
 
 @media (max-width: 480px) {
   .app > *:not(nav) {
-    padding-top: 55px;
+    padding-top: 0;
   }
 }
