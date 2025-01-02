@@ -22,13 +22,7 @@ const router = createBrowserRouter(
       <Route path="questionnaire" element={<QuestionnairePage />} />
       <Route path="results" element={<ResultsPage />} />
     </Route>
-  ),
-  {
-    future: {
-      v7_startTransition: true,
-      v7_relativeSplatPath: true
-    }
-  }
+  )
 );
 
 const App: React.FC = () => {
