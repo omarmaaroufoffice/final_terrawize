@@ -987,35 +987,31 @@
   .scroll-indicator {
     position: relative;
     bottom: auto;
+    left: 0;
+    right: 0;
+    transform: none;
     margin: 2rem auto;
     padding: 1rem;
-    transform: none;
-    left: auto;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    justify-content: center;
   }
 
   .scroll-text {
     font-size: 1rem;
     text-align: center;
+    width: 100%;
   }
 
-  .how-it-works {
-    padding: 4rem 1rem;
-    text-align: center;
-  }
-
-  .steps {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 0;
-  }
-
-  .step {
+  .scroll-arrow {
+    font-size: 2rem;
     margin: 0 auto;
-    max-width: 90%;
+  }
+
+  .popular-searches {
+    margin-bottom: 1rem;
   }
 }
 
@@ -1042,6 +1038,8 @@
 
   .scroll-indicator {
     margin: 1.5rem auto;
+    padding: 0.8rem;
+    width: 100%;
   }
 
   .scroll-text {
@@ -1052,8 +1050,8 @@
     font-size: 1.8rem;
   }
 
-  .how-it-works {
-    padding: 3rem 0.75rem;
+  .popular-searches {
+    margin-bottom: 1rem;
   }
 
   .step {
@@ -1307,35 +1305,43 @@
   .scroll-indicator {
     position: relative;
     bottom: auto;
-    margin-top: 3rem;
-    padding: 1rem;
+    left: 0;
+    right: 0;
     transform: none;
-    left: auto;
+    margin: 2rem auto;
+    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
-  
+
   .scroll-text {
     font-size: 1rem;
-    letter-spacing: 1.5px;
+    text-align: center;
+    width: 100%;
   }
-  
+
   .scroll-arrow {
     font-size: 2rem;
+    margin: 0 auto;
   }
 
   .popular-searches {
-    margin-bottom: 4rem;
+    margin-bottom: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .scroll-indicator {
-    margin-top: 2rem;
+    margin: 1.5rem auto;
     padding: 0.8rem;
+    width: 100%;
   }
   
   .scroll-text {
     font-size: 0.9rem;
-    letter-spacing: 1px;
   }
   
   .scroll-arrow {
@@ -1343,7 +1349,7 @@
   }
 
   .popular-searches {
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
   }
 }
 
