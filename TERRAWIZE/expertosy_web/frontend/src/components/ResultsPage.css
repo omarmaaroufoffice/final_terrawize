@@ -706,4 +706,82 @@
   .results-title {
     font-size: 1.5rem;
   }
+}
+
+.advantages-section,
+.why-not-first-section,
+.caveats-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+.advantages-section h4,
+.why-not-first-section h4,
+.caveats-section h4 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #e0e0ff;
+  font-weight: 600;
+}
+
+.advantages-list,
+.caveats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.advantage-item,
+.caveat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #e0e0ff;
+}
+
+.advantage-icon {
+  color: #4CAF50;
+  font-size: 1.2rem;
+}
+
+.caveat-icon {
+  color: #FFA726;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.why-not-first-section {
+  background: rgba(244, 67, 54, 0.1);
+  border-left: 4px solid #F44336;
+}
+
+.why-not-first-text {
+  color: #ffcdd2;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.caveats-section {
+  background: rgba(255, 167, 38, 0.1);
+  border-left: 4px solid #FFA726;
+}
+
+@media (max-width: 768px) {
+  .advantages-section,
+  .why-not-first-section,
+  .caveats-section {
+    padding: 0.75rem;
+    margin: 1rem 0;
+  }
+
+  .advantage-item,
+  .caveat-item,
+  .why-not-first-text {
+    font-size: 0.9rem;
+  }
 } 

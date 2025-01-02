@@ -428,7 +428,9 @@ class ExpertosyRecommendationEngine:
                     "content": (
                         "You are a product ranking expert. Analyze the given products and user preferences, "
                         "then return a JSON array of ranked products. Each product should include: name, price, "
-                        "explanation (why it's ranked here), and advantages (array of key benefits). "
+                        "explanation (why it's ranked here), advantages (array of key benefits), "
+                        "why_not_first (for products not ranked first, explain why they didn't get the top spot), "
+                        "and product_caveats (array of potential drawbacks or things to consider). "
                         "Format the response as valid JSON. Do not include any markdown formatting or additional text."
                     )
                 },
@@ -443,7 +445,9 @@ class ExpertosyRecommendationEngine:
                         '    "name": "Product Name",\n'
                         '    "price": "$1234",\n'
                         '    "explanation": "Why this product is ranked here",\n'
-                        '    "advantages": ["benefit 1", "benefit 2"]\n'
+                        '    "advantages": ["benefit 1", "benefit 2"],\n'
+                        '    "why_not_first": "Only for non-first ranked products, explain why not #1",\n'
+                        '    "product_caveats": ["caveat 1", "caveat 2"]\n'
                         '  }\n'
                         ']}'
                     )
@@ -469,11 +473,18 @@ class ExpertosyRecommendationEngine:
                 
                 # Validate the structure of each product
                 for product in ranked_products:
-                    required_fields = ['name', 'price', 'explanation', 'advantages']
+                    required_fields = ['name', 'price', 'explanation', 'advantages', 'product_caveats']
                     if not all(field in product for field in required_fields):
                         raise ValueError(f"Missing required fields in product: {product}")
                     if not isinstance(product['advantages'], list):
                         raise ValueError(f"Advantages must be an array for product: {product}")
+                    if not isinstance(product['product_caveats'], list):
+                        raise ValueError(f"Product caveats must be an array for product: {product}")
+                    # Add empty why_not_first for first product
+                    if ranked_products.index(product) == 0:
+                        product['why_not_first'] = ""
+                    elif 'why_not_first' not in product:
+                        raise ValueError(f"Missing why_not_first for non-first product: {product}")
                 
                 return ranked_products
                 

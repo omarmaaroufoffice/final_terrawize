@@ -8,6 +8,8 @@ interface ProductExplanation {
   price: string;
   explanation: string;
   advantages: string[];
+  why_not_first: string;
+  product_caveats: string[];
   situationalBenefits?: string;
   affiliateLink?: string;
 }
@@ -241,46 +243,59 @@ const ResultsPage: React.FC = () => {
                   transition={{ delay: index * 0.1 + 0.7 }}
                 >
                   <p className="explanation-text">{product.explanation}</p>
-                  <div className="advantages-list">
-                    {product.advantages.map((advantage, i) => (
-                      <motion.div 
-                        key={i}
-                        className="advantage-item"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 + 0.8 + (i * 0.1) }}
-                      >
-                        <span className="advantage-icon">✦</span>
-                        {advantage}
-                      </motion.div>
-                    ))}
+                  
+                  <div className="advantages-section">
+                    <h4>Key Advantages</h4>
+                    <div className="advantages-list">
+                      {product.advantages.map((advantage, i) => (
+                        <motion.div 
+                          key={i}
+                          className="advantage-item"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 + 0.8 + (i * 0.1) }}
+                        >
+                          <span className="advantage-icon">✓</span>
+                          {advantage}
+                        </motion.div>
+                      ))}
+                    </div>
                   </div>
-                  {product.situationalBenefits && (
+
+                  {product.why_not_first && (
                     <motion.div 
-                      className="situational-benefits"
+                      className="why-not-first-section"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.1 + 1.2 }}
                     >
-                      <span className="benefits-icon">💡</span>
-                      {product.situationalBenefits}
+                      <h4>Why Not #1 Choice?</h4>
+                      <p className="why-not-first-text">{product.why_not_first}</p>
                     </motion.div>
                   )}
-                  {product.affiliateLink && (
-                    <motion.a
-                      href={product.affiliateLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shop-now-button"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 + 1.3 }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      🛍️ Shop Now
-                    </motion.a>
-                  )}
+
+                  <motion.div 
+                    className="caveats-section"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.1 + 1.4 }}
+                  >
+                    <h4>Things to Consider</h4>
+                    <div className="caveats-list">
+                      {product.product_caveats.map((caveat, i) => (
+                        <motion.div 
+                          key={i}
+                          className="caveat-item"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 + 1.5 + (i * 0.1) }}
+                        >
+                          <span className="caveat-icon">!</span>
+                          {caveat}
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
                 </motion.div>
               </div>
             </motion.div>
