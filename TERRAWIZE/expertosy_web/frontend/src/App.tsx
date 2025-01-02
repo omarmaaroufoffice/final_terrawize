@@ -4,8 +4,7 @@ import {
   RouterProvider, 
   createRoutesFromElements, 
   Route, 
-  Outlet,
-  type RouterOptions 
+  Outlet
 } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import QuestionnairePage from './components/QuestionnairePage';
@@ -22,13 +21,6 @@ const AppLayout: React.FC = () => {
   );
 };
 
-const routerOptions: RouterOptions = {
-  future: {
-    v7_startTransition: true,
-    v7_relativeSplatPath: true
-  }
-};
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<AppLayout />}>
@@ -37,7 +29,12 @@ const router = createBrowserRouter(
       <Route path="results" element={<ResultsPage />} />
     </Route>
   ),
-  routerOptions
+  {
+    future: {
+      v7_startTransition: true,
+      v7_relativeSplatPath: true
+    } as const
+  }
 );
 
 const App: React.FC = () => {
