@@ -249,22 +249,18 @@
 /* Hero Section */
 .hero-section {
   min-height: 100vh;
-  position: relative;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 8rem 2rem 6rem;
-  overflow: hidden;
+  justify-content: center;
+  padding: 6rem 2rem;
+  position: relative;
 }
 
 .hero-content {
-  width: 100%;
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
-  position: relative;
-  z-index: 2;
-  padding-bottom: 4rem;
+  text-align: center;
+  animation: fadeInUp 1s ease-out;
 }
 
 .title-container {
@@ -577,7 +573,6 @@
   text-align: center;
   animation: fadeInUp 0.8s ease-out 0.4s forwards;
   opacity: 0;
-  margin-bottom: 5rem;
 }
 
 .popular-searches-header {
@@ -1212,18 +1207,22 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 10;
   opacity: 0;
-  animation: fadeInScrollIndicator 0.5s ease-out 1s forwards;
+  animation: fadeInScroll 0.5s ease-out 1s forwards;
 }
 
-@keyframes fadeInScrollIndicator {
+@keyframes fadeInScroll {
   from {
     opacity: 0;
-    transform: translate(-50%, -20px);
+    transform: translate(-50%, 20px);
   }
   to {
     opacity: 1;
     transform: translate(-50%, 0);
   }
+}
+
+.scroll-indicator:hover {
+  transform: translateX(-50%);
 }
 
 .scroll-text {

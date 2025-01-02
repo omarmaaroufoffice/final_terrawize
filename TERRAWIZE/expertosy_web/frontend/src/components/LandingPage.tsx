@@ -315,7 +315,7 @@ const LandingPage: React.FC = () => {
                     <span>Processing...</span>
                   </div>
                 ) : (
-                  <span className="search-button-text">Lets find it</span>
+                  <span className="search-button-text">Find Your Perfect Match</span>
                 )}
               </button>
             </div>
