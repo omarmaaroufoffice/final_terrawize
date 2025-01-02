@@ -10,127 +10,102 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
-.logo-icon {
+.logo-symbol {
   position: relative;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.logo-ring {
+.logo-hexagon {
   position: absolute;
   width: 100%;
   height: 100%;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  border-top-color: var(--starlight-blue);
-  border-left-color: var(--nova-gold);
-  animation: rotateLogo 4s linear infinite;
+  background: linear-gradient(135deg, var(--starlight-blue) 0%, var(--nova-gold) 100%);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
 }
 
-.logo-core {
-  position: relative;
-  width: 20px;
-  height: 20px;
-  background: linear-gradient(135deg, var(--starlight-blue), var(--nova-gold));
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-glow {
+.logo-inner-glow {
   position: absolute;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, var(--starlight-blue) 0%, transparent 70%);
-  border-radius: 50%;
+  width: 90%;
+  height: 90%;
+  top: 5%;
+  left: 5%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
   filter: blur(4px);
-  opacity: 0.6;
-  animation: pulse 2s ease-in-out infinite;
 }
 
-.logo-particles {
+.logo-beam {
+  position: absolute;
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.9) 30%,
+    rgba(255, 255, 255, 0.9) 70%,
+    transparent 100%
+  );
+  filter: blur(0.5px);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.logo-dots {
   position: absolute;
   width: 100%;
   height: 100%;
-  animation: rotateLogo 8s linear infinite reverse;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 25% 0;
 }
 
-.logo-particle {
-  position: absolute;
+.logo-dot {
   width: 4px;
   height: 4px;
-  background: var(--nova-gold);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  filter: blur(1px);
-}
-
-.logo-particle:nth-child(1) {
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.logo-particle:nth-child(2) {
-  bottom: 25%;
-  left: 10%;
-  background: var(--starlight-blue);
-}
-
-.logo-particle:nth-child(3) {
-  bottom: 25%;
-  right: 10%;
-  background: var(--starlight-blue);
+  margin-left: 60%;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
 }
 
 .logo-text {
   display: flex;
-  align-items: baseline;
-  gap: 0.3rem;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 .logo-text-main {
   font-family: 'Orbitron', sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   background: linear-gradient(135deg, #FFFFFF 0%, var(--starlight-blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+}
+
+.logo-text-separator {
+  width: 2px;
+  height: 1.2rem;
+  background: linear-gradient(to bottom, var(--starlight-blue), var(--nova-gold));
+  border-radius: 1px;
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
 }
 
 .logo-text-sub {
   font-family: 'Orbitron', sans-serif;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--nova-gold);
-  opacity: 0.9;
-}
-
-@keyframes rotateLogo {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.8;
-  }
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
 }
 
 @media (max-width: 768px) {
@@ -139,22 +114,25 @@
     margin-left: 0.5rem;
   }
 
-  .logo-icon {
-    width: 32px;
-    height: 32px;
+  .logo {
+    gap: 0.8rem;
   }
 
-  .logo-core {
-    width: 16px;
-    height: 16px;
+  .logo-symbol {
+    width: 36px;
+    height: 36px;
   }
 
   .logo-text-main {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+  }
+
+  .logo-text-separator {
+    height: 1rem;
   }
 
   .logo-text-sub {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -163,21 +141,24 @@
     padding: 0.2rem 0.5rem;
   }
 
-  .logo-icon {
-    width: 28px;
-    height: 28px;
+  .logo {
+    gap: 0.6rem;
   }
 
-  .logo-core {
-    width: 14px;
-    height: 14px;
+  .logo-symbol {
+    width: 32px;
+    height: 32px;
   }
 
   .logo-text-main {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+  }
+
+  .logo-text-separator {
+    height: 0.9rem;
   }
 
   .logo-text-sub {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 } 
