@@ -47,6 +47,24 @@ const LandingPage: React.FC = () => {
     }
   ];
 
+  const searchExamples = [
+    { prefix: "Recommend me a", icon: "🎯", color: "blue" },
+    { prefix: "Find me the best", icon: "⭐", color: "gold" },
+    { prefix: "I am looking for a", icon: "🔍", color: "purple" },
+    { prefix: "Help me choose a", icon: "💡", color: "green" }
+  ];
+
+  const handleExampleClick = (prefix: string) => {
+    setSearchQuery(prefix + " ");
+    const searchInput = document.querySelector('.search-box input') as HTMLInputElement;
+    if (searchInput) {
+      searchInput.focus();
+      // Place cursor at the end
+      const length = prefix.length + 1;
+      searchInput.setSelectionRange(length, length);
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -207,21 +225,42 @@ const LandingPage: React.FC = () => {
                 {error}
               </div>
             )}
-          </div>
+            
+            <div className="search-examples">
+              <div className="examples-grid">
+                {searchExamples.map((example, index) => (
+                  <button
+                    key={index}
+                    className={`example-item example-${example.color}`}
+                    onClick={() => handleExampleClick(example.prefix)}
+                  >
+                    <span className="example-icon">{example.icon}</span>
+                    <span className="example-text">
+                      <span className="example-prefix">{example.prefix}</span>
+                      <span className="example-placeholder">...</span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-          <div className="popular-searches">
-            <h3>Popular Discoveries</h3>
-            <div className="tags">
-              {popularSearches.map((search, index) => (
-                <button
-                  key={index}
-                  className="tag"
-                  onClick={() => handlePopularSearch(search)}
-                >
-                  <span className="tag-icon">{search.icon}</span>
-                  {search.name}
-                </button>
-              ))}
+            <div className="popular-searches">
+              <div className="popular-searches-header">
+                <span className="popular-searches-icon">🔥</span>
+                <h3>Popular Searches</h3>
+              </div>
+              <div className="tags">
+                {popularSearches.map((search, index) => (
+                  <button
+                    key={index}
+                    className="tag"
+                    onClick={() => handlePopularSearch(search)}
+                  >
+                    <span className="tag-icon">{search.icon}</span>
+                    {search.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
