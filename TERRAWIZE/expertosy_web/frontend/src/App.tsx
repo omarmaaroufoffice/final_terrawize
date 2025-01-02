@@ -1,5 +1,12 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route, Outlet } from 'react-router-dom';
+import { 
+  createBrowserRouter, 
+  RouterProvider, 
+  createRoutesFromElements, 
+  Route, 
+  Outlet,
+  type RouterOptions 
+} from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import QuestionnairePage from './components/QuestionnairePage';
 import ResultsPage from './components/ResultsPage';
@@ -15,6 +22,13 @@ const AppLayout: React.FC = () => {
   );
 };
 
+const routerOptions: RouterOptions = {
+  future: {
+    v7_startTransition: true,
+    v7_relativeSplatPath: true
+  }
+};
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<AppLayout />}>
@@ -22,7 +36,8 @@ const router = createBrowserRouter(
       <Route path="questionnaire" element={<QuestionnairePage />} />
       <Route path="results" element={<ResultsPage />} />
     </Route>
-  )
+  ),
+  routerOptions
 );
 
 const App: React.FC = () => {

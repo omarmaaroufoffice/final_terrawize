@@ -1,32 +1,38 @@
 import axios from 'axios';
 
-const baseURL = process.env.REACT_APP_API_URL || 'https://api.expertosy.com';
-
 const api = axios.create({
-  baseURL,
+  baseURL: 'https://api.expertosy.com',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': 'https://expertosy.com',
-    'Access-Control-Allow-Credentials': 'true'
-  },
-  withCredentials: true
+    'Accept': 'application/json'
+  }
 });
 
-// Add response interceptor to handle errors
+// Add request interceptor to handle CORS
+api.interceptors.request.use(
+  (config) => {
+    // Don't add Origin header in request - let browser handle it
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for better error handling
 api.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error('Response Error:', error.response.data);
-      console.error('Status:', error.response.status);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error('Request Error:', error.request);
+  (response) => response,
+  (error) => {
+    if (error.code === 'ERR_NETWORK') {
+      console.error('Network error occurred:', error);
+      error.message = 'Unable to connect to the server. Please check your internet connection and try again.';
+    } else if (error.response) {
+      console.error('Server error:', error.response.data);
+      error.message = error.response.data.error || 'An error occurred while processing your request.';
     } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error('Error:', error.message);
+      console.error('Unexpected error:', error);
+      error.message = 'An unexpected error occurred. Please try again.';
     }
     return Promise.reject(error);
   }
