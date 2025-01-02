@@ -112,7 +112,15 @@ const LandingPage: React.FC = () => {
       icon: (
         <div className="custom-icon">
           <div className="icon-target">
-            <div className="icon-target-vertical" />
+            <div className="icon-target-rings">
+              <div className="icon-target-ring"></div>
+              <div className="icon-target-ring"></div>
+              <div className="icon-target-ring"></div>
+            </div>
+            <div className="icon-target-lines">
+              <div className="icon-target-line"></div>
+              <div className="icon-target-line"></div>
+            </div>
           </div>
         </div>
       ), 
@@ -123,8 +131,22 @@ const LandingPage: React.FC = () => {
       icon: (
         <div className="custom-icon">
           <div className="icon-star">
-            <span></span>
-            <span></span>
+            <div className="icon-star-core">
+              <div className="icon-star-point"></div>
+              <div className="icon-star-point"></div>
+              <div className="icon-star-point"></div>
+              <div className="icon-star-point"></div>
+              <div className="icon-star-point"></div>
+            </div>
+            <div className="icon-star-center"></div>
+            <div className="icon-star-rays">
+              <div className="icon-star-ray"></div>
+              <div className="icon-star-ray"></div>
+              <div className="icon-star-ray"></div>
+              <div className="icon-star-ray"></div>
+              <div className="icon-star-ray"></div>
+              <div className="icon-star-ray"></div>
+            </div>
           </div>
         </div>
       ), 
@@ -134,7 +156,16 @@ const LandingPage: React.FC = () => {
       prefix: "I am looking for a", 
       icon: (
         <div className="custom-icon">
-          <div className="icon-search" />
+          <div className="icon-search">
+            <div className="icon-search-circle"></div>
+            <div className="icon-search-handle"></div>
+            <div className="icon-search-rays">
+              <div className="icon-search-ray"></div>
+              <div className="icon-search-ray"></div>
+              <div className="icon-search-ray"></div>
+              <div className="icon-search-ray"></div>
+            </div>
+          </div>
         </div>
       ), 
       color: "purple" 
@@ -143,7 +174,19 @@ const LandingPage: React.FC = () => {
       prefix: "Help me choose a", 
       icon: (
         <div className="custom-icon">
-          <div className="icon-bulb" />
+          <div className="icon-bulb">
+            <div className="icon-bulb-body">
+              <div className="icon-bulb-glow"></div>
+            </div>
+            <div className="icon-bulb-base"></div>
+            <div className="icon-bulb-sparks">
+              <div className="icon-bulb-spark"></div>
+              <div className="icon-bulb-spark"></div>
+              <div className="icon-bulb-spark"></div>
+              <div className="icon-bulb-spark"></div>
+              <div className="icon-bulb-spark"></div>
+            </div>
+          </div>
         </div>
       ), 
       color: "green" 
