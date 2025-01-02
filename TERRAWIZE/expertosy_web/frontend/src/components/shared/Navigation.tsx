@@ -21,7 +21,18 @@ const Navigation: React.FC = () => {
         <Link to="/" className="logo-link">
           <div className="logo">
             <div className="logo-icon-container">
-              <span className="logo-icon">⭐</span>
+              <div className="logo-icon">
+                <div className="custom-star">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
               <div className="logo-glow"></div>
             </div>
             <div className="logo-text-container">

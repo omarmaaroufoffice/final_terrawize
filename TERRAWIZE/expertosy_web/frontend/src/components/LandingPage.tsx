@@ -248,7 +248,6 @@ const LandingPage: React.FC = () => {
       howItWorksSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
   return (
     <div className="landing-page">
       <div className="background-effects">
@@ -348,11 +347,7 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      <div className="how-it-works">
-        <div className="section-header">
-          <h2>How It Works</h2>
-          <p>Three simple steps to find your perfect match</p>
-        </div>
+      <section className="how-it-works">
         <div className="steps">
           <div className="step">
             <div className="step-content">
@@ -385,9 +380,9 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="features-section">
+      <section className="features-section">
         <div className="section-header">
           <h2>Why Choose Us</h2>
           <p>Experience the power of AI-driven recommendations</p>
@@ -407,7 +402,7 @@ const LandingPage: React.FC = () => {
             </div>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 };
