@@ -19,6 +19,7 @@ const ResultsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStage, setLoadingStage] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(45);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   
   const state = location.state as { 
     searchQuery: string;
@@ -41,9 +42,18 @@ const ResultsPage: React.FC = () => {
         setLoadingStage(prev => (prev < loadingStages.length - 1 ? prev + 1 : prev));
       }, 500);
 
+      // Add loading progress animation
+      const progressInterval = setInterval(() => {
+        setLoadingProgress(prev => {
+          if (prev >= 95) return prev; // Cap at 95% until real results
+          return prev + 1;
+        });
+      }, 100);
+
       // Cleanup
       return () => {
         clearInterval(stageInterval);
+        clearInterval(progressInterval);
       };
     }
   }, [isLoading, loadingStages]);
@@ -51,6 +61,7 @@ const ResultsPage: React.FC = () => {
   // Add a new effect to check if we have results and show them immediately
   useEffect(() => {
     if (state?.recommendation && state.recommendation.length > 0) {
+      setLoadingProgress(100); // Complete the progress bar
       setIsLoading(false);
     }
   }, [state?.recommendation]);
@@ -156,18 +167,10 @@ const ResultsPage: React.FC = () => {
           >
             {loadingStages[loadingStage]}
           </motion.div>
-          <motion.p
-            className="time-remaining"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            Estimated time remaining: {timeRemaining} seconds
-          </motion.p>
           <motion.div 
             className="loading-progress"
             initial={{ width: "0%" }}
-            animate={{ width: `${((loadingStage + 1) / loadingStages.length) * 100}%` }}
+            animate={{ width: `${loadingProgress}%` }}
             transition={{ duration: 0.5 }}
           />
         </motion.div>
@@ -195,7 +198,6 @@ const ResultsPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Your Perfect Match
           </motion.h1>
           <motion.p 
             className="subtitle"

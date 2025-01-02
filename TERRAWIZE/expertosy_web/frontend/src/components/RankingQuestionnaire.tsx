@@ -18,13 +18,15 @@ interface RankingQuestionnaireProps {
   searchQuery?: string;
   onRankingComplete: (rankedProducts: ProductExplanation[]) => void;
   previousQuestions?: string[];
+  userLocation?: { country: string; city: string; region: string };
 }
 
 const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   products,
   searchQuery,
   onRankingComplete,
-  previousQuestions = []
+  previousQuestions = [],
+  userLocation
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -60,7 +62,8 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
         const response = await api.post('/generate-ranking-questionnaire', {
           products,
           search_query: searchQuery,
-          previous_questions: previousQuestions
+          previous_questions: previousQuestions,
+          location: userLocation || undefined
         });
 
         if (!mounted) return;
@@ -80,7 +83,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
     return () => {
       mounted = false;
     };
-  }, [products, searchQuery, previousQuestions]);
+  }, [products, searchQuery, previousQuestions, userLocation]);
 
   const parseQuestionnaire = (text: string): RankingQuestion[] => {
     const questions: RankingQuestion[] = [];
@@ -151,7 +154,8 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
       const response = await api.post('/rank-products', {
         products,
         ranking_preferences: userAnswers,
-        search_query: searchQuery
+        search_query: searchQuery,
+        location: userLocation || undefined
       });
 
       if (response.data.ranked_products) {
