@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../config/api';
+import Navigation from './shared/Navigation';
 import './LandingPage.css';
 
 interface PopularSearch {
@@ -266,6 +267,7 @@ const LandingPage: React.FC = () => {
   };
   return (
     <div className="landing-page">
+      <Navigation />
       <div className="background-effects">
         <div className="constellation-grid" />
         <div className="nebula-overlay" />

@@ -2,27 +2,19 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
-  position: fixed;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 1000;
-  background: rgba(10, 17, 40, 0.95);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  border: 1px solid rgba(74, 144, 226, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  flex-direction: column;
-  min-width: 200px;
-  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  min-width: auto;
 }
 
 .logo:hover {
-  transform: translateY(-2px);
-  border-color: rgba(74, 144, 226, 0.3);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  transform: none;
+  background: rgba(74, 144, 226, 0.1);
 }
 
 .logo-content {
