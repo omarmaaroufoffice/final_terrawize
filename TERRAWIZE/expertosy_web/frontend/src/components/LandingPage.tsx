@@ -5,7 +5,13 @@ import './LandingPage.css';
 
 interface PopularSearch {
   name: string;
-  icon: string;
+  icon: React.ReactNode;
+}
+
+interface SearchExample {
+  prefix: string;
+  icon: React.ReactNode;
+  color: string;
 }
 
 const LandingPage: React.FC = () => {
@@ -17,11 +23,46 @@ const LandingPage: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState(0);
 
   const popularSearches: PopularSearch[] = [
-    { name: 'Laptops', icon: '💻' },
-    { name: 'Smartphones', icon: '📱' },
-    { name: 'Cameras', icon: '📸' },
-    { name: 'Headphones', icon: '🎧' },
-    { name: 'Smart Watches', icon: '⌚' }
+    { 
+      name: 'Laptops', 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-laptop" />
+        </div>
+      )
+    },
+    { 
+      name: 'Smartphones', 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-phone" />
+        </div>
+      )
+    },
+    { 
+      name: 'Cameras', 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-camera" />
+        </div>
+      )
+    },
+    { 
+      name: 'Headphones', 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-headphone" />
+        </div>
+      )
+    },
+    { 
+      name: 'Smart Watches', 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-watch" />
+        </div>
+      )
+    }
   ];
 
   const features = [
@@ -48,10 +89,47 @@ const LandingPage: React.FC = () => {
   ];
 
   const searchExamples = [
-    { prefix: "Recommend me a", icon: "🎯", color: "blue" },
-    { prefix: "Find me the best", icon: "⭐", color: "gold" },
-    { prefix: "I am looking for a", icon: "🔍", color: "purple" },
-    { prefix: "Help me choose a", icon: "💡", color: "green" }
+    { 
+      prefix: "Recommend me a", 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-target">
+            <div className="icon-target-vertical" />
+          </div>
+        </div>
+      ), 
+      color: "blue" 
+    },
+    { 
+      prefix: "Find me the best", 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-star">
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      ), 
+      color: "gold" 
+    },
+    { 
+      prefix: "I am looking for a", 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-search" />
+        </div>
+      ), 
+      color: "purple" 
+    },
+    { 
+      prefix: "Help me choose a", 
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-bulb" />
+        </div>
+      ), 
+      color: "green" 
+    }
   ];
 
   const handleExampleClick = (prefix: string) => {

@@ -30,14 +30,6 @@ const Navigation: React.FC = () => {
             </div>
           </div>
         </Link>
-        <div className="nav-links">
-          {location.pathname !== '/' && (
-            <Link to="/" className="nav-link">
-              <span className="nav-link-icon">🏠</span>
-              Home
-            </Link>
-          )}
-        </div>
       </div>
     </nav>
   );
