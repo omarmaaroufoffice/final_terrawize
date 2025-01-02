@@ -572,23 +572,18 @@ const QuestionnairePage: React.FC = () => {
             }}
           >
             <div className="question-card">
-              <div className="question-header">
-                <div className="question-number">
-                  <span className="current">{currentQuestionIndex + 1}</span>
-                  <span className="total">/{questionnaire.length}</span>
-                </div>
-                {currentQuestion?.category && (
-                  <span className="question-category">{currentQuestion.category}</span>
-                )}
-              </div>
-              
+              {currentQuestion?.category && (
+                <div className="question-category">{currentQuestion.category}</div>
+              )}
               <div className="question-content">
                 <h2 className="question-text">{currentQuestion.question}</h2>
-                <div className="help-text">
-                  {currentQuestion.helpText}
-                </div>
+                {currentQuestion.helpText && currentQuestion.helpText.trim() && (
+                  <div className="help-text">
+                    {currentQuestion.helpText}
+                  </div>
+                )}
               </div>
-              
+
               <div className="options-grid">
                 {currentQuestion.options.map((option, index) => (
                   <button
