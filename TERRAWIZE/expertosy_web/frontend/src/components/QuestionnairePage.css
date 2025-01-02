@@ -1057,16 +1057,6 @@
     min-height: 50px;
   }
 
-  .navigation-buttons {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .nav-button {
-    width: 100%;
-    justify-content: center;
-  }
-
   /* Improve touch targets */
   .help-button {
     width: 40px;

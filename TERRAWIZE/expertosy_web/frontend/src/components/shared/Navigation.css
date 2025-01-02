@@ -1,7 +1,10 @@
+/* Root Variables */
 :root {
   --nav-height: 70px;
   --nav-height-mobile: 60px;
   --deep-space-blue: #020814;
+  --constellation-gradient: linear-gradient(135deg, var(--starlight-blue) 0%, var(--nova-gold) 100%);
+  --text-gradient: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(74, 144, 226, 0.9) 100%);
 }
 
 /* Navigation Header */
@@ -12,8 +15,9 @@
   right: 0;
   height: var(--nav-height);
   z-index: 2147483647;
-  background: var(--deep-space-blue);
-  background-color: #020814;
+  background-color: rgba(2, 8, 20, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   width: 100%;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
   isolation: isolate;
@@ -23,8 +27,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--deep-space-blue);
-  opacity: 1;
+  background-color: rgba(2, 8, 20, 0.95);
   z-index: -1;
 }
 
@@ -34,10 +37,9 @@
   inset: 0;
   background: linear-gradient(
     to bottom,
-    var(--deep-space-blue) 0%,
-    var(--deep-space-blue) 100%
+    rgba(2, 8, 20, 1) 0%,
+    rgba(2, 8, 20, 0.98) 100%
   );
-  opacity: 0.98;
   z-index: -2;
 }
 
@@ -52,6 +54,142 @@
   z-index: 1;
 }
 
+/* Logo Styles */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 0.8rem 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: none;
+  border: none;
+  text-decoration: none;
+  position: relative;
+  min-width: auto;
+}
+
+.logo:hover {
+  background: none;
+  transform: translateY(-2px);
+  box-shadow: none;
+}
+
+.logo-content {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.logo-icon svg {
+  width: 85%;
+  height: 85%;
+  filter: drop-shadow(0 2px 8px rgba(74, 144, 226, 0.4));
+  animation: rotateStar 20s linear infinite;
+}
+
+.star-outer {
+  opacity: 0.9;
+  transform-origin: center;
+}
+
+.star-inner {
+  opacity: 0.95;
+  transform-origin: center;
+  animation: pulseInner 3s ease-in-out infinite;
+}
+
+.logo-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: var(--text-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  filter: drop-shadow(0 2px 4px rgba(74, 144, 226, 0.3));
+}
+
+.logo-subtitle {
+  font-size: 0.85rem;
+  background: var(--text-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-button.previous {
+  background: rgba(74, 144, 226, 0.1);
+  color: var(--text-primary);
+  border: 1px solid rgba(74, 144, 226, 0.3);
+}
+
+.nav-button.next,
+.nav-button.submit {
+  background: var(--starlight-blue);
+  color: var(--space-dark);
+}
+
+/* Animations */
+@keyframes rotateStar {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseInner {
+  0%, 100% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .nav-header {
@@ -60,5 +198,49 @@
 
   .nav-content {
     padding: 0 1rem;
+  }
+
+  .logo {
+    padding: 0.6rem 0;
+    top: 1rem;
+    left: 1rem;
+    min-width: 180px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logo-text {
+    font-size: 1.3rem;
+  }
+
+  .logo-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .navigation-buttons {
+    margin-top: 1.5rem;
+    padding: 0 1rem;
+    gap: 0.75rem;
+  }
+
+  .nav-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .nav-button {
+    width: 100%;
+    justify-content: center;
   }
 } 
