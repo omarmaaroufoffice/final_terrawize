@@ -277,11 +277,7 @@ const LandingPage: React.FC = () => {
             <h1 className="main-title">
               <span className="title-line highlight">Expertosy Match</span>
             </h1>
-            <div className="subtitle-container">
-              <div className="subtitle-description">
-                The GPS for your wishlist, not an ad ocean
-              </div>
-            </div>
+
           </div>
           
           <div className="search-container">
