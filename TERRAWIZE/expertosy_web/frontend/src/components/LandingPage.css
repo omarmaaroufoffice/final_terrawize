@@ -38,15 +38,15 @@
   top: 1.5rem;
   left: 1.5rem;
   z-index: 1000;
-  background: rgba(10, 17, 40, 0.95);
+  background: rgba(26, 27, 38, 0.95);
   backdrop-filter: blur(12px);
   border-radius: 16px;
   border: 1px solid rgba(74, 144, 226, 0.15);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  flex-direction: column;
-  min-width: 200px;
+  flex-direction: row;
+  min-width: 300px;
 }
 
 .logo:hover {
@@ -63,8 +63,8 @@
 }
 
 .logo-icon {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,11 +81,15 @@
 .star-outer {
   opacity: 0.9;
   transform-origin: center;
+  stroke: var(--starlight-blue);
+  fill: var(--starlight-blue);
 }
 
 .star-inner {
   opacity: 0.95;
   transform-origin: center;
+  stroke: var(--nova-gold);
+  fill: var(--nova-gold);
   animation: pulseInner 3s ease-in-out infinite;
 }
 
@@ -112,20 +116,22 @@
 .logo-text-container {
   display: flex;
   flex-direction: column;
+  gap: 0.2rem;
 }
 
 .logo-text {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 500;
   color: var(--stellar-white);
   letter-spacing: -0.5px;
 }
 
 .logo-subtitle {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  opacity: 0.8;
+  font-size: 0.9rem;
+  color: var(--starlight-blue);
   letter-spacing: 0.2px;
+  font-weight: 400;
+  opacity: 0.9;
 }
 
 /* Background Effects */
