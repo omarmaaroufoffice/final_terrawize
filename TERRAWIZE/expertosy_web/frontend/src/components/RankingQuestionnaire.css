@@ -242,7 +242,10 @@
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 30px rgba(74, 144, 226, 0.3);
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
   padding: 0.5rem 3rem;
   font-family: 'Orbitron', sans-serif;
   letter-spacing: 1px;

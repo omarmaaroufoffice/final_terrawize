@@ -42,6 +42,21 @@
   font-weight: 700;
   text-align: center;
   margin: 0 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 0.5rem;
+  letter-spacing: 0.5px;
+  animation: titleGlow 3s ease-in-out infinite;
+  white-space: normal;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.gradient-text {
   background: linear-gradient(
     135deg,
     #FFFFFF 0%,
@@ -51,16 +66,11 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 20px rgba(74, 144, 226, 0.4);
-  position: relative;
-  display: inline-block;
-  padding: 0.5rem;
-  letter-spacing: 0.5px;
-  animation: titleGlow 3s ease-in-out infinite;
-  white-space: normal;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-  word-break: break-word;
+}
+
+.accent-text {
+  color: var(--nova-gold);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
 }
 
 .main-title::after {

@@ -190,7 +190,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6rem;
+  gap: 2rem;
   margin: 0;
   position: relative;
 }
@@ -274,16 +274,10 @@
 .accent-text {
   font-size: 7rem;
   font-weight: 800;
-  background: linear-gradient(135deg,
-    var(--nova-gold) 0%,
-    var(--stellar-white) 50%,
-    var(--nova-gold) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--nova-gold);
   letter-spacing: -2px;
   line-height: 1;
-  filter: drop-shadow(0 2px 20px rgba(255, 215, 0, 0.4));
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
 }
 
 .subtitle-text {
