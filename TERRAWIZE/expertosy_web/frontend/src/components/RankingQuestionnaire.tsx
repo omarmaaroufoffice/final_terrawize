@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../config/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RankingQuestion } from '../types';
+import Navigation from './shared/Navigation';
 import './RankingQuestionnaire.css';
 
 interface ProductExplanation {
@@ -221,15 +223,9 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
 
   if (isLoading) {
     return (
-      <motion.div 
-        className="ranking-questionnaire"
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageVariants}
-      >
+      <div className="ranking-questionnaire">
+        <Navigation />
         <div className="questionnaire-container">
-          <div className="space-background" />
           <div className="loading-container">
             <div className="loading-content">
               <div className="loading-icon">
@@ -284,19 +280,14 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
   if (questionnaire.length === 0) {
     return (
-      <motion.div 
-        className="ranking-questionnaire"
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        variants={pageVariants}
-      >
+      <div className="ranking-questionnaire">
+        <Navigation />
         <div className="questionnaire-container">
           <div className="error-container">
             <motion.span 
@@ -323,7 +314,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
             </motion.p>
           </div>
         </div>
-      </motion.div>
+      </div>
     );
   }
 
@@ -332,14 +323,8 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   const remainingQuestions = questionnaire.length - (currentQuestionIndex + 1);
 
   return (
-    <motion.div 
-      className="ranking-questionnaire"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="space-stars" />
+    <div className="ranking-questionnaire">
+      <Navigation />
       <div className="questionnaire-container">
         <motion.div 
           className="questionnaire-header"
@@ -414,7 +399,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

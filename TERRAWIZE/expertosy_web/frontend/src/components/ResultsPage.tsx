@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Navigation from './shared/Navigation';
 import './ResultsPage.css';
 
 interface ProductExplanation {
@@ -180,6 +181,7 @@ const ResultsPage: React.FC = () => {
 
   return (
     <div className="results-page">
+      <Navigation />
       <motion.div 
         className="results-container"
         variants={containerVariants}
