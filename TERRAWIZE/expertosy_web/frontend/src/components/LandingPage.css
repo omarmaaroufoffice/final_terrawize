@@ -179,7 +179,7 @@
 /* Title Container */
 .title-container {
   text-align: center;
-  margin-top: 150px !important;
+  margin-top: 250px !important;
   padding: 0 1rem;
   position: relative;
   z-index: 1;
@@ -200,7 +200,6 @@
   margin: 0;
   position: relative;
   width: fit-content;
-  min-width: min-content;
   overflow: visible;
 }
 

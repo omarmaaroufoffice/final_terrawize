@@ -251,31 +251,6 @@
   letter-spacing: 1px;
 }
 
-.questionnaire-header h2::before,
-.questionnaire-header h2::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    var(--starlight-blue),
-    var(--nova-gold)
-  );
-  box-shadow: 0 0 15px rgba(74, 144, 226, 0.6);
-}
-
-.questionnaire-header h2::before {
-  left: 0;
-  transform: translateY(-50%) rotate(35deg);
-}
-
-.questionnaire-header h2::after {
-  right: 0;
-  transform: translateY(-50%) rotate(-35deg);
-}
-
 .remaining-questions {
   font-size: 1.1rem;
   color: var(--text-primary);

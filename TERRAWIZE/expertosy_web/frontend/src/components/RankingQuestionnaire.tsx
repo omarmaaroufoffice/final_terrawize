@@ -59,6 +59,31 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
           return;
         }
 
+        // Start progress animation immediately
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+          if (progress < 90) {  // Cap at 90% until we get the response
+            progress += 2;
+            if (mounted) setLoadingProgress(progress);
+          }
+        }, 100);
+
+        // Update loading stages
+        const stages = [
+          'Analyzing product features...',
+          'Generating comparison criteria...',
+          'Optimizing questions...',
+          'Finalizing questionnaire...'
+        ];
+        
+        let stageIndex = 0;
+        const stageInterval = setInterval(() => {
+          if (stageIndex < stages.length && mounted) {
+            setLoadingStage(stages[stageIndex]);
+            stageIndex++;
+          }
+        }, 1500);
+
         const response = await api.post('/generate-ranking-questionnaire', {
           products,
           search_query: searchQuery,
@@ -68,6 +93,11 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
 
         if (!mounted) return;
 
+        // Complete the progress
+        clearInterval(progressInterval);
+        clearInterval(stageInterval);
+        setLoadingProgress(100);
+        
         const parsedQuestionnaire = parseQuestionnaire(response.data.questionnaire);
         setQuestionnaire(parsedQuestionnaire);
         setIsLoading(false);
