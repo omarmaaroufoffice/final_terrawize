@@ -153,15 +153,6 @@ const LandingPage: React.FC = () => {
         <div className="nebula-overlay" />
       </div>
       
-      <nav className="nav-header">
-        <div className="nav-content">
-          <div className="logo">
-            <span className="logo-icon">⭐</span>
-            <span className="logo-text">Expertosy</span>
-          </div>
-        </div>
-      </nav>
-
       <section className="hero-section">
         <div className="hero-content">
           <div className="title-container">

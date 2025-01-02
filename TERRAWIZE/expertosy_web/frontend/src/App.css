@@ -106,3 +106,26 @@ button {
     font-size: 0.9rem;
   }
 }
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add padding to account for fixed navigation */
+.app > *:not(nav) {
+  padding-top: 70px; /* Adjust this value based on your navigation height */
+}
+
+@media (max-width: 768px) {
+  .app > *:not(nav) {
+    padding-top: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app > *:not(nav) {
+    padding-top: 55px;
+  }
+}
