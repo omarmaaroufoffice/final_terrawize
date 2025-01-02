@@ -315,7 +315,7 @@ const LandingPage: React.FC = () => {
                     <span>Processing...</span>
                   </div>
                 ) : (
-                  <span className="search-button-text">Find Your Perfect Match</span>
+                  <span className="search-button-text">Lets find it</span>
                 )}
               </button>
             </div>
@@ -377,7 +377,7 @@ const LandingPage: React.FC = () => {
             <div className="step-content">
               <div className="step-number">1</div>
               <h3>Tell Us What You Need</h3>
-              <p>Share your requirements and let our AI understand your needs</p>
+              <p>Describe your ideal product and let our AI decode your requirements</p>
             </div>
             <div className="step-illustration">
               <div className="step-icon">
@@ -393,7 +393,7 @@ const LandingPage: React.FC = () => {
             <div className="step-content">
               <div className="step-number">2</div>
               <h3>Answer Smart Questions</h3>
-              <p>Our AI asks targeted questions to understand your preferences</p>
+              <p>Engage with our AI's personalized questions to refine your perfect match</p>
             </div>
             <div className="step-illustration">
               <div className="step-icon">
@@ -409,7 +409,7 @@ const LandingPage: React.FC = () => {
             <div className="step-content">
               <div className="step-number">3</div>
               <h3>Get Perfect Matches</h3>
-              <p>Receive personalized recommendations tailored just for you</p>
+              <p>Discover your ideal products, expertly curated by our AI just for you</p>
             </div>
             <div className="step-illustration">
               <div className="step-icon">
