@@ -198,15 +198,8 @@ const ResultsPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-          </motion.h1>
-          <motion.p 
-            className="subtitle"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
             ✨ Based on your preferences, here are your stellar matches ✨
-          </motion.p>
+          </motion.h1>
         </div>
 
         <div className="recommendations-list">

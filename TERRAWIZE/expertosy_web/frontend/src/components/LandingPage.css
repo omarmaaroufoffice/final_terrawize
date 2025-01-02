@@ -180,19 +180,28 @@
 .title-container {
   text-align: center;
   margin-top: 150px !important;
-  padding: 0;
+  padding: 0 1rem;
   position: relative;
   z-index: 1;
   width: 100%;
+  max-width: 100%;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .main-title {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
+  gap: 1rem;
   margin: 0;
   position: relative;
+  width: fit-content;
+  min-width: min-content;
+  overflow: visible;
 }
 
 .main-title::before {
@@ -257,7 +266,7 @@
 }
 
 .gradient-text {
-  font-size: 7rem;
+  font-size: min(7rem, 4.5vw) !important;
   font-weight: 800;
   background: linear-gradient(135deg,
     var(--starlight-blue) 0%,
@@ -269,15 +278,29 @@
   letter-spacing: -2px;
   line-height: 1;
   filter: drop-shadow(0 2px 20px rgba(74, 144, 226, 0.4));
+  width: auto;
+  text-align: center;
+  white-space: nowrap;
+  overflow: visible;
+  display: block;
+  transform: scale(1);
+  transform-origin: center;
 }
 
 .accent-text {
-  font-size: 7rem;
+  font-size: min(7rem, 4.5vw) !important;
   font-weight: 800;
-  color: var(--nova-gold);
+  color: rgba(255, 215, 0, 0.7);
   letter-spacing: -2px;
   line-height: 1;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+  width: auto;
+  text-align: center;
+  white-space: nowrap;
+  overflow: visible;
+  display: block;
+  transform: scale(1);
+  transform-origin: center;
 }
 
 .subtitle-text {
@@ -375,18 +398,17 @@
 @media (max-width: 768px) {
   .title-container {
     margin-top: 20px !important;
-    padding: 0;
+    padding: 0 0.5rem;
     width: 100%;
-    max-width: 90%;
   }
   
   .gradient-text,
   .accent-text {
-    font-size: 4rem;
+    font-size: min(4rem, 5vw);
   }
   
   .main-title {
-    gap: 4rem;
+    gap: 1rem;
   }
 }
 
@@ -401,7 +423,7 @@
   }
   
   .main-title {
-    gap: 2rem;
+    gap: 1rem;
   }
 }
 
@@ -1959,9 +1981,9 @@
 
   .title-container {
     margin-top: 150px !important;
-    padding: 0;
+    padding: 0 1rem;
     width: 100%;
-    max-width: 90%;
+    max-width: 100%;
   }
 
   .main-title {
