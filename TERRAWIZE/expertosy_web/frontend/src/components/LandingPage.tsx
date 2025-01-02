@@ -355,11 +355,6 @@ const LandingPage: React.FC = () => {
               </div>
             </div>
           </div>
-
-          <div className="scroll-indicator" onClick={handleScrollToHowItWorks}>
-            <span className="scroll-text">How it Works</span>
-            <span className="scroll-arrow">↓</span>
-          </div>
         </div>
       </section>
 
