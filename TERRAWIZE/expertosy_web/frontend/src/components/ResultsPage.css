@@ -5,6 +5,7 @@
   padding: 2rem 1rem;
   position: relative;
   z-index: 1;
+  margin-top: var(--nav-height);
 }
 
 .space-stars {
@@ -295,6 +296,7 @@
 @media (max-width: 768px) {
   .results-page {
     padding: 1rem;
+    margin-top: var(--nav-height-mobile);
   }
   
   .results-container {

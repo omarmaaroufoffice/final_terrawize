@@ -3,6 +3,7 @@
   padding: 2rem 1rem;
   position: relative;
   z-index: 1;
+  margin-top: var(--nav-height);
 }
 
 .questionnaire-container {
@@ -1217,4 +1218,10 @@
 
 .space-stars {
   display: none;
+}
+
+@media (max-width: 768px) {
+  .questionnaire-page {
+    margin-top: var(--nav-height-mobile);
+  }
 } 

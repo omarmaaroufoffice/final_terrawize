@@ -12,6 +12,8 @@
     --starlight-blue: #4A90E2;
     --nova-gold: #FFD700;
     --stellar-white: #F8FAFC;
+    --nav-height: 80px;
+    --nav-height-mobile: 60px;
 }
   
 /* -----------------------------------
@@ -20,6 +22,13 @@
 .landing-page {
     position: relative;
     min-height: 100vh;
+    margin-top: var(--nav-height);
+}
+  
+@media (max-width: 768px) {
+    .landing-page {
+      margin-top: var(--nav-height-mobile);
+    }
 }
   
 /* -----------------------------------

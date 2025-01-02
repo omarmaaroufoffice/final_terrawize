@@ -1,0 +1,31 @@
+.navigation {
+  height: var(--nav-height);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: var(--background);
+  backdrop-filter: blur(10px);
+}
+
+/* Add spacing for content below navigation */
+.navigation + * {
+  padding-top: var(--nav-height);
+}
+
+@media (max-width: 768px) {
+  .navigation {
+    height: var(--nav-height-mobile);
+  }
+  
+  .navigation + * {
+    padding-top: var(--nav-height-mobile);
+  }
+}
+
+@media (max-width: 480px) {
+  .navigation {
+    height: 50px;
+  }
+} 

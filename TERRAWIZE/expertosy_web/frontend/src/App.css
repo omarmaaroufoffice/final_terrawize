@@ -9,6 +9,8 @@
   --primary-rgb: 111, 180, 254;
   --accent-rgb: 255, 215, 0;
   --error-rgb: 255, 107, 107;
+  --nav-height: 70px;
+  --nav-height-mobile: 50px;
 }
 
 body {

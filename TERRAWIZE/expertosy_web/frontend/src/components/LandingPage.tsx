@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../config/api';
+import Navigation from './shared/Navigation';
 import './rest.css';
 import './mediablocas.css';
 
@@ -343,6 +344,7 @@ const LandingPage: React.FC = () => {
   };
   return (
     <div className="landing-page">
+      <Navigation />
       <div className="content">
         <section className="hero-section">
           <div className="hero-content">
