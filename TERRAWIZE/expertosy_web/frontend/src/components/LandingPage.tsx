@@ -164,6 +164,13 @@ const LandingPage: React.FC = () => {
     }
   };
 
+  const handleScrollToHowItWorks = () => {
+    const howItWorksSection = document.querySelector('.how-it-works');
+    if (howItWorksSection) {
+      howItWorksSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="landing-page">
       <div className="background-effects">
@@ -179,7 +186,7 @@ const LandingPage: React.FC = () => {
             </h1>
             <div className="subtitle-container">
               <div className="subtitle-description">
-              The GPS for your wishlist, not an ad ocean
+                The GPS for your wishlist, not an ad ocean
               </div>
             </div>
           </div>
@@ -207,7 +214,7 @@ const LandingPage: React.FC = () => {
                     <span>Processing...</span>
                   </div>
                 ) : (
-                  <span className="search-button-text">Lets find it</span>
+                  <span className="search-button-text">Find Your Perfect Match</span>
                 )}
               </button>
             </div>
@@ -254,6 +261,11 @@ const LandingPage: React.FC = () => {
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="scroll-indicator" onClick={handleScrollToHowItWorks}>
+            <span className="scroll-text">How it Works</span>
+            <span className="scroll-arrow">↓</span>
           </div>
         </div>
       </section>

@@ -1737,4 +1737,87 @@
   .example-text {
     font-size: 0.85rem;
   }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  cursor: pointer;
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: floatIndicator 3s ease-in-out infinite;
+  z-index: 100;
+}
+
+.scroll-indicator:hover {
+  transform: translateX(-50%) translateY(5px);
+}
+
+.scroll-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #4A90E2 0%, #FFD700 50%, #E24A90 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: gradientText 6s linear infinite;
+  text-shadow: 0 2px 15px rgba(74, 144, 226, 0.4);
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.scroll-indicator:hover .scroll-text {
+  opacity: 1;
+}
+
+.scroll-arrow {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #4A90E2 0%, #FFD700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: bounceArrow 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.5));
+}
+
+@keyframes floatIndicator {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-15px);
+  }
+}
+
+@keyframes bounceArrow {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(10px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .scroll-indicator {
+    bottom: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .scroll-text {
+    font-size: 1.1rem;
+  }
+  
+  .scroll-arrow {
+    font-size: 2rem;
+  }
 } 
