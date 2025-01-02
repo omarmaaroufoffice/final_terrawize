@@ -7,20 +7,31 @@ const Logo: React.FC = () => {
     <Link to="/" className="logo-container">
       <div className="logo">
         <div className="logo-symbol">
-          <div className="logo-hexagon">
-            <div className="logo-inner-glow"></div>
-          </div>
-          <div className="logo-beam"></div>
-          <div className="logo-dots">
-            <div className="logo-dot"></div>
-            <div className="logo-dot"></div>
-            <div className="logo-dot"></div>
+          <div className="logo-star-container">
+            <div className="logo-star-outer"></div>
+            <div className="logo-star-inner"></div>
+            <div className="logo-star-core"></div>
+            <div className="logo-rays">
+              <div className="logo-ray"></div>
+              <div className="logo-ray"></div>
+              <div className="logo-ray"></div>
+              <div className="logo-ray"></div>
+            </div>
+            <div className="logo-sparkles">
+              <div className="logo-sparkle"></div>
+              <div className="logo-sparkle"></div>
+              <div className="logo-sparkle"></div>
+            </div>
           </div>
         </div>
-        <div className="logo-text">
-          <span className="logo-text-main">Expertosy</span>
-          <div className="logo-text-separator"></div>
-          <span className="logo-text-sub">AI</span>
+        <div className="logo-text-group">
+          <div className="logo-text-main">
+            <span className="logo-text-expertosy">Expertosy</span>
+          </div>
+          <div className="logo-text-sub">
+            <span className="logo-text-ai">AI</span>
+            <span className="logo-text-service">recommendation service</span>
+          </div>
         </div>
       </div>
     </Link>

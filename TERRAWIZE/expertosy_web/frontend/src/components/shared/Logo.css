@@ -10,77 +10,123 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .logo-symbol {
   position: relative;
-  width: 42px;
-  height: 42px;
+  width: 45px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.logo-hexagon {
+.logo-star-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.logo-star-outer {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--starlight-blue) 0%, var(--nova-gold) 100%);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+  background: linear-gradient(135deg, var(--starlight-blue), var(--nova-gold));
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: rotateStar 12s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(74, 144, 226, 0.4));
 }
 
-.logo-inner-glow {
+.logo-star-inner {
   position: absolute;
-  width: 90%;
-  height: 90%;
-  top: 5%;
-  left: 5%;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
-  filter: blur(4px);
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+  background: linear-gradient(45deg, var(--nova-gold), var(--starlight-blue));
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: rotateStar 8s linear infinite reverse;
 }
 
-.logo-beam {
+.logo-star-core {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  top: 35%;
+  left: 35%;
+  background: #FFFFFF;
+  border-radius: 50%;
+  filter: blur(2px);
+  animation: pulseCore 2s ease-in-out infinite;
+}
+
+.logo-rays {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: rotateRays 6s linear infinite;
+}
+
+.logo-ray {
   position: absolute;
   width: 2px;
-  height: 60%;
-  background: linear-gradient(to bottom, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.9) 30%,
-    rgba(255, 255, 255, 0.9) 70%,
-    transparent 100%
-  );
-  filter: blur(0.5px);
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+  height: 20px;
+  background: linear-gradient(to top, transparent, rgba(255, 255, 255, 0.8));
+  transform-origin: center 50%;
 }
 
-.logo-dots {
+.logo-ray:nth-child(1) { transform: rotate(0deg) translateY(-130%); }
+.logo-ray:nth-child(2) { transform: rotate(90deg) translateY(-130%); }
+.logo-ray:nth-child(3) { transform: rotate(180deg) translateY(-130%); }
+.logo-ray:nth-child(4) { transform: rotate(270deg) translateY(-130%); }
+
+.logo-sparkles {
   position: absolute;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 25% 0;
 }
 
-.logo-dot {
+.logo-sparkle {
+  position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.9);
+  background: #FFFFFF;
   border-radius: 50%;
-  margin-left: 60%;
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  filter: blur(1px);
+  animation: sparkle 3s ease-in-out infinite;
 }
 
-.logo-text {
+.logo-sparkle:nth-child(1) {
+  top: 0;
+  left: 50%;
+  animation-delay: 0s;
+}
+
+.logo-sparkle:nth-child(2) {
+  top: 50%;
+  right: 0;
+  animation-delay: 1s;
+}
+
+.logo-sparkle:nth-child(3) {
+  bottom: 0;
+  left: 50%;
+  animation-delay: 2s;
+}
+
+.logo-text-group {
   display: flex;
-  align-items: center;
-  gap: 0.8rem;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
 .logo-text-main {
+  display: flex;
+  align-items: baseline;
+}
+
+.logo-text-expertosy {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
@@ -91,21 +137,60 @@
   text-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
 }
 
-.logo-text-separator {
-  width: 2px;
-  height: 1.2rem;
-  background: linear-gradient(to bottom, var(--starlight-blue), var(--nova-gold));
-  border-radius: 1px;
-  box-shadow: 0 0 8px rgba(74, 144, 226, 0.3);
+.logo-text-sub {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
 }
 
-.logo-text-sub {
+.logo-text-ai {
   font-family: 'Orbitron', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--nova-gold);
   letter-spacing: 1px;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.logo-text-service {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+@keyframes rotateStar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotateRays {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulseCore {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
 @media (max-width: 768px) {
@@ -119,20 +204,20 @@
   }
 
   .logo-symbol {
-    width: 36px;
-    height: 36px;
+    width: 35px;
+    height: 35px;
   }
 
-  .logo-text-main {
-    font-size: 1.3rem;
+  .logo-text-expertosy {
+    font-size: 1.2rem;
   }
 
-  .logo-text-separator {
-    height: 1rem;
+  .logo-text-ai {
+    font-size: 0.8rem;
   }
 
-  .logo-text-sub {
-    font-size: 0.9rem;
+  .logo-text-service {
+    font-size: 0.6rem;
   }
 }
 
@@ -146,19 +231,19 @@
   }
 
   .logo-symbol {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
-  .logo-text-main {
-    font-size: 1.2rem;
+  .logo-text-expertosy {
+    font-size: 1.1rem;
   }
 
-  .logo-text-separator {
-    height: 0.9rem;
+  .logo-text-ai {
+    font-size: 0.7rem;
   }
 
-  .logo-text-sub {
-    font-size: 0.8rem;
+  .logo-text-service {
+    font-size: 0.55rem;
   }
 } 
