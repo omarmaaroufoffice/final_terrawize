@@ -269,8 +269,7 @@ const LandingPage: React.FC = () => {
       <div className="background-effects">
         <div className="constellation-grid" />
         <div className="nebula-overlay" />
-      </div>
-      
+      </div>     
       <section className="hero-section">
         <div className="hero-content">
           <div className="title-container">
