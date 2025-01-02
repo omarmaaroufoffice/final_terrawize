@@ -15,8 +15,12 @@ const Navigation: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Define routes where we want transparent navigation
+  const transparentRoutes = ['/', '/landing'];
+  const shouldBeTransparent = transparentRoutes.includes(location.pathname);
+
   return (
-    <nav className={`nav-header ${scrolled ? 'scrolled' : ''}`}>
+    <nav className={`nav-header ${scrolled ? 'scrolled' : ''} ${shouldBeTransparent ? 'transparent' : ''}`}>
       <div className="nav-content">
         <Link to="/" className="logo-link">
           <div className="logo">
