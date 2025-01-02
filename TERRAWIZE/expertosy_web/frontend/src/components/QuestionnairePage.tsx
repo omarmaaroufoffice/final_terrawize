@@ -5,7 +5,6 @@ import { getLocationFromIP } from '../services/locationService';
 import RankingQuestionnaire from './RankingQuestionnaire';
 import { motion, AnimatePresence } from 'framer-motion';
 import './QuestionnairePage.css';
-import Navigation from './shared/Navigation';
 
 interface ProductExplanation {
   name: string;
@@ -537,7 +536,6 @@ const QuestionnairePage: React.FC = () => {
 
   return (
     <div className="questionnaire-page">
-      <Navigation />
       <div className="questionnaire-container">
         <div className="progress-indicator">
           <span>Question {currentQuestionIndex + 1} of {questionnaire.length}</span>

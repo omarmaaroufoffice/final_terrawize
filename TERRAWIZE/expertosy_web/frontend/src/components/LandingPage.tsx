@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../config/api';
-import Navigation from './shared/Navigation';
 import './rest.css';
 import './mediablocas.css';
 
@@ -344,185 +343,186 @@ const LandingPage: React.FC = () => {
   };
   return (
     <div className="landing-page">
-      <Navigation />
-      <section className="hero-section">
-        <div className="hero-content">
-          <div className="search-container">
-            <div className="search-box">
-              <div className="search-input-wrapper">
-                <span className="search-icon">🔍</span>
-                <input
-                  type="text"
-                  placeholder="What are you looking to find?"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                />
+      <div className="content">
+        <section className="hero-section">
+          <div className="hero-content">
+            <div className="search-container">
+              <div className="search-box">
+                <div className="search-input-wrapper">
+                  <span className="search-icon">🔍</span>
+                  <input
+                    type="text"
+                    placeholder="What are you looking to find?"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  />
+                </div>
+                <button 
+                  className="search-button" 
+                  onClick={handleSearch}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <div className="loading-animation">
+                      <div className="loading-ring"></div>
+                      <span>Processing...</span>
+                    </div>
+                  ) : (
+                    <span className="search-button-text">Lets find it</span>
+                  )}
+                </button>
               </div>
-              <button 
-                className="search-button" 
-                onClick={handleSearch}
-                disabled={isLoading}
+              {error && (
+                <div className="error-message">
+                  <span className="error-icon">⚠️</span>
+                  {error}
+                </div>
+              )}
+              
+              <div className="search-examples">
+                <div className="examples-grid">
+                  {searchExamples.map((example, index) => (
+                    <button
+                      key={index}
+                      className={`example-item example-${example.color}`}
+                      onClick={() => handleExampleClick(example.prefix)}
+                    >
+                      <span className="example-icon">{example.icon}</span>
+                      <span className="example-text">
+                        <span className="example-prefix">{example.prefix}</span>
+                        <span className="example-placeholder">...</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="popular-searches">
+                <div className="popular-searches-header">
+                  <span className="popular-searches-icon">🔥</span>
+                  <h3>Popular Searches</h3>
+                </div>
+                <div className="tags">
+                  {popularSearches.map((search, index) => (
+                    <button
+                      key={index}
+                      className="tag"
+                      onClick={() => handlePopularSearch(search)}
+                    >
+                      <span className="tag-icon">{search.icon}</span>
+                      {search.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="how-it-works">
+          <div className="steps">
+            <div className="step">
+              <div className="step-content">
+                <div className="step-number">1</div>
+                <h3>Tell Us What You Need</h3>
+                <p>Describe your ideal product and let our AI decode your requirements</p>
+              </div>
+              <div className="step-illustration">
+                <div className="step-icon">
+                  <div className="custom-icon">
+                    <div className="icon-input">
+                      <div className="icon-input-frame">
+                        <div className="icon-input-glow"></div>
+                      </div>
+                      <div className="icon-input-cursor"></div>
+                      <div className="icon-input-particles">
+                        <div className="icon-input-particle"></div>
+                        <div className="icon-input-particle"></div>
+                        <div className="icon-input-particle"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="step">
+              <div className="step-content">
+                <div className="step-number">2</div>
+                <h3>Answer Smart Questions</h3>
+                <p>Engage with our AI's personalized questions to refine your perfect match</p>
+              </div>
+              <div className="step-illustration">
+                <div className="step-icon">
+                  <div className="custom-icon">
+                    <div className="icon-questions">
+                      <div className="icon-questions-orbit">
+                        <div className="icon-questions-dot"></div>
+                        <div className="icon-questions-dot"></div>
+                        <div className="icon-questions-dot"></div>
+                        <div className="icon-questions-dot"></div>
+                      </div>
+                      <div className="icon-questions-center"></div>
+                      <div className="icon-questions-rings">
+                        <div className="icon-questions-ring"></div>
+                        <div className="icon-questions-ring"></div>
+                        <div className="icon-questions-ring"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="step">
+              <div className="step-content">
+                <div className="step-number">3</div>
+                <h3>Get Perfect Matches</h3>
+                <p>Discover your ideal products, expertly curated by our AI just for you</p>
+              </div>
+              <div className="step-illustration">
+                <div className="step-icon">
+                  <div className="custom-icon">
+                    <div className="icon-match">
+                      <div className="icon-match-circle">
+                        <div className="icon-match-glow"></div>
+                      </div>
+                      <div className="icon-match-check"></div>
+                      <div className="icon-match-particles">
+                        <div className="icon-match-particle"></div>
+                        <div className="icon-match-particle"></div>
+                        <div className="icon-match-particle"></div>
+                        <div className="icon-match-particle"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="features-section">
+          <div className="section-header">
+            <h2>Why Choose Us</h2>
+            <p>Experience the power of AI-driven recommendations</p>
+          </div>
+          <div className="feature-grid">
+            {features.map((feature, index) => (
+              <div 
+                key={index} 
+                className={`feature-card ${index === activeFeature ? 'active' : ''}`}
               >
-                {isLoading ? (
-                  <div className="loading-animation">
-                    <div className="loading-ring"></div>
-                    <span>Processing...</span>
-                  </div>
-                ) : (
-                  <span className="search-button-text">Lets find it</span>
-                )}
-              </button>
-            </div>
-            {error && (
-              <div className="error-message">
-                <span className="error-icon">⚠️</span>
-                {error}
-              </div>
-            )}
-            
-            <div className="search-examples">
-              <div className="examples-grid">
-                {searchExamples.map((example, index) => (
-                  <button
-                    key={index}
-                    className={`example-item example-${example.color}`}
-                    onClick={() => handleExampleClick(example.prefix)}
-                  >
-                    <span className="example-icon">{example.icon}</span>
-                    <span className="example-text">
-                      <span className="example-prefix">{example.prefix}</span>
-                      <span className="example-placeholder">...</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="popular-searches">
-              <div className="popular-searches-header">
-                <span className="popular-searches-icon">🔥</span>
-                <h3>Popular Searches</h3>
-              </div>
-              <div className="tags">
-                {popularSearches.map((search, index) => (
-                  <button
-                    key={index}
-                    className="tag"
-                    onClick={() => handlePopularSearch(search)}
-                  >
-                    <span className="tag-icon">{search.icon}</span>
-                    {search.name}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="how-it-works">
-        <div className="steps">
-          <div className="step">
-            <div className="step-content">
-              <div className="step-number">1</div>
-              <h3>Tell Us What You Need</h3>
-              <p>Describe your ideal product and let our AI decode your requirements</p>
-            </div>
-            <div className="step-illustration">
-              <div className="step-icon">
-                <div className="custom-icon">
-                  <div className="icon-input">
-                    <div className="icon-input-frame">
-                      <div className="icon-input-glow"></div>
-                    </div>
-                    <div className="icon-input-cursor"></div>
-                    <div className="icon-input-particles">
-                      <div className="icon-input-particle"></div>
-                      <div className="icon-input-particle"></div>
-                      <div className="icon-input-particle"></div>
-                    </div>
-                  </div>
+                <div className="feature-icon-wrapper">
+                  <span className="feature-icon">{feature.icon}</span>
                 </div>
+                <h3>{feature.title}</h3>
+                <p>{feature.description}</p>
+                <div className="feature-hover-effect"></div>
               </div>
-            </div>
+            ))}
           </div>
-          <div className="step">
-            <div className="step-content">
-              <div className="step-number">2</div>
-              <h3>Answer Smart Questions</h3>
-              <p>Engage with our AI's personalized questions to refine your perfect match</p>
-            </div>
-            <div className="step-illustration">
-              <div className="step-icon">
-                <div className="custom-icon">
-                  <div className="icon-questions">
-                    <div className="icon-questions-orbit">
-                      <div className="icon-questions-dot"></div>
-                      <div className="icon-questions-dot"></div>
-                      <div className="icon-questions-dot"></div>
-                      <div className="icon-questions-dot"></div>
-                    </div>
-                    <div className="icon-questions-center"></div>
-                    <div className="icon-questions-rings">
-                      <div className="icon-questions-ring"></div>
-                      <div className="icon-questions-ring"></div>
-                      <div className="icon-questions-ring"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="step">
-            <div className="step-content">
-              <div className="step-number">3</div>
-              <h3>Get Perfect Matches</h3>
-              <p>Discover your ideal products, expertly curated by our AI just for you</p>
-            </div>
-            <div className="step-illustration">
-              <div className="step-icon">
-                <div className="custom-icon">
-                  <div className="icon-match">
-                    <div className="icon-match-circle">
-                      <div className="icon-match-glow"></div>
-                    </div>
-                    <div className="icon-match-check"></div>
-                    <div className="icon-match-particles">
-                      <div className="icon-match-particle"></div>
-                      <div className="icon-match-particle"></div>
-                      <div className="icon-match-particle"></div>
-                      <div className="icon-match-particle"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="features-section">
-        <div className="section-header">
-          <h2>Why Choose Us</h2>
-          <p>Experience the power of AI-driven recommendations</p>
-        </div>
-        <div className="feature-grid">
-          {features.map((feature, index) => (
-            <div 
-              key={index} 
-              className={`feature-card ${index === activeFeature ? 'active' : ''}`}
-            >
-              <div className="feature-icon-wrapper">
-                <span className="feature-icon">{feature.icon}</span>
-              </div>
-              <h3>{feature.title}</h3>
-              <p>{feature.description}</p>
-              <div className="feature-hover-effect"></div>
-            </div>
-          ))}
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 };

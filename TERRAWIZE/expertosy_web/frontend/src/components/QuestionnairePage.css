@@ -7,10 +7,10 @@
 
 .questionnaire-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 2rem;
-  border-radius: 24px;
   background: rgba(10, 17, 40, 0.95);
+  border-radius: 24px;
   backdrop-filter: blur(12px);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
@@ -278,8 +278,8 @@
 
 @media (max-width: 768px) {
   .questionnaire-container {
-    margin: 0 auto;
     padding: 1.5rem;
+    margin: 1rem auto;
   }
 
   .title-container {
@@ -338,14 +338,9 @@
 }
 
 @media (max-width: 480px) {
-  .questionnaire-page {
-    padding: 0.5rem;
-    padding-top: calc(var(--nav-height-mobile) + 0.5rem);
-  }
-
   .questionnaire-container {
-    margin: 0 auto;
     padding: 1rem;
+    margin: 0.5rem auto;
   }
 
   .title-container {
@@ -832,13 +827,12 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .questionnaire-page {
-    padding: 0.75rem;
-    padding-top: calc(var(--nav-height-mobile) + 0.75rem);
+    padding: 1rem;
   }
-
+  
   .questionnaire-container {
-    margin: 0 auto;
     padding: 1.5rem;
+    margin: 1rem auto;
   }
 
   .questionnaire-header h2 {
@@ -884,13 +878,12 @@
 /* Mobile Optimization */
 @media (max-width: 768px) {
   .questionnaire-page {
-    padding: 0.75rem;
-    padding-top: calc(var(--nav-height-mobile) + 0.75rem);
+    padding: 1rem;
   }
 
   .questionnaire-container {
-    margin: 0 auto;
     padding: 1.5rem;
+    margin: 1rem auto;
   }
 
   .title-container {

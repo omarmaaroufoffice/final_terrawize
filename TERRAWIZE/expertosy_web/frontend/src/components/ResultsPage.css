@@ -15,7 +15,7 @@
   position: relative;
   z-index: 1;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 2.5rem;
   background: rgba(10, 17, 40, 0.8);
   border-radius: 24px;
@@ -296,10 +296,10 @@
   .results-page {
     padding: 1rem;
   }
-
+  
   .results-container {
-    padding: 1rem;
-    margin: 1rem;
+    padding: 1.5rem;
+    margin: 1rem auto;
   }
 
   .results-header {
@@ -381,13 +381,9 @@
 }
 
 @media (max-width: 480px) {
-  .results-page {
-    padding: 0.75rem;
-  }
-
   .results-container {
-    padding: 0.75rem;
-    margin: 0.5rem;
+    padding: 1rem;
+    margin: 0.5rem auto;
   }
 
   .results-title {

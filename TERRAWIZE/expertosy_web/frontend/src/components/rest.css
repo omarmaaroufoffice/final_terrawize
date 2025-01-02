@@ -12,7 +12,6 @@
     --starlight-blue: #4A90E2;
     --nova-gold: #FFD700;
     --stellar-white: #F8FAFC;
-    --nav-height: 70px;
 }
   
 /* -----------------------------------
@@ -21,7 +20,6 @@
 .landing-page {
     position: relative;
     min-height: 100vh;
-    padding-top: var(--nav-height);
 }
   
 /* -----------------------------------
