@@ -1566,7 +1566,7 @@
 .icon-headphone::before {
   content: '';
   position: absolute;
-  top: 2px;
+  top: 4px;
   left: 4px;
   right: 4px;
   height: 12px;
