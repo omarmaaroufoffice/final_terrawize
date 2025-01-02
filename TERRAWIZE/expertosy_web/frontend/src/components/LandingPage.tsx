@@ -51,7 +51,9 @@ const LandingPage: React.FC = () => {
       name: 'Headphones', 
       icon: (
         <div className="custom-icon">
-          <div className="icon-headphone" />
+          <div className="icon-headphone">
+            <div className="headphone-band" />
+          </div>
         </div>
       )
     },

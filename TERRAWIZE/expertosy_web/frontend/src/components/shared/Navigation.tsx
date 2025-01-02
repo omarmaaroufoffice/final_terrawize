@@ -37,7 +37,7 @@ const Navigation: React.FC = () => {
             </div>
             <div className="logo-text-container">
               <span className="logo-text">Expertosy</span>
-              <span className="logo-tagline">AI Product Matcher</span>
+              <span className="logo-tagline">AI Recomendation Engine</span>
             </div>
           </div>
         </Link>

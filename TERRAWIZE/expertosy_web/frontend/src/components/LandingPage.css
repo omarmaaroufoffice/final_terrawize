@@ -1565,31 +1565,43 @@
 
 .icon-headphone {
   width: 20px;
-  height: 20px;
+  height: 18px;
   position: relative;
 }
 
 .icon-headphone::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 2px;
-  right: 2px;
-  height: 12px;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 14px;
   border: 2px solid currentColor;
-  border-radius: 12px 12px 0 0;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
 }
 
 .icon-headphone::after {
   content: '';
   position: absolute;
-  bottom: 2px;
-  left: 0;
-  width: 6px;
-  height: 10px;
+  bottom: 0;
+  left: 2px;
+  width: 4px;
+  height: 8px;
   border: 2px solid currentColor;
   border-radius: 3px;
-  box-shadow: 14px 0 0 -2px currentColor;
+  box-shadow: 10px 0 0 -1px currentColor, 10px 0 0 1px currentColor;
+}
+
+/* Add a middle band for more detail */
+.icon-headphone .headphone-band {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  width: 8px;
+  height: 2px;
+  background: currentColor;
+  transform: translateX(-50%);
 }
 
 .icon-watch {
