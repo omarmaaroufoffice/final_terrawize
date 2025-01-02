@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../config/api';
 import Navigation from './shared/Navigation';
@@ -21,8 +21,6 @@ const LandingPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [scrolled, setScrolled] = useState(false);
-  const [activeFeature, setActiveFeature] = useState(0);
 
   const popularSearches: PopularSearch[] = [
     { 
@@ -89,53 +87,6 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       )
-    }
-  ];
-
-  const features = [
-    {
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-target">
-            <div className="icon-target-vertical" />
-          </div>
-        </div>
-      ),
-      title: 'Smart Recommendations',
-      description: 'AI-powered suggestions tailored to your unique preferences and needs'
-    },
-    {
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-brain">
-            <div className="icon-brain-circles" />
-          </div>
-        </div>
-      ),
-      title: 'Advanced Analysis',
-      description: 'Deep learning algorithms process thousands of data points for accuracy'
-    },
-    {
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-compare">
-            <div className="icon-compare-lines" />
-          </div>
-        </div>
-      ),
-      title: 'Intelligent Comparison',
-      description: 'Smart feature comparison helps you make informed decisions'
-    },
-    {
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-lightning">
-            <div className="icon-lightning-bolt" />
-          </div>
-        </div>
-      ),
-      title: 'Lightning Fast',
-      description: 'Get instant, personalized recommendations in seconds'
     }
   ];
 
@@ -231,29 +182,10 @@ const LandingPage: React.FC = () => {
     const searchInput = document.querySelector('.search-box input') as HTMLInputElement;
     if (searchInput) {
       searchInput.focus();
-      // Place cursor at the end
       const length = prefix.length + 1;
       searchInput.setSelectionRange(length, length);
     }
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-
-    const rotateFeatures = () => {
-      setActiveFeature((prev) => (prev + 1) % features.length);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    const featureInterval = setInterval(rotateFeatures, 3000);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearInterval(featureInterval);
-    };
-  }, [features.length]);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) {
@@ -336,12 +268,6 @@ const LandingPage: React.FC = () => {
     }
   };
 
-  const handleScrollToHowItWorks = () => {
-    const howItWorksSection = document.querySelector('.how-it-works');
-    if (howItWorksSection) {
-      howItWorksSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
   return (
     <div className="landing-page">
       <Navigation />
