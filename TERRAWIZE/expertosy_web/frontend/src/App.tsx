@@ -9,13 +9,13 @@ import {
 import LandingPage from './components/LandingPage';
 import QuestionnairePage from './components/QuestionnairePage';
 import ResultsPage from './components/ResultsPage';
-import Logo from './components/shared/Logo';
+import Navigation from './components/shared/Navigation';
 import './App.css';
 
 const AppLayout: React.FC = () => {
   return (
     <div className="app">
-      <Logo />
+      <Navigation />
       <Outlet />
     </div>
   );
