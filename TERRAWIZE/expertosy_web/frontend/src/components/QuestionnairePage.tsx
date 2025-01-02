@@ -356,13 +356,12 @@ const QuestionnairePage: React.FC = () => {
         exit="exit"
         variants={pageVariants}
       >
-        <div className="questionnaire-container">
-          <div className="space-background" />
+        <div className="questionnaire-container loading">
           <div className="loading-container">
             <div className="loading-content">
               <div className="loading-icon">
                 <div className="pulse-ring"></div>
-                <span className="icon" role="img" aria-label="star">🌟</span>
+                <span className="icon" role="img" aria-label="star">✨</span>
               </div>
               
               <motion.h2
@@ -388,7 +387,7 @@ const QuestionnairePage: React.FC = () => {
                   />
                 </div>
                 <div className="loading-progress-text">
-                  <span>Analyzing...</span>
+                  <span>Processing</span>
                   <span>{loadingProgress}%</span>
                 </div>
               </motion.div>
@@ -405,7 +404,7 @@ const QuestionnairePage: React.FC = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
                   >
-                    ✨ Crafting Your Stellar Experience ✨
+                    ✨ Crafting Your Perfect Match ✨
                   </motion.span>
                 </p>
               </motion.div>
