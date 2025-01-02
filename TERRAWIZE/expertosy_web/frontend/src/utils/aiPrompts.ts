@@ -15,7 +15,7 @@ Examples:
 
 // Add this to your existing AI system prompt
 export const systemPrompt = `
-${yourExistingSystemPrompt}
+
 
 ${currencyInstructions}
 `; 
