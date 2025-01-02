@@ -205,8 +205,8 @@ def health_check():
 
 # Create an OpenAI client with a custom HTTP client to avoid proxy issues
 client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY", ""),
-    base_url="https://api.openai.com/v1",
+    api_key=os.getenv("DEEPSEEK_API_KEY", ""),
+    base_url="https://api.deepseek.com",
     timeout=60.0,
     max_retries=2
 )
@@ -219,14 +219,17 @@ class ExpertosyRecommendationEngine:
         """Initialize the recommendation engine."""
         self.search_query = search_query
         self.results = {}
-        self.openai_client = OpenAI()
+        self.openai_client = OpenAI(
+            api_key=os.getenv("DEEPSEEK_API_KEY", ""),
+            base_url="https://api.deepseek.com"
+        )
         
     async def _get_completion(self, messages: List[dict]) -> str:
         """Get completion from OpenAI API."""
         try:
             response = await asyncio.to_thread(
                 self.openai_client.chat.completions.create,
-                model="gpt-4o-mini",
+                model="deepseek-chat",
                 messages=messages,
                 temperature=0.7,
                 max_tokens=2000
