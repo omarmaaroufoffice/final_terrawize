@@ -1932,3 +1932,14 @@
   }
 }
 
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 6.75rem !important;
+    letter-spacing: 2px;
+  }
+
+  .subtitle-description {
+    font-size: 0.7rem !important;
+  }
+}
+
