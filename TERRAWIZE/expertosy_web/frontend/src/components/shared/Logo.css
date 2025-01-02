@@ -1,22 +1,30 @@
+/* Root Variables */
+:root {
+  --constellation-gradient: linear-gradient(135deg, var(--starlight-blue) 0%, var(--nova-gold) 100%);
+  --text-gradient: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(74, 144, 226, 0.9) 100%);
+}
+
+/* Logo Container */
 .logo {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.5rem;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  position: relative;
-  background: transparent;
+  gap: 1.2rem;
+  padding: 0.8rem 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: none;
   border: none;
-  box-shadow: none;
+  text-decoration: none;
+  position: relative;
   min-width: auto;
 }
 
 .logo:hover {
-  transform: none;
-  background: rgba(74, 144, 226, 0.1);
+  background: none;
+  transform: translateY(-2px);
+  box-shadow: none;
 }
 
+/* Logo Content */
 .logo-content {
   display: flex;
   align-items: center;
@@ -24,22 +32,27 @@
   width: 100%;
 }
 
+/* Logo Icon */
 .logo-icon {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
   position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .logo-icon svg {
-  width: 100%;
-  height: 100%;
+  width: 85%;
+  height: 85%;
+  filter: drop-shadow(0 2px 8px rgba(74, 144, 226, 0.4));
   animation: rotateStar 20s linear infinite;
 }
 
+/* Star Paths */
 .star-outer {
   opacity: 0.9;
   transform-origin: center;
@@ -51,6 +64,33 @@
   animation: pulseInner 3s ease-in-out infinite;
 }
 
+/* Logo Text */
+.logo-text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: var(--constellation-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+  filter: drop-shadow(0 2px 4px rgba(74, 144, 226, 0.3));
+}
+
+.logo-subtitle {
+  font-size: 0.85rem;
+  background: var(--text-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Animations */
 @keyframes rotateStar {
   from {
     transform: rotate(0deg);
@@ -71,31 +111,10 @@
   }
 }
 
-.logo-text-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: 600;
-  background: var(--constellation-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px;
-}
-
-.logo-subtitle {
-  font-size: 0.75rem;
-  background: linear-gradient(135deg, var(--starlight-blue) 0%, rgba(255, 255, 255, 0.85) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 0.2px;
-}
-
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
   .logo {
-    padding: 0.8rem;
+    padding: 0.6rem 0;
     top: 1rem;
     left: 1rem;
     min-width: 180px;

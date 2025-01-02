@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../config/api';
 import Navigation from './shared/Navigation';
-import './LandingPage.css';
+import './rest.css';
+import './mediablocas.css';
 
 interface PopularSearch {
   name: string;
