@@ -928,12 +928,17 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    color: #FFFFFF;
+    background: rgba(74, 144, 226, 0.15);
+    border-radius: 6px;
+    padding: 6px;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
   }
   .icon-search {
     position: relative;
     width: 14px;
     height: 14px;
-    border: 2px solid currentColor;
+    border: 2.5px solid currentColor;
     border-radius: 50%;
   }
   .icon-search::after {
@@ -942,18 +947,160 @@
     bottom: -6px;
     right: -3px;
     width: 8px;
-    height: 2px;
+    height: 2.5px;
     background: currentColor;
     transform: rotate(45deg);
     transform-origin: right;
   }
-  /* ... all other icons remain here exactly as in your snippet ... */
+  /* Target Icon */
+  .icon-target {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  .icon-target::before,
+  .icon-target::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+  }
+  .icon-target::before {
+    width: 2.5px;
+    height: 24px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .icon-target::after {
+    width: 24px;
+    height: 2.5px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  /* Star Icon */
+  .icon-star {
+    width: 20px;
+    height: 20px;
+    position: relative;
+  }
+  .icon-star::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border: 2.5px solid currentColor;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  .icon-star::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%) rotate(0deg);
+    border: 2.5px solid currentColor;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  /* Bulb Icon */
+  .icon-bulb {
+    width: 16px;
+    height: 20px;
+    border: 2.5px solid currentColor;
+    border-radius: 10px 10px 2px 2px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  .icon-bulb::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 8px;
+    height: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  .icon-bulb::after {
+    content: '';
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    width: 4px;
+    height: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  /* Input Icon */
+  .icon-input {
+    width: 20px;
+    height: 16px;
+    border: 2.5px solid currentColor;
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  .icon-input-cursor {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 2.5px;
+    height: 8px;
+    background: currentColor;
+    animation: blink 1s infinite;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  /* Questions Icon */
+  .icon-questions {
+    width: 20px;
+    height: 20px;
+    position: relative;
+  }
+  .icon-questions-dots {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+  }
+  .icon-questions-dots::before,
+  .icon-questions-dots::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  .icon-questions-dots::before {
+    width: 4px;
+    height: 4px;
+    top: 0;
+    left: 6px;
+  }
+  .icon-questions-dots::after {
+    width: 12px;
+    height: 12px;
+    bottom: 0;
+    left: 2px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+  }
+  /* Match Icon */
   .icon-match {
     width: 24px;
     height: 24px;
-    border: 2px solid currentColor;
+    border: 2.5px solid currentColor;
     border-radius: 50%;
     position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
   .icon-match-check::before,
   .icon-match-check::after {
@@ -963,44 +1110,71 @@
   }
   .icon-match-check::before {
     width: 8px;
-    height: 2px;
+    height: 2.5px;
     transform: rotate(45deg);
     left: 4px;
     top: 11px;
   }
   .icon-match-check::after {
     width: 12px;
-    height: 2px;
+    height: 2.5px;
     transform: rotate(-45deg);
     right: 4px;
     top: 10px;
   }
-  
-  /* -----------------------------------
-     Enhanced icon colors/effects
-  ----------------------------------- */
+  /* Icon Animations */
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  /* Icon Hover Effects */
+  .custom-icon {
+    transition: all 0.3s ease;
+  }
+  .example-item:hover .custom-icon {
+    transform: scale(1.1);
+    background: rgba(74, 144, 226, 0.25);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.4);
+  }
+  .step:hover .custom-icon {
+    transform: scale(1.1);
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  }
+  /* Enhanced icon colors/effects */
   .feature-card .custom-icon {
     width: 40px;
     height: 40px;
-    color: var(--starlight-blue);
-    filter: drop-shadow(0 0 12px rgba(74, 144, 226, 0.4));
+    color: #FFFFFF;
+    background: rgba(74, 144, 226, 0.2);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
     transition: all 0.3s ease;
+    padding: 8px;
   }
   .feature-card:hover .custom-icon {
-    color: var(--nova-gold);
-    filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.5));
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
     transform: scale(1.1);
   }
   .step-icon .custom-icon {
     width: 36px;
     height: 36px;
-    color: var(--starlight-blue);
-    filter: drop-shadow(0 0 12px rgba(74, 144, 226, 0.4));
+    color: #FFFFFF;
+    background: rgba(74, 144, 226, 0.2);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
     transition: all 0.3s ease;
+    padding: 7px;
   }
   .step:hover .step-icon .custom-icon {
-    color: var(--nova-gold);
-    filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.5));
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
     transform: scale(1.1);
   }
   
@@ -1044,5 +1218,475 @@
       opacity: 1;
       transform: translate(-50%, 0);
     }
+  }
+  
+  /* Custom Icon Base */
+  .custom-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: #FFFFFF;
+    background: rgba(74, 144, 226, 0.15);
+    border-radius: 6px;
+    padding: 6px;
+    box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
+  }
+  
+  /* Laptop Icon */
+  .icon-laptop {
+    width: 18px;
+    height: 12px;
+    border: 2.5px solid currentColor;
+    border-radius: 2px;
+    position: relative;
+  }
+  
+  .icon-laptop::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 10px;
+    height: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  
+  /* Phone Icon */
+  .icon-phone {
+    width: 12px;
+    height: 18px;
+    border: 2.5px solid currentColor;
+    border-radius: 2px;
+    position: relative;
+  }
+  
+  .icon-phone::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    width: 4px;
+    height: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+    border-radius: 1px;
+  }
+  
+  /* Camera Icon */
+  .icon-camera {
+    width: 18px;
+    height: 14px;
+    border: 2.5px solid currentColor;
+    border-radius: 2px;
+    position: relative;
+  }
+  
+  .icon-camera::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Watch Icon */
+  .icon-watch {
+    width: 14px;
+    height: 18px;
+    border: 2.5px solid currentColor;
+    border-radius: 8px;
+    position: relative;
+  }
+  
+  .icon-watch::before,
+  .icon-watch::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 6px;
+    height: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  
+  .icon-watch::before {
+    top: -4px;
+  }
+  
+  .icon-watch::after {
+    bottom: -4px;
+  }
+  
+  /* Brain Icon */
+  .icon-brain {
+    width: 20px;
+    height: 16px;
+    position: relative;
+  }
+  
+  .icon-brain-circles::before,
+  .icon-brain-circles::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+  }
+  
+  .icon-brain-circles::before {
+    left: 2px;
+    top: 2px;
+  }
+  
+  .icon-brain-circles::after {
+    right: 2px;
+    top: 2px;
+  }
+  
+  /* Lightning Icon */
+  .icon-lightning {
+    width: 16px;
+    height: 20px;
+    position: relative;
+  }
+  
+  .icon-lightning-bolt {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2.5px;
+    height: 12px;
+    background: currentColor;
+    transform: translateX(-50%) rotate(20deg);
+  }
+  
+  .icon-lightning-bolt::before,
+  .icon-lightning-bolt::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 2.5px;
+    background: currentColor;
+  }
+  
+  .icon-lightning-bolt::before {
+    top: 2px;
+    right: 0;
+    transform: rotate(-45deg);
+  }
+  
+  .icon-lightning-bolt::after {
+    bottom: 2px;
+    left: 0;
+    transform: rotate(-45deg);
+  }
+  
+  /* Compare Icon */
+  .icon-compare {
+    width: 20px;
+    height: 16px;
+    position: relative;
+  }
+  
+  .icon-compare-lines::before,
+  .icon-compare-lines::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 2.5px;
+    background: currentColor;
+    left: 2px;
+  }
+  
+  .icon-compare-lines::before {
+    top: 4px;
+  }
+  
+  .icon-compare-lines::after {
+    bottom: 4px;
+  }
+  
+  /* Search Icon */
+  .icon-search {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+  }
+  
+  .icon-search::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: -3px;
+    width: 8px;
+    height: 2.5px;
+    background: currentColor;
+    transform: rotate(45deg);
+    transform-origin: right;
+  }
+  
+  /* Target Icon */
+  .icon-target {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  .icon-target::before,
+  .icon-target::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+  }
+  
+  .icon-target::before {
+    width: 2.5px;
+    height: 24px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .icon-target::after {
+    width: 24px;
+    height: 2.5px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Star Icon */
+  .icon-star {
+    width: 20px;
+    height: 20px;
+    position: relative;
+  }
+  
+  .icon-star::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%) rotate(45deg);
+    border: 2.5px solid currentColor;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  .icon-star::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%) rotate(0deg);
+    border: 2.5px solid currentColor;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Bulb Icon */
+  .icon-bulb {
+    width: 16px;
+    height: 20px;
+    border: 2.5px solid currentColor;
+    border-radius: 10px 10px 2px 2px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  .icon-bulb::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 8px;
+    height: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  
+  .icon-bulb::after {
+    content: '';
+    position: absolute;
+    bottom: -7px;
+    left: 50%;
+    width: 4px;
+    height: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+  }
+  
+  /* Input Icon */
+  .icon-input {
+    width: 20px;
+    height: 16px;
+    border: 2.5px solid currentColor;
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  .icon-input-cursor {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 2.5px;
+    height: 8px;
+    background: currentColor;
+    animation: blink 1s infinite;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Questions Icon */
+  .icon-questions {
+    width: 20px;
+    height: 20px;
+    position: relative;
+  }
+  
+  .icon-questions-dots {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+  }
+  
+  .icon-questions-dots::before,
+  .icon-questions-dots::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  .icon-questions-dots::before {
+    width: 4px;
+    height: 4px;
+    top: 0;
+    left: 6px;
+  }
+  
+  .icon-questions-dots::after {
+    width: 12px;
+    height: 12px;
+    bottom: 0;
+    left: 2px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+  }
+  
+  /* Match Icon */
+  .icon-match {
+    width: 24px;
+    height: 24px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  }
+  
+  .icon-match-check::before,
+  .icon-match-check::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+  }
+  
+  .icon-match-check::before {
+    width: 8px;
+    height: 2.5px;
+    transform: rotate(45deg);
+    left: 4px;
+    top: 11px;
+  }
+  
+  .icon-match-check::after {
+    width: 12px;
+    height: 2.5px;
+    transform: rotate(-45deg);
+    right: 4px;
+    top: 10px;
+  }
+  
+  /* Icon Animations */
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  
+  /* Icon Hover Effects */
+  .custom-icon {
+    transition: all 0.3s ease;
+  }
+  
+  .example-item:hover .custom-icon {
+    transform: scale(1.1);
+    background: rgba(74, 144, 226, 0.25);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.4);
+  }
+  
+  .step:hover .custom-icon {
+    transform: scale(1.1);
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  }
+  
+  /* Enhanced icon colors/effects */
+  .feature-card .custom-icon {
+    width: 40px;
+    height: 40px;
+    color: #FFFFFF;
+    background: rgba(74, 144, 226, 0.2);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+    transition: all 0.3s ease;
+    padding: 8px;
+  }
+  
+  .feature-card:hover .custom-icon {
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    transform: scale(1.1);
+  }
+  
+  .step-icon .custom-icon {
+    width: 36px;
+    height: 36px;
+    color: #FFFFFF;
+    background: rgba(74, 144, 226, 0.2);
+    box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+    transition: all 0.3s ease;
+    padding: 7px;
+  }
+  
+  .step:hover .step-icon .custom-icon {
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    transform: scale(1.1);
   }
   
