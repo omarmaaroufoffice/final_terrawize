@@ -973,33 +973,20 @@
   }
 
   .scroll-indicator {
-    position: relative;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    transform: none;
-    margin: 2rem auto;
-    padding: 1rem;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: none;
   }
 
-  .scroll-text {
-    font-size: 1rem;
-    text-align: center;
-    width: 100%;
+  .how-it-works {
+    margin-top: 2rem;
+    padding-top: 0;
   }
 
-  .scroll-arrow {
-    font-size: 2rem;
-    margin: 0 auto;
+  .steps {
+    margin-top: 1rem;
   }
 
   .popular-searches {
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
 }
 
@@ -1039,12 +1026,24 @@
   }
 
   .popular-searches {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .step {
     padding: 1.5rem;
     max-width: 95%;
+  }
+
+  .how-it-works {
+    margin-top: 1.5rem;
+  }
+
+  .steps {
+    margin-top: 0.5rem;
+  }
+
+  .popular-searches {
+    margin-bottom: 1.5rem;
   }
 }
 
