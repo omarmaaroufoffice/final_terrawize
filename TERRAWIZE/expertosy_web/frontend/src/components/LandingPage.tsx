@@ -347,13 +347,6 @@ const LandingPage: React.FC = () => {
       <Navigation />
       <section className="hero-section">
         <div className="hero-content">
-          <div className="title-container">
-            <div className="main-title">
-              <span className="gradient-text" data-text="Expertosy">Expertosy</span>
-              <span className="accent-text">Match</span>
-            </div>
-          </div>
-          
           <div className="search-container">
             <div className="search-box">
               <div className="search-input-wrapper">
