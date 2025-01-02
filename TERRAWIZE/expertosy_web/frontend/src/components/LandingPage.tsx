@@ -179,7 +179,7 @@ const LandingPage: React.FC = () => {
             </h1>
             <div className="subtitle-container">
               <div className="subtitle-description">
-              Skip the ad ocean in your search results, we're the GPS for your wishlist
+              The GPS for your wishlist, not an ad ocean
               </div>
             </div>
           </div>
@@ -207,10 +207,7 @@ const LandingPage: React.FC = () => {
                     <span>Processing...</span>
                   </div>
                 ) : (
-                  <>
-                    <span>Lets find it</span>
-                    <span className="button-star">✨</span>
-                  </>
+                  <span className="search-button-text">Lets find it</span>
                 )}
               </button>
             </div>
