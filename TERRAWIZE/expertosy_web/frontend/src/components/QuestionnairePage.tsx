@@ -301,13 +301,11 @@ const QuestionnairePage: React.FC = () => {
         .split('\n')
         .filter((line: string) => line.trim().length > 0);
 
-      setLoadingStage('Preparing detailed comparison questions...');
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setIsLoading(false);
+      // Show results immediately
       setProducts(recommendationLines);
       setRecommendedProducts(recommendationLines);
       setShowInitialRecommendations(true);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error generating recommendation:', error);
       setIsLoading(false);

@@ -49,34 +49,6 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
   useEffect(() => {
     let mounted = true;
     
-    const loadingStages = [
-      { text: '✨ Analyzing your preferences...', duration: 1000 },
-      { text: '🔍 Evaluating product matches...', duration: 1500 },
-      { text: '⚖️ Calculating optimal rankings...', duration: 1000 },
-      { text: '🎯 Fine-tuning recommendations...', duration: 1000 },
-      { text: '🌟 Preparing your personalized ranking...', duration: 500 }
-    ];
-
-    let currentProgress = 0;
-    const progressInterval = setInterval(() => {
-      if (currentProgress < 100) {
-        currentProgress += 1;
-        if (mounted) setLoadingProgress(currentProgress);
-      }
-    }, 40);
-
-    let currentStageIndex = 0;
-    const updateStage = () => {
-      if (currentStageIndex < loadingStages.length && mounted) {
-        setLoadingStage(loadingStages[currentStageIndex].text);
-        currentStageIndex++;
-        if (currentStageIndex < loadingStages.length) {
-          setTimeout(updateStage, loadingStages[currentStageIndex - 1].duration);
-        }
-      }
-    };
-    updateStage();
-
     const generateQuestionnaire = async () => {
       try {
         if (!products || products.length === 0) {
@@ -96,7 +68,7 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
         const parsedQuestionnaire = parseQuestionnaire(response.data.questionnaire);
         setQuestionnaire(parsedQuestionnaire);
         setIsLoading(false);
-        setTimeout(() => setShowQuestion(true), 300);
+        setShowQuestion(true);
       } catch (error) {
         console.error('Error generating ranking questionnaire:', error);
         setIsLoading(false);
@@ -107,7 +79,6 @@ const RankingQuestionnaire: React.FC<RankingQuestionnaireProps> = ({
 
     return () => {
       mounted = false;
-      clearInterval(progressInterval);
     };
   }, [products, searchQuery, previousQuestions]);
 

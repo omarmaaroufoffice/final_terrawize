@@ -20,6 +20,12 @@ const ResultsPage: React.FC = () => {
   const [loadingStage, setLoadingStage] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(45);
   
+  const state = location.state as { 
+    searchQuery: string;
+    userPreferences: Record<string, string>;
+    recommendation: ProductExplanation[];
+  };
+
   const loadingStages = [
     "✨ Analyzing your preferences...",
     "🔍 Evaluating product features...",
@@ -30,36 +36,24 @@ const ResultsPage: React.FC = () => {
 
   useEffect(() => {
     if (isLoading) {
-      // Progress through loading stages
+      // Progress through loading stages more quickly
       const stageInterval = setInterval(() => {
         setLoadingStage(prev => (prev < loadingStages.length - 1 ? prev + 1 : prev));
-      }, 3000);
-
-      // Update time remaining
-      const timeInterval = setInterval(() => {
-        setTimeRemaining(prev => {
-          if (prev <= 1) {
-            setIsLoading(false);
-            clearInterval(timeInterval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      }, 500);
 
       // Cleanup
       return () => {
         clearInterval(stageInterval);
-        clearInterval(timeInterval);
       };
     }
-  }, [isLoading]);
+  }, [isLoading, loadingStages]);
 
-  const state = location.state as { 
-    searchQuery: string;
-    userPreferences: Record<string, string>;
-    recommendation: ProductExplanation[];
-  };
+  // Add a new effect to check if we have results and show them immediately
+  useEffect(() => {
+    if (state?.recommendation && state.recommendation.length > 0) {
+      setIsLoading(false);
+    }
+  }, [state?.recommendation]);
 
   const pageVariants = {
     initial: { opacity: 0, y: 20 },
@@ -201,7 +195,7 @@ const ResultsPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Your Perfect <span className="search-query">{state.searchQuery}</span> Match
+            Your Perfect Match
           </motion.h1>
           <motion.p 
             className="subtitle"
