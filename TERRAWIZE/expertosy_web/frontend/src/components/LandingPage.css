@@ -1570,44 +1570,67 @@
 }
 
 .icon-headphone {
-  width: 20px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   position: relative;
 }
 
+/* Headband arc */
 .icon-headphone::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: 0;
-  right: 0;
-  height: 14px;
+  top: 0;
+  left: 2px;
+  right: 2px;
+  height: 12px;
   border: 2px solid currentColor;
   border-bottom: none;
-  border-radius: 10px 10px 0 0;
+  border-radius: 12px 12px 0 0;
 }
 
+/* Ear cups */
 .icon-headphone::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 2px;
-  width: 4px;
-  height: 8px;
+  bottom: 4px;
+  left: 0;
+  width: 6px;
+  height: 10px;
   border: 2px solid currentColor;
-  border-radius: 3px;
-  box-shadow: 10px 0 0 -1px currentColor, 10px 0 0 1px currentColor;
+  border-radius: 6px;
+  box-shadow: 18px 0 0 -1px currentColor, 18px 0 0 1px currentColor;
 }
 
-/* Add a middle band for more detail */
-.icon-headphone .headphone-band {
+/* Inner ear cup details */
+.headphone-band::before,
+.headphone-band::after {
+  content: '';
   position: absolute;
-  top: 4px;
-  left: 50%;
-  width: 8px;
-  height: 2px;
+  bottom: 8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
   background: currentColor;
-  transform: translateX(-50%);
+  opacity: 0.8;
+}
+
+.headphone-band::before {
+  left: 3px;
+}
+
+.headphone-band::after {
+  right: 3px;
+}
+
+/* Connecting bands */
+.headphone-band {
+  position: absolute;
+  top: 12px;
+  left: 4px;
+  width: 2px;
+  height: 6px;
+  background: currentColor;
+  box-shadow: 14px 0 0 0 currentColor;
 }
 
 .icon-watch {
