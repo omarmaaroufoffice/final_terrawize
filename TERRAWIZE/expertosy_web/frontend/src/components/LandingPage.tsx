@@ -67,22 +67,46 @@ const LandingPage: React.FC = () => {
 
   const features = [
     {
-      icon: '🎯',
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-target">
+            <div className="icon-target-vertical" />
+          </div>
+        </div>
+      ),
       title: 'Smart Recommendations',
       description: 'AI-powered suggestions tailored to your unique preferences and needs'
     },
     {
-      icon: '🤖',
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-brain">
+            <div className="icon-brain-circles" />
+          </div>
+        </div>
+      ),
       title: 'Advanced Analysis',
       description: 'Deep learning algorithms process thousands of data points for accuracy'
     },
     {
-      icon: '💡',
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-compare">
+            <div className="icon-compare-lines" />
+          </div>
+        </div>
+      ),
       title: 'Intelligent Comparison',
       description: 'Smart feature comparison helps you make informed decisions'
     },
     {
-      icon: '⚡',
+      icon: (
+        <div className="custom-icon">
+          <div className="icon-lightning">
+            <div className="icon-lightning-bolt" />
+          </div>
+        </div>
+      ),
       title: 'Lightning Fast',
       description: 'Get instant, personalized recommendations in seconds'
     }
@@ -356,7 +380,13 @@ const LandingPage: React.FC = () => {
               <p>Share your requirements and let our AI understand your needs</p>
             </div>
             <div className="step-illustration">
-              <div className="step-icon">🎯</div>
+              <div className="step-icon">
+                <div className="custom-icon">
+                  <div className="icon-input">
+                    <div className="icon-input-cursor" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div className="step">
@@ -366,7 +396,13 @@ const LandingPage: React.FC = () => {
               <p>Our AI asks targeted questions to understand your preferences</p>
             </div>
             <div className="step-illustration">
-              <div className="step-icon">💭</div>
+              <div className="step-icon">
+                <div className="custom-icon">
+                  <div className="icon-questions">
+                    <div className="icon-questions-dots" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div className="step">
@@ -376,7 +412,13 @@ const LandingPage: React.FC = () => {
               <p>Receive personalized recommendations tailored just for you</p>
             </div>
             <div className="step-illustration">
-              <div className="step-icon">✨</div>
+              <div className="step-icon">
+                <div className="custom-icon">
+                  <div className="icon-match">
+                    <div className="icon-match-check" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
