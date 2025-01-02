@@ -353,7 +353,7 @@ const LandingPage: React.FC = () => {
         <div className="hero-content">
           <div className="title-container">
             <div className="main-title">
-              <span className="gradient-text">Expertosy</span>
+              <span className="gradient-text" data-text="Expertosy">Expertosy</span>
               <span className="accent-text">Match</span>
             </div>
           </div>
