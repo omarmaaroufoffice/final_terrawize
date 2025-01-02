@@ -266,21 +266,6 @@ const LandingPage: React.FC = () => {
   };
   return (
     <div className="landing-page">
-      <div className="logo">
-        <div className="logo-content">
-          <div className="logo-icon">
-            <svg width="100%" height="100%" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 0L24.4903 15.5097L40 20L24.4903 24.4903L20 40L15.5097 24.4903L0 20L15.5097 15.5097L20 0Z" fill="#4A90E2"/>
-              <path d="M20 8L22.4721 16.5279L31 20L22.4721 23.4721L20 32L17.5279 23.4721L9 20L17.5279 16.5279L20 8Z" fill="#FFD700"/>
-            </svg>
-          </div>
-          <div className="logo-text-container">
-            <span className="logo-text">Expertosy</span>
-            <span className="logo-subtitle">AI Recommendation Engine</span>
-          </div>
-        </div>
-      </div>
-      
       <div className="background-effects">
         <div className="constellation-grid" />
         <div className="nebula-overlay" />
@@ -290,16 +275,10 @@ const LandingPage: React.FC = () => {
         <div className="hero-content">
           <div className="title-container">
             <div className="main-title">
-              <div className="title-line">
-                <span className="gradient-text">Expertosy</span>
-                <span className="accent-text">Match</span>
-              </div>
+              <span className="gradient-text">Expertosy</span>
+              <span className="accent-text">Match</span>
             </div>
             <div className="subtitle-text">AI-Powered Product Recommendations</div>
-            <div className="title-decoration">
-              <div className="decoration-line"></div>
-              <div className="decoration-line"></div>
-            </div>
           </div>
           
           <div className="search-container">
