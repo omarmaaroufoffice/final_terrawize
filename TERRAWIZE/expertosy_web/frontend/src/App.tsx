@@ -15,8 +15,10 @@ import './App.css';
 const AppLayout: React.FC = () => {
   return (
     <div className="app">
-      <Logo />
-      <Outlet />
+      <div className="content">
+        <Logo />
+        <Outlet />
+      </div>
     </div>
   );
 };
