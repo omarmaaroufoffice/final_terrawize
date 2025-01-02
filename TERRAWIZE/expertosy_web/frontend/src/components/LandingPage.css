@@ -422,7 +422,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.2rem;
+    gap: 0.2rem !important;
     margin: 0;
     position: relative;
     width: fit-content;
@@ -2327,6 +2327,32 @@
     font-size: min(4rem, 12vw);
     transform: rotate(25deg);
     margin: 0.5rem 0;
+  }
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  .title-container {
+    margin-top: 20px !important;
+    padding: 0 1rem !important;
+  }
+  
+  .main-title {
+    gap: 0.2rem !important;
+  }
+
+  .gradient-text {
+    font-size: min(7rem, 4.5vw) !important;
+  }
+
+  .accent-text {
+    font-size: min(7rem, 4.5vw) !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .title-container {
+    margin-top: 10px !important;
   }
 }
 
