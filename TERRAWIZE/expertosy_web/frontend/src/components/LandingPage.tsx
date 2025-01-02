@@ -178,13 +178,8 @@ const LandingPage: React.FC = () => {
               <span className="title-line highlight">Expertosy Match</span>
             </h1>
             <div className="subtitle-container">
-              <div className="subtitle-content">
-                <div className="subtitle-icon-container">
-                  <span className="subtitle-icon">✨</span>
-                </div>
-                <div className="subtitle-description">
-                  Discover your perfect match with precision and clarity, free from sponsored noise
-                </div>
+              <div className="subtitle-description">
+              Skip the ad ocean in your search results, we're the GPS for your wishlist
               </div>
             </div>
           </div>
@@ -213,7 +208,7 @@ const LandingPage: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                    <span>Begin Journey</span>
+                    <span>Lets find it</span>
                     <span className="button-star">✨</span>
                   </>
                 )}
