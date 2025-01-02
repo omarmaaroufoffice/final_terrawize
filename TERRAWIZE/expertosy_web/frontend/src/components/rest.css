@@ -2597,3 +2597,253 @@
     50% { opacity: 0.4; }
 }
   
+.features-showcase {
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.feature-card {
+  background: rgba(10, 17, 40, 0.8);
+  border-radius: 20px;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(74, 144, 226, 0.1) 0%,
+    rgba(255, 215, 0, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.feature-card:hover::before {
+  opacity: 1;
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  position: relative;
+}
+
+/* Process Card */
+.process-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.process-step {
+  width: 24px;
+  height: 24px;
+  background: var(--starlight-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--space-dark);
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.4);
+}
+
+.process-arrow {
+  color: var(--nova-gold);
+  font-size: 1.2rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+/* AI Card */
+.brain-waves {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--starlight-blue);
+  border-radius: 50%;
+  animation: pulseWave 2s ease-out infinite;
+}
+
+.brain-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--starlight-blue), var(--nova-gold));
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+}
+
+/* Speed Card */
+.speed-lines {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: var(--starlight-blue);
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.4);
+}
+
+.speed-star {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: var(--nova-gold);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+/* Accuracy Card */
+.target-rings {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--starlight-blue);
+  border-radius: 50%;
+}
+
+.target-rings::before,
+.target-rings::after {
+  content: '';
+  position: absolute;
+  border: 2px solid var(--starlight-blue);
+  border-radius: 50%;
+}
+
+.target-rings::before {
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+}
+
+.target-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: var(--nova-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.feature-card h3 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  margin: 1rem 0 0.5rem;
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--starlight-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@keyframes pulseWave {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+}
+
+@media (max-width: 768px) {
+  .features-showcase {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
+
+  .features-grid {
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+
+  .feature-card {
+    padding: 1.2rem;
+  }
+
+  .feature-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .feature-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .features-showcase {
+    padding: 0.8rem;
+    margin: 0.8rem auto;
+  }
+
+  .feature-card {
+    padding: 1rem;
+  }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .process-step {
+    width: 20px;
+    height: 20px;
+    font-size: 0.9rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.85rem;
+  }
+}
+  

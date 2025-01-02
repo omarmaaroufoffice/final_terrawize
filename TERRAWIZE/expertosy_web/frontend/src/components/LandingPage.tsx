@@ -422,106 +422,56 @@ const LandingPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="how-it-works">
-          <div className="steps">
-            <div className="step">
-              <div className="step-content">
-                <div className="step-number">1</div>
-                <h3>Tell Us What You Need</h3>
-                <p>Describe your ideal product and let our AI decode your requirements</p>
-              </div>
-              <div className="step-illustration">
-                <div className="step-icon">
-                  <div className="custom-icon">
-                    <div className="icon-input">
-                      <div className="icon-input-frame">
-                        <div className="icon-input-glow"></div>
-                      </div>
-                      <div className="icon-input-cursor"></div>
-                      <div className="icon-input-particles">
-                        <div className="icon-input-particle"></div>
-                        <div className="icon-input-particle"></div>
-                        <div className="icon-input-particle"></div>
-                      </div>
-                    </div>
+        <section className="features-showcase">
+          <div className="features-grid">
+            <div className="feature-card process">
+              <div className="feature-icon">
+                <div className="icon-process">
+                  <div className="process-steps">
+                    <div className="process-step">1</div>
+                    <div className="process-arrow">→</div>
+                    <div className="process-step">2</div>
+                    <div className="process-arrow">→</div>
+                    <div className="process-step">3</div>
                   </div>
                 </div>
               </div>
+              <h3>Quick 3-Step Magic</h3>
+              <p>Tell us what you need → Answer a few smart questions → Get perfect matches</p>
             </div>
-            <div className="step">
-              <div className="step-content">
-                <div className="step-number">2</div>
-                <h3>Answer Smart Questions</h3>
-                <p>Engage with our AI's personalized questions to refine your perfect match</p>
-              </div>
-              <div className="step-illustration">
-                <div className="step-icon">
-                  <div className="custom-icon">
-                    <div className="icon-questions">
-                      <div className="icon-questions-orbit">
-                        <div className="icon-questions-dot"></div>
-                        <div className="icon-questions-dot"></div>
-                        <div className="icon-questions-dot"></div>
-                        <div className="icon-questions-dot"></div>
-                      </div>
-                      <div className="icon-questions-center"></div>
-                      <div className="icon-questions-rings">
-                        <div className="icon-questions-ring"></div>
-                        <div className="icon-questions-ring"></div>
-                        <div className="icon-questions-ring"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="step">
-              <div className="step-content">
-                <div className="step-number">3</div>
-                <h3>Get Perfect Matches</h3>
-                <p>Discover your ideal products, expertly curated by our AI just for you</p>
-              </div>
-              <div className="step-illustration">
-                <div className="step-icon">
-                  <div className="custom-icon">
-                    <div className="icon-match">
-                      <div className="icon-match-circle">
-                        <div className="icon-match-glow"></div>
-                      </div>
-                      <div className="icon-match-check"></div>
-                      <div className="icon-match-particles">
-                        <div className="icon-match-particle"></div>
-                        <div className="icon-match-particle"></div>
-                        <div className="icon-match-particle"></div>
-                        <div className="icon-match-particle"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <section className="features-section">
-          <div className="section-header">
-            <h2>Why Choose Us</h2>
-            <p>Experience the power of AI-driven recommendations</p>
-          </div>
-          <div className="feature-grid">
-            {features.map((feature, index) => (
-              <div 
-                key={index} 
-                className={`feature-card ${index === activeFeature ? 'active' : ''}`}
-              >
-                <div className="feature-icon-wrapper">
-                  <span className="feature-icon">{feature.icon}</span>
+            <div className="feature-card ai">
+              <div className="feature-icon">
+                <div className="icon-brain">
+                  <div className="brain-waves"></div>
+                  <div className="brain-core"></div>
                 </div>
-                <h3>{feature.title}</h3>
-                <p>{feature.description}</p>
-                <div className="feature-hover-effect"></div>
               </div>
-            ))}
+              <h3>AI-Powered Genius</h3>
+              <p>Our smart AI analyzes thousands of options to find your perfect match</p>
+            </div>
+
+            <div className="feature-card speed">
+              <div className="feature-icon">
+                <div className="icon-speed">
+                  <div className="speed-lines"></div>
+                  <div className="speed-star"></div>
+                </div>
+              </div>
+              <h3>Lightning Fast</h3>
+              <p>Get personalized recommendations in seconds, not hours</p>
+            </div>
+
+            <div className="feature-card accuracy">
+              <div className="feature-icon">
+                <div className="icon-target">
+                  <div className="target-rings"></div>
+                  <div className="target-dot"></div>
+                </div>
+              </div>
+              <h3>Spot-On Accuracy</h3>
+              <p>Tailored suggestions that match your exact needs and preferences</p>
+            </div>
           </div>
         </section>
       </div>
