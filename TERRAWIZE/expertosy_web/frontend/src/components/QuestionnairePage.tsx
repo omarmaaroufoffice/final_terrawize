@@ -583,69 +583,34 @@ const QuestionnairePage: React.FC = () => {
               </div>
               
               <div className="question-content">
-                <h3 className="question-text">{currentQuestion.question}</h3>
-                {currentQuestion.helpText && (
-                  <motion.div 
-                    className={`help-text ${showHelpText ? 'visible' : ''}`}
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ 
-                      opacity: showHelpText ? 1 : 0,
-                      height: showHelpText ? 'auto' : 0
-                    }}
-                  >
-                    <p>{currentQuestion.helpText}</p>
-                  </motion.div>
-                )}
-                <button 
-                  className="help-button"
-                  onClick={() => setShowHelpText(!showHelpText)}
-                  aria-label={showHelpText ? "Hide help text" : "Show help text"}
-                >
-                  {showHelpText ? '❌' : '❔'}
-                </button>
+                <h2 className="question-text">{currentQuestion.question}</h2>
+                <div className="help-text">
+                  {currentQuestion.helpText}
+                </div>
               </div>
               
               <div className="options-grid">
-                {currentQuestion.options.map((option, index) => {
-                  const optionLabel = String.fromCharCode(65 + index);
-                  const isSelected = userAnswers[currentQuestion.question] === option.text;
-                  
-                  return (
-                    <motion.button 
-                      key={index} 
-                      className={`option-button ${isSelected ? 'selected' : ''}`}
-                      onClick={() => handleOptionSelect(option.text)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <div className="option-content">
-                        <span className="option-label">{optionLabel}</span>
-                        <span className="option-icon" role="img" aria-hidden="true">
-                          {option.icon}
-                        </span>
-                        <div className="option-text-container">
-                          <span className="option-text">{option.text}</span>
-                          {option.description && (
-                            <span className="option-description">{option.description}</span>
-                          )}
-                        </div>
+                {currentQuestion.options.map((option, index) => (
+                  <button
+                    key={index}
+                    className={`option-button ${userAnswers[currentQuestion.question] === option.text ? 'selected' : ''}`}
+                    onClick={() => handleOptionSelect(option.text)}
+                  >
+                    <div className="option-content">
+                      <div className="option-label">
+                        {String.fromCharCode(65 + index)}
                       </div>
-                      {isSelected && (
-                        <motion.span 
-                          className="check-mark"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                        >
-                          ✓
-                        </motion.span>
-                      )}
-                    </motion.button>
-                  );
-                })}
+                      <div className="option-text-container">
+                        <div className="option-text">{option.text}</div>
+                        {option.description && (
+                          <div className="option-description">
+                            {option.description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           </motion.div>
