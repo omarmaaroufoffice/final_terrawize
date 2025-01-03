@@ -373,6 +373,7 @@ const QuestionnairePage: React.FC = () => {
         exit="exit"
         variants={pageVariants}
       >
+        <Navigation />
         <div className="questionnaire-container loading">
           <div className="loading-container">
             <div className="loading-content">
