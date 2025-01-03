@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navigation from './shared/Navigation';
@@ -19,7 +19,6 @@ const ResultsPage: React.FC = () => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStage, setLoadingStage] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(45);
   const [loadingProgress, setLoadingProgress] = useState(0);
   
   const state = location.state as { 
@@ -28,13 +27,13 @@ const ResultsPage: React.FC = () => {
     recommendation: ProductExplanation[];
   };
 
-  const loadingStages = [
+  const loadingStages = useMemo(() => [
     "✨ Analyzing your preferences...",
     "🔍 Evaluating product features...",
     "⚡ Calculating optimal matches...",
     "🎯 Generating detailed explanations...",
     "🌟 Finalizing your personalized recommendations..."
-  ];
+  ], []);
 
   useEffect(() => {
     if (isLoading) {
