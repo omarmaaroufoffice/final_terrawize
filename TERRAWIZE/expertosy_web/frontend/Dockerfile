@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine as builder
+FROM node:18-alpine AS builder
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -22,7 +22,7 @@ ENV REACT_APP_API_URL=http://localhost:8000
 # Build the application
 RUN npm run build
 
-# Production stage
+# Production stage - using nginx
 FROM nginx:alpine
 
 # Copy build files
