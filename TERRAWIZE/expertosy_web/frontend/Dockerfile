@@ -17,7 +17,7 @@ COPY . .
 ENV NODE_ENV=production
 ENV CI=false
 ENV GENERATE_SOURCEMAP=false
-ENV REACT_APP_API_URL=http://localhost:8000
+ENV REACT_APP_API_URL=https://api.expertosy.com
 RUN npm run build
 
 # Production stage
@@ -28,10 +28,6 @@ COPY --from=builder /app/build /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Add healthcheck
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget -q --spider http://localhost:80/ || exit 1
 
 # Expose port
 EXPOSE 80
