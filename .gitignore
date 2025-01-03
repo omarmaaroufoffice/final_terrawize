@@ -92,7 +92,7 @@ jspm_packages/
 .ipynb_checkpoints
 
 # Project specific
-expertosy_web/frontend/expertosy-web/build/
-expertosy_web/frontend/expertosy-web/node_modules/
-expertosy_web/backend/venv/
-expertosy_web/backend/__pycache__/ 
+TERRAWIZE/expertosy_web/frontend/build/
+TERRAWIZE/expertosy_web/frontend/node_modules/
+TERRAWIZE/expertosy_web/backend/venv/
+TERRAWIZE/expertosy_web/backend/__pycache__/ 
