@@ -2,36 +2,34 @@
 FROM node:18-alpine AS builder
 
 # Set working directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copy package files first for better caching
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy the rest of the application code
+# Copy source code
 COPY . .
 
-# Set environment variables
+# Build the application
 ENV NODE_ENV=production
 ENV CI=false
 ENV GENERATE_SOURCEMAP=false
 ENV REACT_APP_API_URL=http://localhost:8000
-
-# Build the application
 RUN npm run build
 
-# Production stage - using nginx only
+# Production stage
 FROM nginx:alpine
 
-# Copy build files from builder stage
-COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+# Copy built assets from builder stage
+COPY --from=builder /app/build /usr/share/nginx/html
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Add a healthcheck
+# Add healthcheck
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget -q --spider http://localhost:80/ || exit 1
 
