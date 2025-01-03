@@ -7,12 +7,10 @@ import './mediablocas.css';
 
 interface PopularSearch {
   name: string;
-  icon: React.ReactNode;
 }
 
 interface SearchExample {
   prefix: string;
-  icon: React.ReactNode;
   color: string;
 }
 
@@ -23,158 +21,17 @@ const LandingPage: React.FC = () => {
   const [error, setError] = useState('');
 
   const popularSearches: PopularSearch[] = [
-    { 
-      name: 'Laptops', 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-laptop">
-            <div className="icon-laptop-screen">
-              <div className="icon-laptop-glow"></div>
-            </div>
-            <div className="icon-laptop-base"></div>
-            <div className="icon-laptop-keyboard">
-              <div className="icon-laptop-key"></div>
-              <div className="icon-laptop-key"></div>
-              <div className="icon-laptop-key"></div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    { 
-      name: 'Smartphones', 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-phone">
-            <div className="icon-phone-screen">
-              <div className="icon-phone-glow"></div>
-            </div>
-            <div className="icon-phone-button"></div>
-            <div className="icon-phone-camera"></div>
-          </div>
-        </div>
-      )
-    },
-    { 
-      name: 'Cameras', 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-camera">
-            <div className="icon-camera-body">
-              <div className="icon-camera-lens">
-                <div className="icon-camera-aperture"></div>
-              </div>
-              <div className="icon-camera-flash"></div>
-            </div>
-            <div className="icon-camera-grip"></div>
-          </div>
-        </div>
-      )
-    },
-    { 
-      name: 'Smart Watches', 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-watch">
-            <div className="icon-watch-face">
-              <div className="icon-watch-screen">
-                <div className="icon-watch-glow"></div>
-              </div>
-              <div className="icon-watch-button"></div>
-            </div>
-            <div className="icon-watch-band-top"></div>
-            <div className="icon-watch-band-bottom"></div>
-          </div>
-        </div>
-      )
-    }
+    { name: 'Laptops' },
+    { name: 'Smartphones' },
+    { name: 'Cameras' },
+    { name: 'Smart Watches' }
   ];
 
   const searchExamples = [
-    { 
-      prefix: "Recommend me a", 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-target">
-            <div className="icon-target-rings">
-              <div className="icon-target-ring"></div>
-              <div className="icon-target-ring"></div>
-              <div className="icon-target-ring"></div>
-            </div>
-            <div className="icon-target-lines">
-              <div className="icon-target-line"></div>
-              <div className="icon-target-line"></div>
-            </div>
-          </div>
-        </div>
-      ), 
-      color: "blue" 
-    },
-    { 
-      prefix: "Find me the best", 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-star">
-            <div className="icon-star-core">
-              <div className="icon-star-point"></div>
-              <div className="icon-star-point"></div>
-              <div className="icon-star-point"></div>
-              <div className="icon-star-point"></div>
-              <div className="icon-star-point"></div>
-            </div>
-            <div className="icon-star-center"></div>
-            <div className="icon-star-rays">
-              <div className="icon-star-ray"></div>
-              <div className="icon-star-ray"></div>
-              <div className="icon-star-ray"></div>
-              <div className="icon-star-ray"></div>
-              <div className="icon-star-ray"></div>
-              <div className="icon-star-ray"></div>
-            </div>
-          </div>
-        </div>
-      ), 
-      color: "gold" 
-    },
-    { 
-      prefix: "I am looking for a", 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-search">
-            <div className="icon-search-circle"></div>
-            <div className="icon-search-handle"></div>
-            <div className="icon-search-rays">
-              <div className="icon-search-ray"></div>
-              <div className="icon-search-ray"></div>
-              <div className="icon-search-ray"></div>
-              <div className="icon-search-ray"></div>
-            </div>
-          </div>
-        </div>
-      ), 
-      color: "purple" 
-    },
-    { 
-      prefix: "Help me choose a", 
-      icon: (
-        <div className="custom-icon">
-          <div className="icon-bulb">
-            <div className="icon-bulb-body">
-              <div className="icon-bulb-glow"></div>
-            </div>
-            <div className="icon-bulb-base"></div>
-            <div className="icon-bulb-sparks">
-              <div className="icon-bulb-spark"></div>
-              <div className="icon-bulb-spark"></div>
-              <div className="icon-bulb-spark"></div>
-              <div className="icon-bulb-spark"></div>
-              <div className="icon-bulb-spark"></div>
-            </div>
-          </div>
-        </div>
-      ), 
-      color: "green" 
-    }
+    { prefix: "Recommend me a", color: "blue" },
+    { prefix: "Find me the best", color: "gold" },
+    { prefix: "I am looking for a", color: "purple" },
+    { prefix: "Help me choose a", color: "green" }
   ];
 
   const handleExampleClick = (prefix: string) => {
@@ -274,6 +131,9 @@ const LandingPage: React.FC = () => {
       <div className="content">
         <section className="hero-section">
           <div className="hero-content">
+            <h1 className="hero-title">Expertosy Match</h1>
+            <p className="hero-subtitle">Find Your Perfect Match with AI-Powered Recommendations</p>
+            
             <div className="search-container">
               <div className="search-box">
                 <div className="search-input-wrapper">
@@ -297,7 +157,7 @@ const LandingPage: React.FC = () => {
                       <span>Processing...</span>
                     </div>
                   ) : (
-                    <span className="search-button-text">Lets find it</span>
+                    <span className="search-button-text">Let's find it</span>
                   )}
                 </button>
               </div>
@@ -316,7 +176,6 @@ const LandingPage: React.FC = () => {
                       className={`example-item example-${example.color}`}
                       onClick={() => handleExampleClick(example.prefix)}
                     >
-                      <span className="example-icon">{example.icon}</span>
                       <span className="example-text">
                         <span className="example-prefix">{example.prefix}</span>
                         <span className="example-placeholder">...</span>
@@ -328,7 +187,7 @@ const LandingPage: React.FC = () => {
 
               <div className="popular-searches">
                 <div className="popular-searches-header">
-                  <span className="popular-searches-icon">🔥</span>
+                  <span className="popular-searches-icon">⭐</span>
                   <h3>Popular Searches</h3>
                 </div>
                 <div className="tags">
@@ -338,65 +197,11 @@ const LandingPage: React.FC = () => {
                       className="tag"
                       onClick={() => handlePopularSearch(search)}
                     >
-                      <span className="tag-icon">{search.icon}</span>
                       {search.name}
                     </button>
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="features-showcase">
-          <div className="features-grid">
-            <div className="feature-card process">
-              <div className="feature-icon">
-                <div className="icon-process">
-                  <div className="process-steps">
-                    <div className="process-step">1</div>
-                    <div className="process-arrow">→</div>
-                    <div className="process-step">2</div>
-                    <div className="process-arrow">→</div>
-                    <div className="process-step">3</div>
-                  </div>
-                </div>
-              </div>
-              <h3>Quick 3-Step Magic</h3>
-              <p>Tell us what you need → Answer a few smart questions → Get perfect matches</p>
-            </div>
-
-            <div className="feature-card ai">
-              <div className="feature-icon">
-                <div className="icon-brain">
-                  <div className="brain-waves"></div>
-                  <div className="brain-core"></div>
-                </div>
-              </div>
-              <h3>AI-Powered Genius</h3>
-              <p>Our smart AI analyzes thousands of options to find your perfect match</p>
-            </div>
-
-            <div className="feature-card speed">
-              <div className="feature-icon">
-                <div className="icon-speed">
-                  <div className="speed-lines"></div>
-                  <div className="speed-star"></div>
-                </div>
-              </div>
-              <h3>Lightning Fast</h3>
-              <p>Get personalized recommendations in seconds, not hours</p>
-            </div>
-
-            <div className="feature-card accuracy">
-              <div className="feature-icon">
-                <div className="icon-target">
-                  <div className="target-rings"></div>
-                  <div className="target-dot"></div>
-                </div>
-              </div>
-              <h3>Spot-On Accuracy</h3>
-              <p>Tailored suggestions that match your exact needs and preferences</p>
             </div>
           </div>
         </section>
