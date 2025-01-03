@@ -17,7 +17,7 @@ COPY . .
 ENV NODE_ENV=production
 ENV CI=false
 ENV GENERATE_SOURCEMAP=false
-ENV REACT_APP_API_URL=https://api.expertosy.com
+ENV REACT_APP_API_URL=https://finalterrawize-production-d70d.up.railway.app
 RUN npm run build
 
 # Production stage
