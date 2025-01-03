@@ -14,6 +14,10 @@
     --stellar-white: #F8FAFC;
     --nav-height: 80px;
     --nav-height-mobile: 60px;
+    --primary-blue: #8CB8E5;
+    --dark-navy: #0B1219;
+    --text-light: #B4C9E4;
+    --accent-green: #7AB98B;
 }
   
 /* -----------------------------------
@@ -23,6 +27,7 @@
     position: relative;
     min-height: 100vh;
     margin-top: var(--nav-height);
+    padding: 0 20px;
 }
   
 @media (max-width: 768px) {
