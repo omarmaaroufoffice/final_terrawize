@@ -1,16 +1,15 @@
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 
-const api: AxiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'https://api.expertosy.com',
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://api.expertosy.com';
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   },
   withCredentials: true,
-  timeout: 30000,
-  validateStatus: (status) => {
-    return status >= 200 && status < 500;
-  }
+  timeout: 30000
 });
 
 // Add response interceptor for better error handling
