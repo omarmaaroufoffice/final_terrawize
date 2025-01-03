@@ -35,22 +35,111 @@
   height: 48px;
   width: 48px;
   filter: drop-shadow(0 0 12px rgba(74, 144, 226, 0.4));
-  animation: logoRotate 20s linear infinite;
   transition: all 0.3s ease;
 }
 
-.nav-logo:hover img {
-  filter: drop-shadow(0 0 16px rgba(74, 144, 226, 0.6));
-  transform: scale(1.05) rotate(180deg);
+/* Logo SVG Animations */
+.nav-logo .outer-ring {
+  animation: rotateRing 20s linear infinite;
+  transform-origin: center;
 }
 
-@keyframes logoRotate {
+.nav-logo .middle-ring {
+  animation: rotateRing 15s linear infinite reverse;
+  transform-origin: center;
+}
+
+.nav-logo .inner-ring {
+  animation: rotateRing 10s linear infinite;
+  transform-origin: center;
+}
+
+.nav-logo .rotating-dots {
+  animation: rotateRing 8s linear infinite;
+  transform-origin: center;
+}
+
+.nav-logo .orbital-dots {
+  animation: rotateRing 12s linear infinite reverse;
+  transform-origin: center;
+}
+
+.nav-logo .dot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+.nav-logo .orbital-dot {
+  animation: pulseOrbitalDot 3s ease-in-out infinite;
+}
+
+.nav-logo .center-dot {
+  animation: pulseCenter 2s ease-in-out infinite;
+}
+
+@keyframes rotateRing {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseOrbitalDot {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.3);
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes pulseCenter {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.2);
+    filter: brightness(1.5);
+  }
+}
+
+.nav-logo:hover img {
+  filter: drop-shadow(0 0 16px rgba(74, 144, 226, 0.6));
+}
+
+.nav-logo:hover .outer-ring {
+  animation-duration: 10s;
+}
+
+.nav-logo:hover .middle-ring {
+  animation-duration: 8s;
+}
+
+.nav-logo:hover .inner-ring {
+  animation-duration: 6s;
+}
+
+.nav-logo:hover .rotating-dots {
+  animation-duration: 4s;
+}
+
+.nav-logo:hover .orbital-dots {
+  animation-duration: 6s;
 }
 
 .nav-text {
