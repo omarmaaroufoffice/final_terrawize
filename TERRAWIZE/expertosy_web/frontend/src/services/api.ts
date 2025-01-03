@@ -13,10 +13,21 @@ const axiosInstance = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Origin': window.location.origin
   },
   validateStatus: (status) => {
     return status >= 200 && status < 500;
   }
+});
+
+// Add request interceptor to handle CORS preflight
+axiosInstance.interceptors.request.use((config) => {
+  if (config.method === 'options') {
+    config.headers['Access-Control-Request-Method'] = 'POST';
+    config.headers['Access-Control-Request-Headers'] = 'content-type';
+  }
+  return config;
 });
 
 export const api = {

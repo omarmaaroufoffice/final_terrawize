@@ -34,9 +34,15 @@ flask_app = Flask(__name__)
 # Configure CORS properly
 CORS(flask_app, 
      resources={r"/*": {
-         "origins": "*",
+         "origins": [
+             "http://localhost:3000",
+             "http://localhost:8080",
+             "https://expertosy.com",
+             "https://www.expertosy.com",
+             "https://api.expertosy.com"
+         ],
          "methods": ["GET", "POST", "OPTIONS"],
-         "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
+         "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Credentials", "Origin", "Accept"],
          "supports_credentials": True,
          "expose_headers": ["Content-Range", "X-Content-Range"]
      }},
