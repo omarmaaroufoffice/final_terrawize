@@ -5,6 +5,10 @@ const api: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
+  validateStatus: (status) => {
+    return status >= 200 && status < 500;
+  }
 });
 
 export default api; 
