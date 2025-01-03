@@ -36,13 +36,12 @@ CORS(flask_app,
      resources={r"/*": {
          "origins": [
              "http://localhost:3000",
-             "http://localhost:8080",
              "https://expertosy.com",
              "https://www.expertosy.com",
              "https://api.expertosy.com"
          ],
          "methods": ["GET", "POST", "OPTIONS"],
-         "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Credentials", "Origin", "Accept"],
+         "allow_headers": ["Content-Type", "Authorization", "Accept"],
          "supports_credentials": True,
          "expose_headers": ["Content-Range", "X-Content-Range"]
      }},
@@ -67,9 +66,9 @@ async def dispatch_flask(request: Request, call_next):
             return JSONResponse(
                 content={},
                 headers={
-                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
                     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-                    "Access-Control-Allow-Headers": "Content-Type, Authorization, Access-Control-Allow-Credentials",
+                    "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
                     "Access-Control-Allow-Credentials": "true",
                     "Access-Control-Max-Age": "86400",
                 }
