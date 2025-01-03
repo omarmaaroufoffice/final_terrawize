@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../config/api';
+import api from '../services/api';
 import Navigation from './shared/Navigation';
-import './rest.css';
+import './LandingPage.css';
 
 interface PopularSearch {
   name: string;
@@ -12,6 +12,10 @@ interface PopularSearch {
 interface SearchExample {
   text: string;
   icon: string;
+}
+
+interface ApiResponse {
+  factors: string[];
 }
 
 const LandingPage: React.FC = () => {
@@ -53,7 +57,7 @@ const LandingPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await api.post('/generate-factors', {
+      const response = await api.post<ApiResponse>('/generate-factors', {
         search_query: searchQuery.trim()
       });
 
@@ -108,17 +112,6 @@ const LandingPage: React.FC = () => {
                 "Let's find it"
               )}
             </button>
-          </div>
-
-          <div className="location-section">
-            <div className="location-option">
-              <span>🕒</span>
-              <span>Enter location manually</span>
-            </div>
-            <div className="location-option">
-              <span>📍</span>
-              <span>Unknown, Unknown, Unknown</span>
-            </div>
           </div>
 
           {error && (
