@@ -1,3 +1,8 @@
+interface AIPrompts {
+  currencyInstructions: string;
+  systemPrompt: string;
+}
+
 const currencyInstructions = `
 IMPORTANT CURRENCY HANDLING INSTRUCTIONS:
 1. Always convert any non-USD currency amounts to USD in your responses
@@ -13,9 +18,16 @@ Examples:
 - If amount is already in USD, use "$" symbol: "$100"
 `;
 
-// Add this to your existing AI system prompt
 export const systemPrompt = `
-
+You are an AI expert in product recommendations.
+Your goal is to help users find the perfect product based on their needs and preferences.
 
 ${currencyInstructions}
-`; 
+`;
+
+const aiPrompts: AIPrompts = {
+  currencyInstructions,
+  systemPrompt
+};
+
+export default aiPrompts; 
