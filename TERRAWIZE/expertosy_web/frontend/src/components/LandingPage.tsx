@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import api from '../config/api';
 import Navigation from './shared/Navigation';
 import './LandingPage.css';
@@ -7,11 +8,13 @@ import './LandingPage.css';
 interface PopularSearch {
   name: string;
   icon: string;
+  description: string;
 }
 
 interface SearchExample {
   text: string;
   icon: string;
+  color: string;
 }
 
 interface ApiResponse {
@@ -23,19 +26,52 @@ const LandingPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const searchExamples: SearchExample[] = [
-    { text: "Recommend me a ...", icon: "⭐" },
-    { text: "Find me the best ...", icon: "🔍" },
-    { text: "I am looking for a ...", icon: "🔎" },
-    { text: "Help me choose a ...", icon: "💡" }
+    { 
+      text: "Recommend me a ...", 
+      icon: "⭐", 
+      color: "var(--nova-gold)"
+    },
+    { 
+      text: "Find me the best ...", 
+      icon: "🔍", 
+      color: "var(--starlight-blue)"
+    },
+    { 
+      text: "I am looking for a ...", 
+      icon: "🎯", 
+      color: "var(--accent-green)"
+    },
+    { 
+      text: "Help me choose a ...", 
+      icon: "💡", 
+      color: "var(--primary-blue)"
+    }
   ];
 
   const popularSearches: PopularSearch[] = [
-    { name: "Laptops", icon: "💻" },
-    { name: "Smartphones", icon: "📱" },
-    { name: "Cameras", icon: "📸" },
-    { name: "Smart Watches", icon: "⌚" }
+    { 
+      name: "Laptops", 
+      icon: "💻",
+      description: "Find your perfect laptop for work or play"
+    },
+    { 
+      name: "Smartphones", 
+      icon: "📱",
+      description: "Compare the latest mobile devices"
+    },
+    { 
+      name: "Cameras", 
+      icon: "📸",
+      description: "Capture life's moments with the right camera"
+    },
+    { 
+      name: "Smart Watches", 
+      icon: "⌚",
+      description: "Stay connected with modern wearables"
+    }
   ];
 
   const handleExampleClick = (text: string) => {
@@ -82,78 +118,137 @@ const LandingPage: React.FC = () => {
   return (
     <div className="landing-page">
       <Navigation />
-      <div className="hero-section">
-        <h1 className="hero-title">Expertosy Match</h1>
-        <h2 className="hero-subtitle">Find Your Perfect Match </h2>
-        
-        <div className="search-container">
-          <div className="search-box">
-            <div className="search-input-wrapper">
-              <span className="search-icon">🔍</span>
-              <input
-                type="text"
-                placeholder="What are you looking to find?"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              />
-            </div>
-            <button 
-              className="search-button" 
-              onClick={handleSearch}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="loading-animation">
-                  <div className="loading-ring"></div>
-                  <span>Processing...</span>
-                </div>
-              ) : (
-                "Let's find it"
-              )}
-            </button>
-          </div>
-
-          {error && (
-            <div className="error-message">
-              <span className="error-icon">⚠️</span>
-              {error}
-            </div>
-          )}
-        </div>
-
-        <div className="examples-grid">
-          {searchExamples.map((example, index) => (
-            <button
-              key={index}
-              className="example-item"
-              onClick={() => handleExampleClick(example.text)}
-            >
-              <span className="example-icon">{example.icon}</span>
-              <span className="example-text">{example.text}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className="popular-searches">
-          <div className="popular-searches-header">
-            <span className="popular-searches-icon">⭐</span>
-            <h3>Popular Searches</h3>
-          </div>
-          <div className="tags">
-            {popularSearches.map((search, index) => (
-              <button
-                key={index}
-                className="tag"
-                onClick={() => setSearchQuery(search.name)}
+      
+      <motion.div 
+        className="hero-section"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="hero-content">
+          <motion.h1 
+            className="hero-title"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            Expertosy Match
+          </motion.h1>
+          <motion.h2 
+            className="hero-subtitle"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            Your AI-Powered Personal Shopping Assistant
+          </motion.h2>
+          
+          <motion.div 
+            className={`search-container ${isSearchFocused ? 'focused' : ''}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <div className="search-box">
+              <div className="search-input-wrapper">
+                <span className="search-icon">🔍</span>
+                <input
+                  type="text"
+                  placeholder="What are you looking to find?"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                />
+              </div>
+              <motion.button 
+                className="search-button"
+                onClick={handleSearch}
+                disabled={isLoading}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span className="tag-icon">{search.icon}</span>
-                <span>{search.name}</span>
-              </button>
+                {isLoading ? (
+                  <div className="loading-animation">
+                    <div className="loading-ring"></div>
+                    <span>Processing...</span>
+                  </div>
+                ) : (
+                  <>
+                    <span className="button-icon">✨</span>
+                    Let's find it
+                  </>
+                )}
+              </motion.button>
+            </div>
+
+            <AnimatePresence>
+              {error && (
+                <motion.div 
+                  className="error-message"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <span className="error-icon">⚠️</span>
+                  {error}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          <motion.div 
+            className="examples-grid"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            {searchExamples.map((example, index) => (
+              <motion.button
+                key={index}
+                className="example-item"
+                style={{ '--highlight-color': example.color } as React.CSSProperties}
+                onClick={() => handleExampleClick(example.text)}
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="example-icon">{example.icon}</span>
+                <span className="example-text">{example.text}</span>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
+
+          <motion.div 
+            className="popular-searches"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1 }}
+          >
+            <div className="popular-searches-header">
+              <span className="popular-searches-icon">⭐</span>
+              <h3>Popular Searches</h3>
+            </div>
+            <div className="tags">
+              {popularSearches.map((search, index) => (
+                <motion.button
+                  key={index}
+                  className="tag"
+                  onClick={() => setSearchQuery(search.name)}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="tag-icon">{search.icon}</span>
+                  <div className="tag-content">
+                    <span className="tag-name">{search.name}</span>
+                    <span className="tag-description">{search.description}</span>
+                  </div>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
