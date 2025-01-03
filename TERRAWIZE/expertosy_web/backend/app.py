@@ -21,6 +21,19 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Define allowed origins
+ALLOWED_ORIGINS = [
+    "https://expertosy.com",
+    "https://www.expertosy.com",
+    "https://app.expertosy.com",
+    "http://localhost:3000"
+]
+
+def get_allowed_origin(request_origin):
+    if not request_origin:
+        return ALLOWED_ORIGINS[0]  # Default to main domain
+    return request_origin if request_origin in ALLOWED_ORIGINS else ALLOWED_ORIGINS[0]
+
 @asynccontextmanager
 async def lifespan(app):
     """Lifespan context for the application"""
@@ -34,12 +47,7 @@ flask_app = Flask(__name__)
 # Configure CORS properly
 CORS(flask_app, resources={
     r"/*": {
-        "origins": [
-            "https://expertosy.com",
-            "https://www.expertosy.com",
-            "https://app.expertosy.com",
-            "http://localhost:3000"
-        ],
+        "origins": ALLOWED_ORIGINS,
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True,
@@ -61,12 +69,15 @@ async def dispatch_flask(request: Request, call_next):
         return await call_next(request)
     
     try:
+        request_origin = request.headers.get("origin")
+        allowed_origin = get_allowed_origin(request_origin)
+        
         # Add CORS headers to all responses
         if request.method == "OPTIONS":
             return JSONResponse(
                 content={},
                 headers={
-                    "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                    "Access-Control-Allow-Origin": allowed_origin,
                     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
                     "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
                     "Access-Control-Allow-Credentials": "true",
@@ -83,7 +94,7 @@ async def dispatch_flask(request: Request, call_next):
                     "version": "1.0.0"
                 },
                 headers={
-                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Origin": allowed_origin,
                     "Access-Control-Allow-Credentials": "true"
                 }
             )
@@ -147,7 +158,7 @@ async def dispatch_flask(request: Request, call_next):
                         content=body,
                         status_code=response_status[0],
                         headers={
-                            "Access-Control-Allow-Origin": "*",
+                            "Access-Control-Allow-Origin": allowed_origin,
                             "Access-Control-Allow-Credentials": "true"
                         }
                     )
@@ -157,7 +168,7 @@ async def dispatch_flask(request: Request, call_next):
         
         # Add CORS headers to the response headers
         response_headers.extend([
-            (b"Access-Control-Allow-Origin", b"*"),
+            (b"Access-Control-Allow-Origin", allowed_origin.encode('utf-8')),
             (b"Access-Control-Allow-Credentials", b"true")
         ])
         
@@ -175,7 +186,7 @@ async def dispatch_flask(request: Request, call_next):
             status_code=500,
             content={"error": str(e)},
             headers={
-                "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                "Access-Control-Allow-Origin": allowed_origin,
                 "Access-Control-Allow-Credentials": "true"
             }
         )
