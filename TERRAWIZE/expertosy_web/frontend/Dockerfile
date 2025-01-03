@@ -1,42 +1,36 @@
-# Build stage
-FROM node:18.17-alpine AS builder
+FROM node:18-alpine as builder
 
+# Set working directory
 WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies)
+# Install dependencies
 RUN npm install
-RUN npm install --save-dev @babel/plugin-proposal-private-property-in-object@7.21.11
 
 # Copy source code
 COPY . .
 
-# Set environment variables for build
+# Set environment variables
 ENV NODE_ENV=production
+ENV CI=false
 ENV GENERATE_SOURCEMAP=false
 
-# Build the application with explicit environment
-RUN NODE_ENV=production npm run build
+# Build the application
+RUN npm run build
 
 # Production stage
-FROM node:18.17-alpine
+FROM nginx:alpine
 
-WORKDIR /app
+# Copy build files
+COPY --from=builder /app/build /usr/share/nginx/html
 
-# Copy package files and install production dependencies
-COPY package*.json ./
-RUN npm install --omit=dev
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy built files and server
-COPY --from=builder /app/build ./build
-COPY server.js .
+# Expose port
+EXPOSE 80
 
-# Set production environment
-ENV NODE_ENV=production
-
-
-
-# Start the server
-CMD ["node", "server.js"] 
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"] 
