@@ -13,6 +13,10 @@ const Navigation: React.FC = () => {
           <span className="nav-subtitle">AI recommendation service</span>
         </div>
       </Link>
+      <div className="nav-links">
+        <Link to="/" className="nav-link">Home</Link>
+        <Link to="/questionnaire" className="nav-link">Questionnaire</Link>
+      </div>
     </nav>
   );
 };
