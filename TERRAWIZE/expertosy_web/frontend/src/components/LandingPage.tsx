@@ -84,7 +84,7 @@ const LandingPage: React.FC = () => {
       <Navigation />
       <div className="hero-section">
         <h1 className="hero-title">Expertosy Match</h1>
-        <h2 className="hero-subtitle">Find Your Perfect Match with AI-Powered Recommendations</h2>
+        <h2 className="hero-subtitle">Find Your Perfect Match </h2>
         
         <div className="search-container">
           <div className="search-box">
