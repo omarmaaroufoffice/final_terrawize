@@ -17,6 +17,7 @@
   --background-secondary: rgb(30, 41, 59);
   --text-primary: rgb(248, 250, 252);
   --text-secondary: rgb(148, 163, 184);
+  --text-question: rgb(226, 232, 240);
   --accent-blue: rgb(56, 189, 248);
   --accent-blue-dark: rgb(14, 165, 233);
   --accent-blue-light: rgb(186, 230, 253);
@@ -25,8 +26,8 @@
   --header-height: 72px;
   --content-width: 1200px;
   --container-padding: 24px;
-  --section-spacing: 48px;
-  --element-spacing: 24px;
+  --section-spacing: 32px;
+  --element-spacing: 16px;
   
   /* Border Radius */
   --border-radius-sm: 4px;
@@ -107,6 +108,9 @@ a:hover {
   padding: var(--section-spacing) var(--container-padding);
   width: 100%;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--element-spacing);
 }
 
 .section {
@@ -239,4 +243,33 @@ input:focus, textarea:focus, select:focus {
   html {
     font-size: 14px;
   }
+}
+
+/* Question styles */
+.question-text {
+  color: var(--text-question);
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.question-container {
+  background: var(--background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: var(--element-spacing);
+  margin-bottom: var(--element-spacing);
+}
+
+/* Loading page styles */
+.loading-container {
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--container-padding);
+}
+
+.loading-content {
+  text-align: center;
+  color: var(--text-primary);
 } 
