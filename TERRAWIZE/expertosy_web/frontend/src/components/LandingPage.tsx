@@ -31,23 +31,23 @@ const LandingPage: React.FC = () => {
   const searchExamples: SearchExample[] = [
     { 
       text: "Recommend me a ...", 
-      icon: "⭐", 
-      color: "var(--nova-gold)"
+      icon: "✨", 
+      color: "var(--blue-glow)"
     },
     { 
       text: "Find me the best ...", 
       icon: "🔍", 
-      color: "var(--starlight-blue)"
+      color: "var(--accent-teal)"
     },
     { 
       text: "I am looking for a ...", 
       icon: "🎯", 
-      color: "var(--accent-green)"
+      color: "var(--text-primary)"
     },
     { 
       text: "Help me choose a ...", 
       icon: "💡", 
-      color: "var(--primary-blue)"
+      color: "var(--blue-glow)"
     }
   ];
 
@@ -55,22 +55,22 @@ const LandingPage: React.FC = () => {
     { 
       name: "Laptops", 
       icon: "💻",
-      description: "Find your perfect laptop for work or play"
+      description: "Find the perfect laptop for your needs"
     },
     { 
       name: "Smartphones", 
       icon: "📱",
-      description: "Compare the latest mobile devices"
+      description: "Compare the latest flagship phones"
     },
     { 
       name: "Cameras", 
       icon: "📸",
-      description: "Capture life's moments with the right camera"
+      description: "Discover your ideal photography gear"
     },
     { 
       name: "Smart Watches", 
       icon: "⌚",
-      description: "Stay connected with modern wearables"
+      description: "Explore cutting-edge wearable tech"
     }
   ];
 
@@ -121,33 +121,40 @@ const LandingPage: React.FC = () => {
       
       <motion.div 
         className="hero-section"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
       >
         <div className="hero-content">
-          <motion.h1 
-            className="hero-title"
+          <motion.div 
+            className="hero-header"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Expertosy Match
-          </motion.h1>
-          <motion.h2 
-            className="hero-subtitle"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            Your AI-Powered Personal Shopping Assistant
-          </motion.h2>
+            <motion.h1 
+              className="hero-title"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              Expertosy Match
+            </motion.h1>
+            <motion.h2 
+              className="hero-subtitle"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              Your AI-Powered Personal Shopping Assistant
+            </motion.h2>
+          </motion.div>
           
           <motion.div 
             className={`search-container ${isSearchFocused ? 'focused' : ''}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
           >
             <div className="search-box">
               <div className="search-input-wrapper">
@@ -202,7 +209,7 @@ const LandingPage: React.FC = () => {
             className="examples-grid"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
           >
             {searchExamples.map((example, index) => (
               <motion.button
@@ -223,10 +230,10 @@ const LandingPage: React.FC = () => {
             className="popular-searches"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
           >
             <div className="popular-searches-header">
-              <span className="popular-searches-icon">⭐</span>
+              <span className="popular-searches-icon">✨</span>
               <h3>Popular Searches</h3>
             </div>
             <div className="tags">
@@ -235,7 +242,7 @@ const LandingPage: React.FC = () => {
                   key={index}
                   className="tag"
                   onClick={() => setSearchQuery(search.name)}
-                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <span className="tag-icon">{search.icon}</span>
