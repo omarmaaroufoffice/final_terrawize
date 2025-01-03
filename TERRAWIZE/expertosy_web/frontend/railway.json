@@ -15,7 +15,7 @@
     "healthcheckRetries": 3,
     "envs": {
       "NODE_ENV": "production",
-      "PORT": "80"
+      "PORT": "8080"
     }
   }
 } 
