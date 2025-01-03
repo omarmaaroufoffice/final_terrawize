@@ -3,14 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import QuestionnairePage from './components/QuestionnairePage';
 import ResultsPage from './components/ResultsPage';
-import StarBackground from './components/shared/StarBackground';
-import './App.css';
+import './styles/global.css';
 
 const App: React.FC = () => {
   return (
     <Router>
       <div className="app">
-        <StarBackground />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/questionnaire" element={<QuestionnairePage />} />
