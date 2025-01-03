@@ -12,4 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 README.md
 *.md
-.DS_Store 
+.DS_Store
+Dockerfile
+docker-compose.yml 
