@@ -32,20 +32,19 @@ async def lifespan(app):
 flask_app = Flask(__name__)
 
 # Configure CORS properly
-CORS(flask_app, 
-     resources={r"/*": {
-         "origins": [
-             "http://localhost:3000",
-             "https://expertosy.com",
-             "https://www.expertosy.com",
-             "https://api.expertosy.com"
-         ],
-         "methods": ["GET", "POST", "OPTIONS"],
-         "allow_headers": ["Content-Type", "Authorization", "Accept"],
-         "supports_credentials": True,
-         "expose_headers": ["Content-Range", "X-Content-Range"]
-     }},
-     supports_credentials=True)
+CORS(flask_app, resources={
+    r"/*": {
+        "origins": [
+            "https://expertosy.com",
+            "https://www.expertosy.com",
+            "https://app.expertosy.com",
+            "http://localhost:3000"
+        ],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+})
 
 # Create FastAPI app with lifespan support
 fastapi_app = FastAPI(lifespan=lifespan)
