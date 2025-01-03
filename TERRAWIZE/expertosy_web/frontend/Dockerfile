@@ -22,10 +22,10 @@ ENV REACT_APP_API_URL=http://localhost:8000
 # Build the application
 RUN npm run build
 
-# Production stage - using nginx
+# Production stage - using nginx only
 FROM nginx:alpine
 
-# Copy build files
+# Copy build files from builder stage
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
 # Copy nginx configuration
