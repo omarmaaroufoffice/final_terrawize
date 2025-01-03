@@ -1,29 +1,10 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "DOCKERFILE",
-    "dockerfile": "Dockerfile"
+    "builder": "DOCKERFILE"
   },
   "deploy": {
-    "healthcheckPath": "/health",
-    "healthcheckTimeout": 30,
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 5,
-    "healthcheckInterval": 15,
-    "healthcheckRetries": 3,
-    "numReplicas": 1,
-    "startCommand": "uvicorn app:asgi_app --host 0.0.0.0 --port 8080 --workers 4 --log-level info --loop auto --http h11 --lifespan on",
-    "envs": {
-      "FLASK_ENV": "production",
-      "PYTHONUNBUFFERED": "1",
-      "PORT": "8080",
-      "PYTHONPATH": "/app",
-      "UVICORN_WORKERS": "4",
-      "UVICORN_HOST": "0.0.0.0",
-      "UVICORN_PORT": "8080",
-      "UVICORN_LOG_LEVEL": "info",
-      "UVICORN_LOOP": "auto",
-      "UVICORN_HTTP": "h11"
-    }
+    "startCommand": "uvicorn app:asgi_app --host 0.0.0.0 --port 8080",
+    "healthcheckPath": "/health"
   }
 } 
