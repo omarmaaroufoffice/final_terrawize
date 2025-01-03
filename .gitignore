@@ -33,8 +33,8 @@ npm-debug.log
 yarn-error.log
 
 # React
-/build
-/coverage
+build/
+coverage/
 
 # IDEs and editors
 .idea/
@@ -89,10 +89,4 @@ jspm_packages/
 *.swp
 
 # Jupyter Notebook
-.ipynb_checkpoints
-
-# Project specific
-TERRAWIZE/expertosy_web/frontend/build/
-TERRAWIZE/expertosy_web/frontend/node_modules/
-TERRAWIZE/expertosy_web/backend/venv/
-TERRAWIZE/expertosy_web/backend/__pycache__/ 
+.ipynb_checkpoints 
