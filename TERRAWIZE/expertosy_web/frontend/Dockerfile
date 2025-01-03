@@ -1,15 +1,16 @@
+# Build stage
 FROM node:18-alpine as builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
-# Copy package files
+# Copy package files first for better caching
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy source code
+# Copy the rest of the application code
 COPY . .
 
 # Set environment variables
@@ -25,39 +26,16 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy build files
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
 # Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"] 
-# Build stage
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN NODE_ENV=production npm run build
-
-# Production stage
-FROM nginx:alpine
-
-# Install node and npm in production stage
-RUN apk add --update nodejs npm
-
-# Copy build files
-COPY --from=builder /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Add a healthcheck
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget -q --spider http://localhost:80/ || exit 1
 
-# Expose port 80
+# Expose port
 EXPOSE 80
 
 # Start nginx
