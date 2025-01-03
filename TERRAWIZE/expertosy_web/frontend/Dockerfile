@@ -15,8 +15,6 @@ COPY . .
 
 # Build the application
 ENV NODE_ENV=production
-
-
 ENV CI=false
 ENV GENERATE_SOURCEMAP=false
 ENV REACT_APP_API_URL=https://api.expertosy.com
@@ -32,7 +30,7 @@ COPY --from=builder /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port
-EXPOSE 8080
+EXPOSE 80
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
