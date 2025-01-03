@@ -34,14 +34,7 @@ flask_app = Flask(__name__)
 # Configure CORS properly
 CORS(flask_app, 
      resources={r"/*": {
-         "origins": [
-             "http://localhost:3000",
-             "http://localhost:8080",
-             "https://expertosy.com",
-             "https://www.expertosy.com",
-             "https://app.expertosy.com",
-             "https://api.expertosy.com"
-         ],
+         "origins": "*",
          "methods": ["GET", "POST", "OPTIONS"],
          "allow_headers": ["Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
          "supports_credentials": True,
@@ -68,7 +61,7 @@ async def dispatch_flask(request: Request, call_next):
             return JSONResponse(
                 content={},
                 headers={
-                    "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                    "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
                     "Access-Control-Allow-Headers": "Content-Type, Authorization, Access-Control-Allow-Credentials",
                     "Access-Control-Allow-Credentials": "true",
@@ -85,7 +78,7 @@ async def dispatch_flask(request: Request, call_next):
                     "version": "1.0.0"
                 },
                 headers={
-                    "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                    "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Credentials": "true"
                 }
             )
@@ -149,7 +142,7 @@ async def dispatch_flask(request: Request, call_next):
                         content=body,
                         status_code=response_status[0],
                         headers={
-                            "Access-Control-Allow-Origin": request.headers.get("origin", "https://expertosy.com"),
+                            "Access-Control-Allow-Origin": "*",
                             "Access-Control-Allow-Credentials": "true"
                         }
                     )
@@ -159,7 +152,7 @@ async def dispatch_flask(request: Request, call_next):
         
         # Add CORS headers to the response headers
         response_headers.extend([
-            (b"Access-Control-Allow-Origin", request.headers.get("origin", "https://expertosy.com").encode()),
+            (b"Access-Control-Allow-Origin", b"*"),
             (b"Access-Control-Allow-Credentials", b"true")
         ])
         
