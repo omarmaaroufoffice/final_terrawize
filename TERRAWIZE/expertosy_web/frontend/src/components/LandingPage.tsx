@@ -299,7 +299,7 @@ const LandingPage: React.FC = () => {
                     <span>Processing...</span>
                   </div>
                 ) : (
-                  <span className="search-button-text">Let's find it</span>
+                  <span>Let's find it</span>
                 )}
               </button>
             </div>
@@ -316,7 +316,7 @@ const LandingPage: React.FC = () => {
                 {searchExamples.map((example, index) => (
                   <button
                     key={index}
-                    className={`example-item example-${example.color}`}
+                    className="example-item"
                     onClick={() => handleExampleClick(example.prefix)}
                   >
                     <span className="example-text">{example.prefix}...</span>
