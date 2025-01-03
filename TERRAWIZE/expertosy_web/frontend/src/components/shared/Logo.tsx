@@ -30,7 +30,7 @@ const Logo: React.FC = () => {
           </div>
           <div className="logo-text-sub">
             <span className="logo-text-ai">AI</span>
-            <span className="logo-text-service">recommendation service</span>
+            <span className="logo-text-service">recommendation service </span>
           </div>
         </div>
       </div>
