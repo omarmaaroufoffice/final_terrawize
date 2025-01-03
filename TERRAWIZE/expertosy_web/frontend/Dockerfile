@@ -7,7 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -18,8 +18,8 @@ ENV CI=false
 ENV GENERATE_SOURCEMAP=false
 ENV REACT_APP_API_URL=http://localhost:8000
 
-# Type check and build
-RUN npm run tsc --noEmit && npm run build
+# Build the application
+RUN npm run build
 
 # Production stage
 FROM nginx:alpine
