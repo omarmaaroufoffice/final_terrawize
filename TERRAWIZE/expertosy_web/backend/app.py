@@ -26,7 +26,8 @@ ALLOWED_ORIGINS = [
     "https://expertosy.com",
     "https://www.expertosy.com",
     "https://app.expertosy.com",
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://api.expertosy.com"
 ]
 
 def get_allowed_origin(request_origin):
@@ -48,12 +49,25 @@ flask_app = Flask(__name__)
 CORS(flask_app, resources={
     r"/*": {
         "origins": ALLOWED_ORIGINS,
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
+        "methods": ["GET", "POST", "OPTIONS", "HEAD"],
+        "allow_headers": ["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"],
         "supports_credentials": True,
-        "expose_headers": ["Content-Type", "Authorization"]
+        "expose_headers": ["Content-Type", "Authorization"],
+        "max_age": 86400
     }
 })
+
+@flask_app.after_request
+def after_request(response):
+    request_origin = request.headers.get("origin")
+    allowed_origin = get_allowed_origin(request_origin)
+    
+    response.headers.add('Access-Control-Allow-Origin', allowed_origin)
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,Origin,X-Requested-With')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS,HEAD')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    response.headers.add('Access-Control-Max-Age', '86400')
+    return response
 
 # Create FastAPI app with lifespan support
 fastapi_app = FastAPI(lifespan=lifespan)
@@ -569,27 +583,46 @@ async def generate_factors_route():
 async def create_questionnaire_route():
     """API endpoint to create a questionnaire based on factors"""
     if request.method == 'OPTIONS':
-        return jsonify({}), 200
+        response = jsonify({})
+        return response
 
-    data = request.json
-    logger.info(f"Received create_questionnaire request: {data}")
-
-    search_query = data.get('search_query')
-    factors = data.get('factors')
-    
-    if not search_query or not factors:
-        logger.error("Missing search query or factors")
-        return jsonify({"error": "Search query and factors are required"}), 400
-    
     try:
-        engine = ExpertosyRecommendationEngine(search_query)
-        questionnaire = await engine.create_questionnaire(factors)
-        logger.info(f"Generated questionnaire: {questionnaire}")
-        return jsonify({"questionnaire": questionnaire})
+        data = request.get_json()
+        if not data:
+            logger.error("No JSON data received")
+            return jsonify({"error": "No data received"}), 400
+
+        logger.info(f"Received create_questionnaire request: {data}")
+
+        search_query = data.get('search_query')
+        factors = data.get('factors')
+        
+        if not search_query or not factors:
+            logger.error("Missing search query or factors")
+            return jsonify({"error": "Search query and factors are required"}), 400
+        
+        try:
+            engine = ExpertosyRecommendationEngine(search_query)
+            questionnaire = await engine.create_questionnaire(factors)
+            logger.info(f"Generated questionnaire: {questionnaire}")
+            return jsonify({"questionnaire": questionnaire})
+        except Exception as e:
+            logger.error(f"Error in questionnaire generation: {e}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            return jsonify({
+                "error": "Failed to generate questionnaire",
+                "details": str(e),
+                "status": "error"
+            }), 500
+
     except Exception as e:
-        logger.error(f"Error creating questionnaire: {e}")
+        logger.error(f"Error processing request: {e}")
         logger.error(f"Traceback: {traceback.format_exc()}")
-        return jsonify({"error": str(e), "traceback": traceback.format_exc()}), 500
+        return jsonify({
+            "error": "Internal server error",
+            "details": str(e),
+            "status": "error"
+        }), 500
 
 @flask_app.route('/generate-recommendation', methods=['POST', 'OPTIONS'])
 async def generate_recommendation_route():
