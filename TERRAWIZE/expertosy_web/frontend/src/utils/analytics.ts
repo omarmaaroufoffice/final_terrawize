@@ -1,65 +1,69 @@
-import TagManager from 'react-gtm-module';
-
 // Track page views
 export const trackPageView = (path: string) => {
-  TagManager.dataLayer({
-    dataLayer: {
-      event: 'pageview',
-      page: path
-    }
-  });
+  const gtag = (window as any).gtag;
+  if (gtag) {
+    gtag('event', 'page_view', {
+      page_path: path,
+      page_location: window.location.href,
+      page_title: document.title
+    });
+  }
 };
 
 // Track search events
 export const trackSearch = (query: string) => {
-  TagManager.dataLayer({
-    dataLayer: {
-      event: 'search',
-      searchQuery: query
-    }
-  });
+  const gtag = (window as any).gtag;
+  if (gtag) {
+    gtag('event', 'search', {
+      search_term: query
+    });
+  }
 };
 
 // Track questionnaire answers
 export const trackQuestionAnswer = (question: string, answer: string) => {
-  TagManager.dataLayer({
-    dataLayer: {
-      event: 'questionAnswer',
-      question,
-      answer
-    }
-  });
+  const gtag = (window as any).gtag;
+  if (gtag) {
+    gtag('event', 'question_answer', {
+      question: question,
+      answer: answer
+    });
+  }
 };
 
 // Track recommendations viewed
 export const trackRecommendationView = (products: string[]) => {
-  TagManager.dataLayer({
-    dataLayer: {
-      event: 'recommendationView',
-      products
-    }
-  });
+  const gtag = (window as any).gtag;
+  if (gtag) {
+    gtag('event', 'view_item_list', {
+      items: products.map((product, index) => ({
+        item_name: product,
+        index: index
+      }))
+    });
+  }
 };
 
 // Track product clicks
 export const trackProductClick = (productName: string, position: number) => {
-  TagManager.dataLayer({
-    dataLayer: {
-      event: 'productClick',
-      productName,
-      position
-    }
-  });
+  const gtag = (window as any).gtag;
+  if (gtag) {
+    gtag('event', 'select_item', {
+      items: [{
+        item_name: productName,
+        index: position
+      }]
+    });
+  }
 };
 
 // Track user interactions
 export const trackInteraction = (action: string, category?: string, label?: string) => {
-  TagManager.dataLayer({
-    dataLayer: {
-      event: 'interaction',
-      action,
-      category,
-      label
-    }
-  });
+  const gtag = (window as any).gtag;
+  if (gtag) {
+    gtag('event', action, {
+      event_category: category,
+      event_label: label
+    });
+  }
 }; 
