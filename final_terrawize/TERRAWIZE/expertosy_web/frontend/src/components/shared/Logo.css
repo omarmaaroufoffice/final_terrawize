@@ -1,0 +1,202 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  position: relative;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-core {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  animation: pulseScale 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.4));
+}
+
+.logo-outer-ring,
+.logo-middle-ring,
+.logo-inner-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.logo-outer-ring {
+  inset: -8px;
+  border-top-color: #4F46E5;
+  border-left-color: #10B981;
+  animation: rotateRing 12s linear infinite;
+}
+
+.logo-middle-ring {
+  inset: -5px;
+  border-right-color: #4F46E5;
+  border-bottom-color: #10B981;
+  animation: rotateRing 8s linear infinite reverse;
+}
+
+.logo-inner-ring {
+  inset: -2px;
+  border-top-color: rgba(79, 70, 229, 0.6);
+  border-bottom-color: rgba(16, 185, 129, 0.6);
+  animation: rotateRing 6s linear infinite;
+}
+
+.logo-particles {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: rotateParticles 10s linear infinite;
+}
+
+.logo-particles::before,
+.logo-particles::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4F46E5;
+  filter: blur(1px);
+  animation: pulseBrightness 3s ease-in-out infinite;
+}
+
+.logo-particles::before {
+  top: 50%;
+  left: 0;
+  transform: translateX(-50%);
+  background: #10B981;
+}
+
+.logo-particles::after {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg,
+    #4F46E5 0%,
+    #10B981 50%,
+    #4F46E5 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientFlow 8s linear infinite;
+}
+
+/* Animations */
+@keyframes rotateRing {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateParticles {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes pulseBrightness {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8) translateX(-50%);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) translateX(-50%);
+  }
+}
+
+@keyframes pulseScale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Hover Effects */
+.logo:hover .logo-outer-ring {
+  animation: rotateRing 6s linear infinite;
+}
+
+.logo:hover .logo-middle-ring {
+  animation: rotateRing 4s linear infinite reverse;
+}
+
+.logo:hover .logo-inner-ring {
+  animation: rotateRing 3s linear infinite;
+}
+
+.logo:hover .logo-particles {
+  animation: rotateParticles 8s linear infinite;
+}
+
+.logo:hover .logo-core {
+  filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.6));
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logo-text {
+    font-size: 1.2rem;
+  }
+
+  .logo-particles::before,
+  .logo-particles::after {
+    width: 4px;
+    height: 4px;
+  }
+} 
