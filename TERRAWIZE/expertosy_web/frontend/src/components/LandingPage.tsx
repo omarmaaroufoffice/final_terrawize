@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, MotionProps } from 'framer-motion';
 import api from '../config/api';
 import Navigation from './shared/Navigation';
 import './LandingPage.css';
@@ -20,6 +20,9 @@ interface SearchExample {
 interface ApiResponse {
   factors: string[];
 }
+
+const MotionDiv = motion.div;
+const MotionButton = motion.button;
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -129,31 +132,31 @@ const LandingPage: React.FC = () => {
       <Navigation />
       
       <div className="landing-content">
-        <motion.div 
+        <MotionDiv 
           className="hero-section"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <div className="hero-content">
-            <motion.h1 
+            <MotionDiv 
               className="hero-title"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               Expertosy Match
-            </motion.h1>
-            <motion.h2 
+            </MotionDiv>
+            <MotionDiv 
               className="hero-subtitle"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               Your AI-Powered Personal Shopping Assistant
-            </motion.h2>
+            </MotionDiv>
             
-            <motion.div 
+            <MotionDiv 
               className={`search-container ${isSearchFocused ? 'focused' : ''}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -172,7 +175,7 @@ const LandingPage: React.FC = () => {
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                   />
                 </div>
-                <motion.button 
+                <MotionButton 
                   className="search-button"
                   onClick={handleSearch}
                   disabled={isLoading}
@@ -190,12 +193,12 @@ const LandingPage: React.FC = () => {
                       Let's find it
                     </>
                   )}
-                </motion.button>
+                </MotionButton>
               </div>
 
               <AnimatePresence>
                 {error && (
-                  <motion.div 
+                  <MotionDiv 
                     className="error-message"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -203,19 +206,19 @@ const LandingPage: React.FC = () => {
                   >
                     <span className="error-icon">⚠️</span>
                     {error}
-                  </motion.div>
+                  </MotionDiv>
                 )}
               </AnimatePresence>
-            </motion.div>
+            </MotionDiv>
 
-            <motion.div 
+            <MotionDiv 
               className="examples-grid"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               {searchExamples.map((example, index) => (
-                <motion.div
+                <MotionDiv
                   key={index}
                   className="example-item"
                   style={{ '--highlight-color': example.color } as React.CSSProperties}
@@ -226,11 +229,11 @@ const LandingPage: React.FC = () => {
                 >
                   <span className="example-icon">{example.icon}</span>
                   <span className="example-text">{example.text}</span>
-                </motion.div>
+                </MotionDiv>
               ))}
-            </motion.div>
+            </MotionDiv>
 
-            <motion.div 
+            <MotionDiv 
               className="popular-searches"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -242,7 +245,7 @@ const LandingPage: React.FC = () => {
               </div>
               <div className="tags">
                 {popularSearches.map((search, index) => (
-                  <motion.button
+                  <MotionButton
                     key={index}
                     className="tag"
                     onClick={() => setSearchQuery(search.name)}
@@ -254,12 +257,12 @@ const LandingPage: React.FC = () => {
                       <span className="tag-name">{search.name}</span>
                       <span className="tag-description">{search.description}</span>
                     </div>
-                  </motion.button>
+                  </MotionButton>
                 ))}
               </div>
-            </motion.div>
+            </MotionDiv>
           </div>
-        </motion.div>
+        </MotionDiv>
       </div>
     </div>
   );
