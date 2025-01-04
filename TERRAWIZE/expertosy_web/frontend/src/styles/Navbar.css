@@ -64,6 +64,7 @@
     0 2px 4px rgba(16, 185, 129, 0.05);
   position: relative;
   overflow: hidden;
+  animation: none;
 }
 
 .nav-logo::before {
@@ -93,7 +94,7 @@
   opacity: 1;
 }
 
-.nav-logo-icon {
+.nav-logo img {
   width: 40px;
   height: 40px;
   position: relative;
@@ -103,10 +104,14 @@
   transition: all 0.3s ease;
 }
 
-.nav-logo-icon:hover {
+.nav-logo:hover img {
   animation: rotateLogo 4s linear infinite;
   filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.6));
   transform: scale(1.1);
+}
+
+.nav-logo-icon {
+  animation: none;
 }
 
 .nav-logo-icon::before {
@@ -190,10 +195,10 @@
 }
 
 @keyframes rotateLogo {
-  from {
+  0% {
     transform: rotate(0deg);
   }
-  to {
+  100% {
     transform: rotate(360deg);
   }
 }
@@ -452,7 +457,7 @@
     padding: 0.5rem 1rem;
   }
 
-  .nav-logo-icon {
+  .nav-logo img {
     width: 28px;
     height: 28px;
   }
