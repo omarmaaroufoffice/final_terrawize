@@ -1,3 +1,4 @@
+/* START OF REACT (ResultsPage.tsx or .jsx) */
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -27,13 +28,16 @@ const ResultsPage: React.FC = () => {
     recommendation: ProductExplanation[];
   };
 
-  const loadingStages = useMemo(() => [
-    "✨ Analyzing your preferences...",
-    "🔍 Evaluating product features...",
-    "⚡ Calculating optimal matches...",
-    "🎯 Generating detailed explanations...",
-    "🌟 Finalizing your personalized recommendations..."
-  ], []);
+  const loadingStages = useMemo(
+    () => [
+      "✨ Analyzing your preferences...",
+      "🔍 Evaluating product features...",
+      "⚡ Calculating optimal matches...",
+      "🎯 Generating detailed explanations...",
+      "🌟 Finalizing your personalized recommendations..."
+    ],
+    []
+  );
 
   useEffect(() => {
     if (isLoading) {
@@ -58,7 +62,7 @@ const ResultsPage: React.FC = () => {
     }
   }, [isLoading, loadingStages]);
 
-  // Add a new effect to check if we have results and show them immediately
+  // If we have recommendations, move from loading to results
   useEffect(() => {
     if (state?.recommendation && state.recommendation.length > 0) {
       setLoadingProgress(100); // Complete the progress bar
@@ -77,6 +81,7 @@ const ResultsPage: React.FC = () => {
     animate: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.95 }
   };
+  
 
   const cardVariants = {
     initial: { opacity: 0, y: 20 },
@@ -91,6 +96,7 @@ const ResultsPage: React.FC = () => {
     })
   };
 
+  // If no state or no recommendation array, show an error message
   if (!state || !state.recommendation) {
     return (
       <motion.div 
@@ -129,6 +135,7 @@ const ResultsPage: React.FC = () => {
     );
   }
 
+  // If we are still in the loading phase, show the loading screen
   if (isLoading) {
     return (
       <motion.div 
@@ -178,6 +185,7 @@ const ResultsPage: React.FC = () => {
     );
   }
 
+  // Otherwise, render the final results
   return (
     <div className="results-page">
       <Navigation />
@@ -225,8 +233,11 @@ const ResultsPage: React.FC = () => {
                   animate={{ opacity: 1 }}
                   transition={{ delay: index * 0.1 + 0.7 }}
                 >
-                  <p className="explanation-text">{product.explanation}</p>
+                  <p className="explanation-text">
+                    {product.explanation}
+                  </p>
                   
+                  {/* Advantages */}
                   <div className="advantages-section">
                     <h4>Key Advantages</h4>
                     <div className="advantages-list">
@@ -245,6 +256,7 @@ const ResultsPage: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* Why Not First */}
                   {product.why_not_first && (
                     <motion.div 
                       className="why-not-first-section"
@@ -257,6 +269,7 @@ const ResultsPage: React.FC = () => {
                     </motion.div>
                   )}
 
+                  {/* Caveats */}
                   <motion.div 
                     className="caveats-section"
                     initial={{ opacity: 0 }}
@@ -293,4 +306,5 @@ const ResultsPage: React.FC = () => {
   );
 };
 
-export default ResultsPage; 
+export default ResultsPage;
+/* END OF REACT */

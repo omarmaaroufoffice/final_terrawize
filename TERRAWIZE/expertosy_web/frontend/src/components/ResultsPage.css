@@ -1,3 +1,4 @@
+/* START OF CSS */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 
 /* Root Variables */
@@ -628,3 +629,28 @@
     }
   }
 }
+
+/* *** Additional Styling Overrides for Uniform Spacing & Rich Look *** */
+.advantages-section,
+.why-not-first-section,
+.caveats-section {
+  margin: 1rem 0 !important;       /* more uniform vertical spacing */
+  padding: 1rem !important;        /* consistent padding */
+  border-radius: 14px !important;  /* more curved edges */
+  box-shadow: 0 2px 8px rgba(100, 180, 255, 0.15) !important; 
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8),
+    rgba(100, 180, 255, 0.08)
+  ) !important;
+}
+.product-explanation {
+  border-radius: 20px !important; 
+  box-shadow: 0 6px 20px rgba(100, 180, 255, 0.12) !important; 
+}
+.product-card {
+  border-radius: 28px !important;
+  box-shadow: 0 10px 35px rgba(100, 180, 255, 0.18), 0 4px 10px rgba(16, 185, 129, 0.12) !important;
+  padding: 1.5rem !important; /* Slightly more generous padding */
+}
+/* END OF CSS */
