@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
 
+:root {
+  --starlight-blue: #4F46E5;
+  --nova-gold: #10B981;
+  --background-dark: rgba(255, 255, 255, 0.98);
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+  --error: #EF4444;
+}
+
 .ranking-questionnaire {
   min-height: 100vh;
   padding: 2rem;
@@ -35,12 +44,12 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(1px 1px at 35% 85%, var(--starlight-blue) 50%, transparent 100%),
-    radial-gradient(2px 2px at 85% 35%, var(--nova-gold) 50%, transparent 100%),
-    radial-gradient(1px 1px at 45% 55%, var(--starlight-blue) 50%, transparent 100%),
-    radial-gradient(2px 2px at 55% 45%, var(--nova-gold) 50%, transparent 100%),
-    radial-gradient(1px 1px at 20% 80%, var(--starlight-blue) 50%, transparent 100%),
-    radial-gradient(2px 2px at 80% 20%, var(--nova-gold) 50%, transparent 100%);
+    radial-gradient(1px 1px at 35% 85%, #4F46E5 50%, transparent 100%),
+    radial-gradient(2px 2px at 85% 35%, #10B981 50%, transparent 100%),
+    radial-gradient(1px 1px at 45% 55%, #4F46E5 50%, transparent 100%),
+    radial-gradient(2px 2px at 55% 45%, #10B981 50%, transparent 100%),
+    radial-gradient(1px 1px at 20% 80%, #4F46E5 50%, transparent 100%),
+    radial-gradient(2px 2px at 80% 20%, #10B981 50%, transparent 100%);
   opacity: 0.4;
   background-size: 200px 200px;
   animation: twinkle 12s linear infinite reverse;
@@ -179,7 +188,7 @@
   height: 2px;
   background: linear-gradient(
     90deg,
-    var(--starlight-blue),
+    #4F46E5,
     transparent
   );
   border-radius: 1px;
@@ -329,7 +338,7 @@
 
 .question-number {
   font-size: 1.1rem;
-  color: var(--starlight-blue);
+  color: #4F46E5;
   font-weight: 600;
   margin-bottom: 1rem;
   display: flex;
@@ -342,7 +351,7 @@
   height: 2px;
   flex: 1;
   background: linear-gradient(90deg,
-    var(--starlight-blue),
+    #4F46E5,
     transparent
   );
   border-radius: 1px;
@@ -670,11 +679,11 @@
   width: 100%;
   height: 100%;
   border: 3px solid transparent;
-  border-top-color: var(--starlight-blue);
-  border-right-color: var(--nova-gold);
+  border-top-color: #4F46E5;
+  border-right-color: #10B981;
   border-radius: 50%;
   animation: rotateRing 2s linear infinite;
-  filter: drop-shadow(0 0 10px var(--starlight-blue));
+  filter: drop-shadow(0 0 10px #4F46E5);
 }
 
 .pulse-ring::before,
@@ -690,10 +699,10 @@
   right: 5px;
   bottom: 5px;
   left: 5px;
-  border-top-color: var(--starlight-blue);
-  border-left-color: var(--nova-gold);
+  border-top-color: #4F46E5;
+  border-left-color: #10B981;
   animation: rotateRing 3s linear infinite reverse;
-  filter: drop-shadow(0 0 8px var(--nova-gold));
+  filter: drop-shadow(0 0 8px #10B981);
 }
 
 .pulse-ring::after {
@@ -701,10 +710,10 @@
   right: 15px;
   bottom: 15px;
   left: 15px;
-  border-top-color: var(--starlight-blue);
-  border-bottom-color: var(--nova-gold);
+  border-top-color: #4F46E5;
+  border-bottom-color: #10B981;
   animation: rotateRing 1.5s linear infinite;
-  filter: drop-shadow(0 0 6px var(--starlight-blue));
+  filter: drop-shadow(0 0 6px #4F46E5);
 }
 
 .loading-icon::before {
@@ -716,8 +725,8 @@
   width: 70%;
   height: 70%;
   background: radial-gradient(circle, 
-    rgba(74, 144, 226, 0.4) 0%,
-    rgba(255, 215, 0, 0.2) 50%,
+    rgba(79, 70, 229, 0.4) 0%,
+    rgba(16, 185, 129, 0.2) 50%,
     transparent 70%
   );
   filter: blur(8px);
@@ -732,16 +741,16 @@
   font-size: 2.5rem;
   z-index: 2;
   animation: starPulse 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 15px var(--starlight-blue));
+  filter: drop-shadow(0 0 15px #4F46E5);
 }
 
 .loading-progress-container {
   position: relative;
   margin-top: 2rem;
   padding: 1rem;
-  background: rgba(10, 17, 40, 0.3);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
-  border: 1px solid rgba(74, 144, 226, 0.2);
+  border: 1px solid rgba(79, 70, 229, 0.2);
   overflow: hidden;
 }
 
@@ -754,7 +763,7 @@
   bottom: 0;
   background: linear-gradient(90deg, 
     transparent,
-    rgba(74, 144, 226, 0.1),
+    rgba(79, 70, 229, 0.1),
     transparent
   );
   transform: translateX(-100%);
@@ -772,9 +781,9 @@
 .loading-progress-fill {
   height: 100%;
   background: linear-gradient(90deg,
-    var(--starlight-blue),
-    var(--nova-gold),
-    var(--starlight-blue)
+    #4F46E5,
+    #10B981,
+    #4F46E5
   );
   background-size: 200% 100%;
   animation: gradientFlow 2s linear infinite;
@@ -802,11 +811,11 @@
 @keyframes starPulse {
   0%, 100% {
     transform: translate(-50%, -50%) scale(1) rotate(0deg);
-    filter: drop-shadow(0 0 15px var(--starlight-blue));
+    filter: drop-shadow(0 0 15px #4F46E5);
   }
   50% {
     transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
-    filter: drop-shadow(0 0 25px var(--nova-gold));
+    filter: drop-shadow(0 0 25px #10B981);
   }
 }
 
