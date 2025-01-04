@@ -47,51 +47,90 @@
 }
 
 .nav-logo {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  text-decoration: none;
-  padding: 0.75rem 1.25rem;
-  border-radius: 12px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: linear-gradient(135deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(79, 70, 229, 0.1) 100%
-  );
-  border: 1px solid rgba(79, 70, 229, 0.2);
-  box-shadow: 
-    0 4px 15px rgba(79, 70, 229, 0.1),
-    0 2px 4px rgba(16, 185, 129, 0.05);
-  position: relative;
-  overflow: hidden;
-  animation: none;
+  justify-content: center;
+}
+
+.nav-logo::before,
+.nav-logo::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .nav-logo::before {
+  inset: -8px;
+  border: 2px solid transparent;
+  border-top-color: #4F46E5;
+  border-left-color: #10B981;
+  animation: orbitRotation 8s linear infinite;
+}
+
+.nav-logo::after {
+  inset: -4px;
+  border: 2px solid transparent;
+  border-right-color: #4F46E5;
+  border-bottom-color: #10B981;
+  animation: orbitRotation 6s linear infinite reverse;
+}
+
+.logo-particles {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particleRotation 10s linear infinite;
+}
+
+.logo-particles::before,
+.logo-particles::after {
   content: '';
   position: absolute;
-  top: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4F46E5;
+  filter: blur(1px);
+  animation: particlePulse 3s ease-in-out infinite;
+}
+
+.logo-particles::before {
+  top: 50%;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg,
+  transform: translateY(-50%);
+  background: #10B981;
+}
+
+.logo-particles::after {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-inner-ring {
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: rgba(79, 70, 229, 0.6);
+  border-bottom-color: rgba(16, 185, 129, 0.6);
+  animation: innerRingRotation 4s linear infinite;
+}
+
+.logo-outer-glow {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
     rgba(79, 70, 229, 0.2),
-    rgba(16, 185, 129, 0.1)
+    rgba(16, 185, 129, 0.2) 50%,
+    transparent 70%
   );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.nav-logo:hover {
-  transform: translateY(-2px) scale(1.02);
-  border-color: rgba(79, 70, 229, 0.3);
-  box-shadow: 
-    0 8px 25px rgba(79, 70, 229, 0.15),
-    0 4px 10px rgba(16, 185, 129, 0.1);
-}
-
-.nav-logo:hover::before {
-  opacity: 1;
+  animation: glowPulse 4s ease-in-out infinite;
 }
 
 .nav-logo img {
@@ -99,15 +138,33 @@
   height: 40px;
   position: relative;
   transform-origin: center;
-  animation: rotateLogo 12s linear infinite;
+  animation: mainRotation 12s linear infinite;
   filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
   transition: all 0.3s ease;
 }
 
 .nav-logo:hover img {
-  animation: rotateLogo 4s linear infinite;
+  animation: mainRotation 4s linear infinite;
   filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.6));
   transform: scale(1.1);
+}
+
+.nav-logo:hover::before {
+  animation: orbitRotation 4s linear infinite;
+  opacity: 0.8;
+}
+
+.nav-logo:hover::after {
+  animation: orbitRotation 3s linear infinite reverse;
+  opacity: 0.8;
+}
+
+.nav-logo:hover .logo-particles {
+  animation: particleRotation 5s linear infinite;
+}
+
+.nav-logo:hover .logo-inner-ring {
+  animation: innerRingRotation 2s linear infinite;
 }
 
 .nav-logo-icon {
@@ -490,4 +547,65 @@
 
 .nav-menu.active {
   animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes mainRotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbitRotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes particleRotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes innerRingRotation {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes particlePulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
 } 
