@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Circle -->
+  <circle class="outer-ring" cx="24" cy="24" r="23" stroke="url(#gradient1)" stroke-width="2"/>
+  
+  <!-- Middle Circle -->
+  <circle class="middle-ring" cx="24" cy="24" r="16" stroke="url(#gradient2)" stroke-width="1.5"/>
+  
+  <!-- Inner Circle -->
+  <circle class="inner-ring" cx="24" cy="24" r="10" stroke="url(#gradient3)" stroke-width="1.5"/>
+  
+  <!-- Rotating Dots -->
+  <g class="rotating-dots">
+    <circle class="dot" cx="24" cy="5" r="2" fill="#4A90E2"/>
+    <circle class="dot" cx="43" cy="24" r="2" fill="#4A90E2"/>
+    <circle class="dot" cx="24" cy="43" r="2" fill="#4A90E2"/>
+    <circle class="dot" cx="5" cy="24" r="2" fill="#4A90E2"/>
+  </g>
+  
+  <!-- Orbital Dots -->
+  <g class="orbital-dots">
+    <circle class="orbital-dot" cx="35" cy="13" r="1.5" fill="#FFD700"/>
+    <circle class="orbital-dot" cx="35" cy="35" r="1.5" fill="#FFD700"/>
+    <circle class="orbital-dot" cx="13" cy="35" r="1.5" fill="#FFD700"/>
+    <circle class="orbital-dot" cx="13" cy="13" r="1.5" fill="#FFD700"/>
+  </g>
+  
+  <!-- Center Dot -->
+  <circle class="center-dot" cx="24" cy="24" r="3" fill="url(#gradient4)"/>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="gradient1" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4A90E2"/>
+      <stop offset="100%" stop-color="#8CB8E5"/>
+    </linearGradient>
+    
+    <linearGradient id="gradient2" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4A90E2"/>
+      <stop offset="100%" stop-color="#FFD700"/>
+    </linearGradient>
+    
+    <linearGradient id="gradient3" x1="14" y1="14" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#4A90E2"/>
+    </linearGradient>
+    
+    <radialGradient id="gradient4" cx="24" cy="24" r="3" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#4A90E2"/>
+    </radialGradient>
+  </defs>
+</svg> 

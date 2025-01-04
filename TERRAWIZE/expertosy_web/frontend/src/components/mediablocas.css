@@ -1,0 +1,268 @@
+/* =========================
+   mediablocas.css
+   ========================= */
+
+/* Remove all title-related styles */
+.custom-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+/* Icon Styles */
+.icon-laptop {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.icon-laptop-screen {
+  width: 80%;
+  height: 60%;
+  background: var(--accent);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-laptop-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: screenGlow 2s ease-in-out infinite;
+}
+
+.icon-laptop-base {
+  width: 100%;
+  height: 10%;
+  background: var(--accent);
+  position: absolute;
+  bottom: 0;
+  border-radius: 2px;
+}
+
+.icon-laptop-keyboard {
+  width: 70%;
+  height: 5%;
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  bottom: 15%;
+  left: 15%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.icon-laptop-key {
+  width: 4px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 1px;
+}
+
+/* Phone Icon */
+.icon-phone {
+  width: 60%;
+  height: 90%;
+  background: var(--accent);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-phone-screen {
+  width: 90%;
+  height: 80%;
+  background: rgba(255, 255, 255, 0.1);
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.icon-phone-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: screenGlow 2s ease-in-out infinite;
+}
+
+.icon-phone-button {
+  width: 30%;
+  height: 3%;
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  bottom: 3%;
+  left: 35%;
+  border-radius: 2px;
+}
+
+.icon-phone-camera {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  top: 3%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+}
+
+/* Camera Icon */
+.icon-camera {
+  width: 90%;
+  height: 70%;
+  position: relative;
+}
+
+.icon-camera-body {
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 8px;
+  position: relative;
+}
+
+.icon-camera-lens {
+  width: 50%;
+  height: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.icon-camera-aperture {
+  width: 70%;
+  height: 70%;
+  background: rgba(255, 255, 255, 0.1);
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  border-radius: 50%;
+  animation: aperture 3s linear infinite;
+}
+
+.icon-camera-flash {
+  width: 20%;
+  height: 20%;
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  border-radius: 2px;
+}
+
+.icon-camera-grip {
+  width: 30%;
+  height: 60%;
+  background: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: -10%;
+  top: 20%;
+  border-radius: 4px;
+}
+
+/* Watch Icon */
+.icon-watch {
+  width: 70%;
+  height: 90%;
+  position: relative;
+}
+
+.icon-watch-face {
+  width: 100%;
+  height: 70%;
+  background: var(--accent);
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-watch-screen {
+  width: 80%;
+  height: 80%;
+  background: rgba(255, 255, 255, 0.1);
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.icon-watch-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  animation: screenGlow 2s ease-in-out infinite;
+}
+
+.icon-watch-button {
+  width: 20%;
+  height: 10%;
+  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  right: -10%;
+  top: 45%;
+  border-radius: 2px;
+}
+
+.icon-watch-band-top,
+.icon-watch-band-bottom {
+  width: 60%;
+  height: 20%;
+  background: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  left: 20%;
+}
+
+.icon-watch-band-top {
+  top: -15%;
+  border-radius: 4px 4px 0 0;
+}
+
+.icon-watch-band-bottom {
+  bottom: -15%;
+  border-radius: 0 0 4px 4px;
+}
+
+/* Animations */
+@keyframes screenGlow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes aperture {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .custom-icon {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+  
