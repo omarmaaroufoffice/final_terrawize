@@ -54,18 +54,43 @@
   padding: 0.75rem 1.25rem;
   border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--nav-border);
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.06);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(79, 70, 229, 0.1) 100%
+  );
+  border: 1px solid rgba(79, 70, 229, 0.2);
+  box-shadow: 
+    0 4px 15px rgba(79, 70, 229, 0.1),
+    0 2px 4px rgba(16, 185, 129, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-logo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg,
+    rgba(79, 70, 229, 0.2),
+    rgba(16, 185, 129, 0.1)
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .nav-logo:hover {
-  transform: translateY(-2px);
-  background: var(--nav-item-hover);
-  border-color: rgba(79, 70, 229, 0.2);
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(79, 70, 229, 0.3);
   box-shadow: 
-    0 4px 12px rgba(79, 70, 229, 0.1),
-    0 2px 4px rgba(16, 185, 129, 0.05);
+    0 8px 25px rgba(79, 70, 229, 0.15),
+    0 4px 10px rgba(16, 185, 129, 0.1);
+}
+
+.nav-logo:hover::before {
+  opacity: 1;
 }
 
 .nav-logo-icon {
@@ -73,22 +98,15 @@
   height: 32px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(79, 70, 229, 0.2));
-  animation: rotateLogo 8s linear infinite;
+  animation: logoSpin 12s linear infinite;
   transition: all 0.3s ease;
+  transform-origin: center;
 }
 
 .nav-logo:hover .nav-logo-icon {
-  animation: rotateLogo 4s linear infinite;
-  filter: drop-shadow(0 4px 8px rgba(79, 70, 229, 0.4));
-}
-
-@keyframes rotateLogo {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  animation: logoSpinFast 3s linear infinite;
+  filter: drop-shadow(0 4px 12px rgba(79, 70, 229, 0.4));
+  transform: scale(1.1);
 }
 
 .nav-logo-text {
@@ -98,9 +116,45 @@
     var(--primary-blue) 0%,
     var(--primary-green) 100%
   );
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.02em;
+  animation: gradientText 8s ease infinite;
+}
+
+.nav-logo:hover .nav-logo-text {
+  animation: gradientText 4s ease infinite;
+}
+
+@keyframes logoSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes logoSpinFast {
+  0% {
+    transform: rotate(0deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1.1);
+  }
+}
+
+@keyframes gradientText {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .nav-menu {
