@@ -26,7 +26,7 @@
   justify-content: center;
 }
 
-.logo-image {
+.logo-core {
   width: 100%;
   height: 100%;
   position: relative;
@@ -67,52 +67,34 @@
 .logo-particles {
   position: absolute;
   inset: -12px;
-  animation: rotateParticles 15s linear infinite;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: rotateParticles 10s linear infinite;
 }
 
-.particle {
+.logo-particles::before,
+.logo-particles::after {
+  content: '';
   position: absolute;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: #4F46E5;
   filter: blur(1px);
-}
-
-.particle-1 {
-  top: 50%;
-  left: -3px;
-  transform: translateY(-50%);
-  background: #10B981;
   animation: pulseBrightness 3s ease-in-out infinite;
 }
 
-.particle-2 {
-  top: -3px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: pulseBrightness 3s ease-in-out infinite 1s;
-}
-
-.particle-3 {
-  bottom: -3px;
-  left: 50%;
+.logo-particles::before {
+  top: 50%;
+  left: 0;
   transform: translateX(-50%);
   background: #10B981;
-  animation: pulseBrightness 3s ease-in-out infinite 2s;
 }
 
-.logo-glow {
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  background: radial-gradient(circle at center,
-    rgba(79, 70, 229, 0.2),
-    rgba(16, 185, 129, 0.2) 50%,
-    transparent 70%
-  );
-  animation: pulseGlow 4s ease-in-out infinite;
-  z-index: 1;
+.logo-particles::after {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .logo-text {
@@ -159,17 +141,6 @@
   }
 }
 
-@keyframes pulseGlow {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(0.95);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.05);
-  }
-}
-
 @keyframes pulseScale {
   0%, 100% {
     transform: scale(1);
@@ -208,7 +179,7 @@
   animation: rotateParticles 8s linear infinite;
 }
 
-.logo:hover .logo-image {
+.logo:hover .logo-core {
   filter: drop-shadow(0 0 12px rgba(79, 70, 229, 0.6));
 }
 
@@ -223,7 +194,8 @@
     font-size: 1.2rem;
   }
 
-  .particle {
+  .logo-particles::before,
+  .logo-particles::after {
     width: 4px;
     height: 4px;
   }
