@@ -1,0 +1,244 @@
+/* =========================
+   LandingPage.css
+   ========================= */
+
+/* -----------------------------------
+   Base Styles and Variables
+----------------------------------- */
+:root {
+  /* Core Colors */
+  --space-light: rgba(255, 255, 255, 0.98);
+  --cosmic-blue: #4F46E5;
+  --fresh-green: #10B981;
+  --deep-blue: #1E293B;
+  --starlight-blue: #4F46E5;
+  --mint-green: #10B981;
+  --stellar-white: #FFFFFF;
+  --primary-blue: #4F46E5;
+  --text-dark: #1E293B;
+  --accent-green: #10B981;
+
+  /* Enhanced UI Colors */
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(79, 70, 229, 0.2);
+  --card-hover-bg: rgba(255, 255, 255, 1);
+  --card-hover-border: rgba(79, 70, 229, 0.4);
+  --search-bg: rgba(255, 255, 255, 0.9);
+  --search-border: rgba(79, 70, 229, 0.25);
+  
+  /* Shadows and Effects */
+  --card-shadow: 0 8px 32px rgba(79, 70, 229, 0.1);
+  --hover-shadow: 0 12px 40px rgba(79, 70, 229, 0.15);
+  --text-shadow: 0 2px 4px rgba(79, 70, 229, 0.1);
+}
+
+/* -----------------------------------
+   Main Layout
+----------------------------------- */
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(79, 70, 229, 0.05) 50%,
+    rgba(16, 185, 129, 0.05) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+.nav-bar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(79, 70, 229, 0.15);
+  padding: 1rem 0;
+  box-shadow: 
+    0 4px 20px rgba(79, 70, 229, 0.1),
+    0 1px 3px rgba(16, 185, 129, 0.05);
+  transition: all 0.3s ease;
+}
+
+.nav-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.landing-content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.99) 0%,
+    rgba(240, 248, 255, 0.97) 100%
+  );
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.hero-section {
+  width: 100%;
+  padding: 2rem 1rem;
+  text-align: center;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(79, 70, 229, 0.05) 100%
+  );
+  border-radius: 0;
+  margin: 0;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg,
+    var(--cosmic-blue) 0%,
+    var(--fresh-green) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 1rem;
+  padding: 0;
+}
+
+.examples-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+
+.example-item {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  min-height: 160px;
+  cursor: pointer;
+}
+
+.search-section {
+  width: 100%;
+  padding: 1rem;
+}
+
+.search-container {
+  width: 100%;
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.search-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.search-input-wrapper {
+  width: 100%;
+}
+
+.search-button {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Desktop Styles */
+@media (min-width: 769px) {
+  .landing-page {
+    padding: 2rem;
+  }
+
+  .nav-container {
+    padding: 0 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.08);
+  }
+
+  .landing-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 3.5rem;
+    border-radius: 40px;
+    box-shadow: 0 25px 70px rgba(79, 70, 229, 0.18);
+  }
+
+  .hero-section {
+    padding: 4rem 2rem;
+    border-radius: 24px;
+    margin: 2rem auto;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .examples-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 4rem;
+  }
+
+  .example-item {
+    padding: 2rem;
+    gap: 1.5rem;
+    min-height: 200px;
+  }
+}
+
+/* Small Screen Adjustments */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .example-item {
+    min-height: 140px;
+    padding: 1.25rem;
+  }
+
+  .example-icon {
+    font-size: 1.75rem;
+  }
+
+  .example-text {
+    font-size: 1rem;
+  }
+}
+
+/* iPhone Notch Support */
+@supports (padding: max(0px)) {
+  .landing-page {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+} 
