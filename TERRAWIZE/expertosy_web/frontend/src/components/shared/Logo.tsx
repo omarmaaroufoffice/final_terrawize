@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Logo.css';
 
 const Logo: React.FC = () => {
   return (
@@ -13,8 +14,7 @@ const Logo: React.FC = () => {
         </div>
       </div>
       <div className="logo-core">
-        <div className="logo-inner-circle"></div>
-        <div className="logo-pulse"></div>
+        <img src="/static/media/logo.2e2c642bf5931adb622080029bad" alt="Expertosy Logo" />
       </div>
       <div className="logo-rings"></div>
       <span className="nav-logo-text">Expertosy</span>
