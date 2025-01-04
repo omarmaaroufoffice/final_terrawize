@@ -99,7 +99,7 @@
   position: relative;
   transform-origin: center;
   animation: rotateLogo 12s linear infinite;
-  filter: drop-shadow(0 0 15px rgba(79, 70, 229, 0.4));
+  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
   transition: all 0.3s ease;
 }
 
@@ -113,7 +113,7 @@
   content: '';
   position: absolute;
   inset: -5px;
-  background: linear-gradient(135deg, #4F46E5, #10B981);
+  background: linear-gradient(135deg, #10B981, #0EA5E9);
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -130,8 +130,8 @@
   inset: 0;
   border-radius: 50%;
   border: 2px solid transparent;
-  border-top-color: #4F46E5;
-  border-right-color: #10B981;
+  border-top-color: #10B981;
+  border-right-color: #0EA5E9;
   opacity: 0;
   transition: opacity 0.3s ease;
   animation: rotateRing 3s linear infinite;
@@ -190,10 +190,10 @@
 }
 
 @keyframes rotateLogo {
-  0% {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
@@ -210,10 +210,10 @@
 }
 
 @keyframes rotateRing {
-  0% {
+  from {
     transform: rotate(0deg);
   }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
