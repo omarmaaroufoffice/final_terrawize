@@ -90,3 +90,4 @@ jspm_packages/
 
 # Jupyter Notebook
 .ipynb_checkpoints 
+.codegpt
