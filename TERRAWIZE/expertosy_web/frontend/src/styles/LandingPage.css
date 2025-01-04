@@ -2,6 +2,10 @@
 .landing-page {
   min-height: 100vh;
   position: relative;
+  background: linear-gradient(135deg, 
+    rgba(108, 180, 238, 0.1) 0%,
+    rgba(152, 251, 152, 0.1) 100%
+  );
 }
 
 .landing-content {
@@ -28,12 +32,12 @@
 }
 
 .search-container {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(108, 180, 238, 0.1);
+  border: 1px solid rgba(108, 180, 238, 0.2);
 }
 
 .search-input-wrapper {
@@ -56,7 +60,7 @@
   font-size: 1.1rem;
   border: 2px solid transparent;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(240, 248, 255, 0.5);
   color: var(--text-primary);
   transition: all 0.3s ease;
 }
@@ -64,7 +68,7 @@
 .search-input:focus {
   outline: none;
   border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(108, 180, 238, 0.1);
 }
 
 .search-button {
@@ -86,7 +90,8 @@
 
 .search-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
+  box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.2);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
 }
 
 .search-button:disabled {
@@ -125,8 +130,8 @@
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(108, 180, 238, 0.2);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -134,11 +139,14 @@
 
 .example-item:hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--primary);
+  box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.1);
 }
 
 .example-icon {
   font-size: 1.5rem;
+  color: var(--primary);
 }
 
 .example-text {
@@ -189,8 +197,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(108, 180, 238, 0.2);
   border-radius: 20px;
   color: var(--text-primary);
   font-size: 0.95rem;
@@ -200,11 +208,14 @@
 
 .tag:hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--primary);
+  box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.1);
 }
 
 .tag-icon {
   font-size: 1.2rem;
+  color: var(--primary);
 }
 
 /* Mobile Responsiveness */

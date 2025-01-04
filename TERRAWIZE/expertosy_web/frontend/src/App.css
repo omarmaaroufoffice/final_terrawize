@@ -1,13 +1,13 @@
 /* Root Variables */
 :root {
-  --background: #2D2B3D;
-  --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --primary: #6FB4FE;
-  --accent: #FFD700;
+  --background: #F0F8FF;
+  --text-primary: #2C3E50;
+  --text-secondary: rgba(44, 62, 80, 0.7);
+  --primary: #6CB4EE;
+  --accent: #98FB98;
   --error: #FF6B6B;
-  --primary-rgb: 111, 180, 254;
-  --accent-rgb: 255, 215, 0;
+  --primary-rgb: 108, 180, 238;
+  --accent-rgb: 152, 251, 152;
   --error-rgb: 255, 107, 107;
   --nav-height: 70px;
   --nav-height-mobile: 50px;
