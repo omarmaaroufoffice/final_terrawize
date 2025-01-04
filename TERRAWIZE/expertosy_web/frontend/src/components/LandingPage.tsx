@@ -157,7 +157,7 @@ const LandingPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              Your AI-Powered Personal Shopping Assistant
+              The GPS for what you want, not more ads
             </motion.h2>
           </motion.div>
           
@@ -243,10 +243,15 @@ const LandingPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
           >
-            <h2 className="popular-searches-title">
-              <SparkleIcon className="title-icon" size={32} />
-              Popular Searches
-            </h2>
+            <div className="popular-searches-header">
+              <h2 className="popular-searches-title">
+                <SparkleIcon className="title-icon" size={36} />
+                Popular Searches
+              </h2>
+              <p className="popular-searches-subtitle">
+                Discover trending categories and find exactly what you need
+              </p>
+            </div>
             <div className="tags-grid">
               <motion.div 
                 className="tag-item"
