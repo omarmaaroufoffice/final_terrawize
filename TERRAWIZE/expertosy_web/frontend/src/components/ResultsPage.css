@@ -198,7 +198,7 @@
   color: var(--text-primary);
   background: var(--overlay-light);
   border-radius: 16px;
-  padding: 1.25rem;
+  padding: 0.5rem;
   margin-top: 0.5rem;
   border: 1px solid var(--border-dark);
   box-shadow: 0 4px 12px rgba(100, 180, 255, 0.08);
@@ -210,10 +210,10 @@
   font-size: 1rem;
   line-height: 1.6;
   color: var(--text-primary);
-  margin-bottom: 1rem;
-  padding: 0.8rem;
+  margin-bottom: 3rem;
+  padding: 0.2rem;
   background: rgba(10, 17, 40, 0.1);
-  border-radius: 12px;
+  border-radius: 3px;
   border: 1px solid rgba(100, 180, 255, 0.15);
 }
 
@@ -221,10 +221,10 @@
 .advantages-section,
 .why-not-first-section,
 .caveats-section {
-  margin: 1.5rem 0 0;
-  padding: 1rem;
-  border-radius: 12px;
-  border-left: 4px solid var(--blue);
+  margin: 0.2rem 0 0;
+  padding: 0.1rem;
+  border-radius: 2px;
+  border-left: 1px solid var(--blue);
   background: rgba(10, 17, 40, 0.1);
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -257,7 +257,7 @@
   font-size: 0.95rem;
   line-height: 1.4;
   color: var(--text-primary);
-  padding: 0.6rem 1rem;
+  padding: 0.2rem 0,2rem;
   background: rgba(10, 17, 40, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(100, 180, 255, 0.1);
@@ -279,6 +279,31 @@
   color: #FFB74D;
   font-size: 1.2rem;
   font-weight: bold;
+}
+.product-details,
+.product-explanation {
+  min-width: 0;
+}
+
+.product-card {
+  grid-template-columns: auto 1fr;
+
+  padding: 0rem;
+}
+.product-details {
+  grid-template-columns: auto 1fr;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.product-details {
+  grid-template-columns: auto 1fr;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start; /* Ensures left alignment */
 }
 
 /* Why Not First (Contrast) */
