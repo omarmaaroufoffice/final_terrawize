@@ -3,6 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../config/api';
 import Navigation from './shared/Navigation';
+import {
+  SparkleIcon,
+  SearchIcon,
+  TargetIcon,
+  LightbulbIcon,
+  LaptopIcon,
+  SmartphoneIcon,
+  CameraIcon,
+  SmartWatchIcon,
+  WarningIcon
+} from './shared/Icons';
 import './LandingPage.css';
 
 interface PopularSearch {
@@ -13,7 +24,7 @@ interface PopularSearch {
 
 interface SearchExample {
   text: string;
-  icon: string;
+  icon: React.ReactNode;
   color: string;
 }
 
@@ -31,22 +42,22 @@ const LandingPage: React.FC = () => {
   const searchExamples: SearchExample[] = [
     { 
       text: "Recommend me a ...", 
-      icon: "✨", 
+      icon: <SparkleIcon className="example-icon" size={28} />, 
       color: "var(--blue-glow)"
     },
     { 
       text: "Find me the best ...", 
-      icon: "🔍", 
+      icon: <SearchIcon className="example-icon" size={28} />, 
       color: "var(--accent-teal)"
     },
     { 
       text: "I am looking for a ...", 
-      icon: "🎯", 
+      icon: <TargetIcon className="example-icon" size={28} />, 
       color: "var(--text-primary)"
     },
     { 
       text: "Help me choose a ...", 
-      icon: "💡", 
+      icon: <LightbulbIcon className="example-icon" size={28} />, 
       color: "var(--blue-glow)"
     }
   ];
@@ -158,7 +169,7 @@ const LandingPage: React.FC = () => {
           >
             <div className="search-box">
               <div className="search-input-wrapper">
-                <span className="search-icon">🔍</span>
+                <SearchIcon className="search-icon" size={32} />
                 <input
                   type="text"
                   placeholder="What are you looking to find?"
@@ -183,7 +194,7 @@ const LandingPage: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                    <span className="button-icon">✨</span>
+                    <SparkleIcon className="button-icon" size={24} />
                     Let's find it
                   </>
                 )}
@@ -198,7 +209,7 @@ const LandingPage: React.FC = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
-                  <span className="error-icon">⚠️</span>
+                  <WarningIcon className="error-icon" size={24} />
                   {error}
                 </motion.div>
               )}
@@ -220,7 +231,7 @@ const LandingPage: React.FC = () => {
                 whileHover={{ scale: 1.02, y: -2 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <span className="example-icon">{example.icon}</span>
+                {example.icon}
                 <span className="example-text">{example.text}</span>
               </motion.button>
             ))}
@@ -232,7 +243,10 @@ const LandingPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
           >
-            <h2 className="popular-searches-title">Popular Searches</h2>
+            <h2 className="popular-searches-title">
+              <SparkleIcon className="title-icon" size={32} />
+              Popular Searches
+            </h2>
             <div className="tags-grid">
               <motion.div 
                 className="tag-item"
@@ -240,7 +254,9 @@ const LandingPage: React.FC = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSearchQuery("laptop")}
               >
-                <div className="tag-icon">💻</div>
+                <div className="tag-icon">
+                  <LaptopIcon size={40} />
+                </div>
                 <div className="tag-content">
                   <h3 className="tag-title">Laptops</h3>
                   <p className="tag-description">Find the perfect laptop for your needs</p>
@@ -252,7 +268,9 @@ const LandingPage: React.FC = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSearchQuery("smartphone")}
               >
-                <div className="tag-icon">📱</div>
+                <div className="tag-icon">
+                  <SmartphoneIcon size={40} />
+                </div>
                 <div className="tag-content">
                   <h3 className="tag-title">Smartphones</h3>
                   <p className="tag-description">Compare the latest flagship phones</p>
@@ -264,7 +282,9 @@ const LandingPage: React.FC = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSearchQuery("camera")}
               >
-                <div className="tag-icon">📸</div>
+                <div className="tag-icon">
+                  <CameraIcon size={40} />
+                </div>
                 <div className="tag-content">
                   <h3 className="tag-title">Cameras</h3>
                   <p className="tag-description">Discover your ideal photography gear</p>
@@ -276,7 +296,9 @@ const LandingPage: React.FC = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setSearchQuery("smartwatch")}
               >
-                <div className="tag-icon">⌚</div>
+                <div className="tag-icon">
+                  <SmartWatchIcon size={40} />
+                </div>
                 <div className="tag-content">
                   <h3 className="tag-title">Smart Watches</h3>
                   <p className="tag-description">Explore cutting-edge wearable tech</p>

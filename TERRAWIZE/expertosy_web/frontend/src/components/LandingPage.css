@@ -167,19 +167,13 @@
 }
 
 .example-icon {
-  font-size: 2rem;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg,
-    rgba(56, 189, 248, 0.15) 0%,
-    rgba(34, 197, 94, 0.15) 100%
-  );
-  border-radius: var(--border-radius-md);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  color: var(--accent-blue);
+  transition: all var(--transition-normal);
+}
+
+.example-item:hover .example-icon {
+  color: var(--highlight-color, var(--accent-blue));
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.3));
 }
 
 .example-text {
@@ -251,19 +245,29 @@
 }
 
 .tag-icon {
-  font-size: 2.5rem;
+  color: var(--friendly-blue);
+  transition: all var(--transition-normal);
   display: flex;
   align-items: center;
   justify-content: center;
   width: 64px;
   height: 64px;
   background: linear-gradient(135deg,
+    rgba(56, 189, 248, 0.15) 0%,
+    rgba(34, 197, 94, 0.15) 100%
+  );
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.tag-item:hover .tag-icon {
+  color: var(--friendly-green);
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.3));
+  border-color: rgba(34, 197, 94, 0.3);
+  background: linear-gradient(135deg,
     rgba(34, 197, 94, 0.15) 0%,
     rgba(56, 189, 248, 0.15) 100%
   );
-  border-radius: var(--border-radius-lg);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  margin-bottom: 0.5rem;
 }
 
 .tag-content {
@@ -369,8 +373,13 @@
 }
 
 .search-icon {
-  font-size: 1.75rem;
   color: var(--accent-blue);
+  transition: all var(--transition-normal);
+}
+
+.search-container.focused .search-icon {
+  color: var(--accent-blue-dark);
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.3));
 }
 
 .search-input-wrapper input {
@@ -420,7 +429,12 @@
 }
 
 .button-icon {
-  font-size: 1.25rem;
+  color: var(--deep-blue);
+  transition: all var(--transition-normal);
+}
+
+.search-button:hover .button-icon {
+  filter: drop-shadow(0 0 4px rgba(15, 23, 42, 0.3));
 }
 
 /* Loading Animation */
@@ -461,7 +475,8 @@
 }
 
 .error-icon {
-  font-size: 1.25rem;
+  color: #ef4444;
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.2));
 }
 
 @media (max-width: 768px) {
@@ -501,4 +516,10 @@
   .button-icon {
     font-size: 1.1rem;
   }
+}
+
+.title-icon {
+  color: var(--friendly-green);
+  margin-right: 0.75rem;
+  filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.2));
 } 
