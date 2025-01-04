@@ -230,7 +230,7 @@ const QuestionnairePage: React.FC = () => {
             question: questionLine,
             options: options,
             category: getCategoryFromQuestion(questionLine),
-            helpText: generateHelpText(questionLine)
+
           });
         }
       });
@@ -265,19 +265,7 @@ const QuestionnairePage: React.FC = () => {
     return 'General';
   };
 
-  const generateHelpText = (question: string): string => {
-    const lowercaseQuestion = question.toLowerCase();
-    if (lowercaseQuestion.includes('space')) {
-      return 'Consider your daily needs for passengers and cargo, including future requirements.';
-    }
-    if (lowercaseQuestion.includes('budget')) {
-      return 'Remember to factor in maintenance, insurance, and fuel costs beyond the purchase price.';
-    }
-    if (lowercaseQuestion.includes('fuel')) {
-      return 'Think about your typical driving patterns and local fuel prices.';
-    }
-    return '';
-  };
+
 
   const handleOptionSelect = async (option: string) => {
     const currentQuestion = questionnaire[currentQuestionIndex];

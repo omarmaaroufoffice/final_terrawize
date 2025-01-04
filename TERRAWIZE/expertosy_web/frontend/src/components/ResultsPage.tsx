@@ -1,19 +1,142 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
+import type { HTMLMotionProps } from 'framer-motion';
 import Navigation from './shared/Navigation';
 import './ResultsPage.css';
 
-interface ProductExplanation {
+interface Product {
   name: string;
   price: string;
   explanation: string;
   advantages: string[];
-  why_not_first: string;
+  why_not_first?: string;
   product_caveats: string[];
-  situationalBenefits?: string;
-  affiliateLink?: string;
 }
+
+interface ProductCardProps {
+  product: Product;
+  index: number;
+}
+
+const cardVariants: Variants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
+const ProductCard = ({ product, index }: ProductCardProps) => (
+  <motion.div
+    data-testid="product-card"
+    className="product-card"
+    custom={index}
+    variants={cardVariants}
+    initial="initial"
+    animate="animate"
+    whileHover={{ scale: 1.02 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    <motion.div 
+      data-testid="rank-badge"
+      className="rank-badge"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
+    >
+      {index + 1}
+    </motion.div>
+    <div className="product-details">
+      <div className="product-info-header">
+        <h3 className="product-name">{product.name}</h3>
+        <p className="product-price">{product.price}</p>
+      </div>
+      
+      <motion.div 
+        data-testid="product-explanation"
+        className="product-explanation"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: index * 0.1 + 0.7 }}
+      >
+        <p className="explanation-text">{product.explanation}</p>
+        
+        <div className="advantages-section">
+          <h4>Key Advantages</h4>
+          <div className="advantages-list">
+            {product.advantages.map((advantage, i) => (
+              <motion.div 
+                key={i}
+                data-testid={`advantage-${i}`}
+                className="advantage-item"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 + 0.8 + (i * 0.1) }}
+              >
+                <span className="advantage-icon">✓</span>
+                {advantage}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {product.why_not_first && (
+          <motion.div 
+            data-testid="why-not-first"
+            className="why-not-first-section"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: index * 0.1 + 1.2 }}
+          >
+            <h4>Why Not #1 Choice?</h4>
+            <p className="why-not-first-text">{product.why_not_first}</p>
+          </motion.div>
+        )}
+
+        <motion.div 
+          data-testid="caveats-section"
+          className="caveats-section"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: index * 0.1 + 1.4 }}
+        >
+          <h4>Things to Consider</h4>
+          <div className="caveats-list">
+            {product.product_caveats.map((caveat, i) => (
+              <motion.div 
+                key={i}
+                data-testid={`caveat-${i}`}
+                className="caveat-item"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 + 1.5 + (i * 0.1) }}
+              >
+                <span className="caveat-icon">!</span>
+                {caveat}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </div>
+  </motion.div>
+);
+
+const LoadingSpinner = () => (
+  <motion.div
+    data-testid="loading-spinner"
+    className="loading-spinner"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+  >
+    <motion.div
+      data-testid="spinner"
+      className="spinner"
+      animate={{ rotate: 360 }}
+      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+    />
+    <p>Analyzing your request...</p>
+  </motion.div>
+);
 
 const ResultsPage: React.FC = () => {
   const location = useLocation();
@@ -24,7 +147,7 @@ const ResultsPage: React.FC = () => {
   const state = location.state as { 
     searchQuery: string;
     userPreferences: Record<string, string>;
-    recommendation: ProductExplanation[];
+    recommendation: Product[];
   };
 
   const loadingStages = useMemo(() => [
@@ -76,19 +199,6 @@ const ResultsPage: React.FC = () => {
     initial: { opacity: 0, scale: 0.95 },
     animate: { opacity: 1, scale: 1 },
     exit: { opacity: 0, scale: 0.95 }
-  };
-
-  const cardVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    })
   };
 
   if (!state || !state.recommendation) {
@@ -143,13 +253,7 @@ const ResultsPage: React.FC = () => {
           className="loading-container"
           variants={containerVariants}
         >
-          <motion.div 
-            className="loading-spinner"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          >
-            ✨
-          </motion.div>
+          <LoadingSpinner />
           <motion.h2
             className="loading-title"
             initial={{ opacity: 0 }}
@@ -198,90 +302,7 @@ const ResultsPage: React.FC = () => {
 
         <div className="recommendations-list">
           {state.recommendation.map((product, index) => (
-            <motion.div
-              key={index}
-              className="product-card"
-              custom={index}
-              variants={cardVariants}
-              initial="initial"
-              animate="animate"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <motion.div 
-                className="rank-badge"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: index * 0.1 + 0.5, type: "spring" }}
-              >
-                {index + 1}
-              </motion.div>
-              <div className="product-details">
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-price">{product.price}</p>
-                <motion.div 
-                  className="product-explanation"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: index * 0.1 + 0.7 }}
-                >
-                  <p className="explanation-text">{product.explanation}</p>
-                  
-                  <div className="advantages-section">
-                    <h4>Key Advantages</h4>
-                    <div className="advantages-list">
-                      {product.advantages.map((advantage, i) => (
-                        <motion.div 
-                          key={i}
-                          className="advantage-item"
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 + 0.8 + (i * 0.1) }}
-                        >
-                          <span className="advantage-icon">✓</span>
-                          {advantage}
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {product.why_not_first && (
-                    <motion.div 
-                      className="why-not-first-section"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: index * 0.1 + 1.2 }}
-                    >
-                      <h4>Why Not #1 Choice?</h4>
-                      <p className="why-not-first-text">{product.why_not_first}</p>
-                    </motion.div>
-                  )}
-
-                  <motion.div 
-                    className="caveats-section"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.1 + 1.4 }}
-                  >
-                    <h4>Things to Consider</h4>
-                    <div className="caveats-list">
-                      {product.product_caveats.map((caveat, i) => (
-                        <motion.div 
-                          key={i}
-                          className="caveat-item"
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 + 1.5 + (i * 0.1) }}
-                        >
-                          <span className="caveat-icon">!</span>
-                          {caveat}
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </div>
-            </motion.div>
+            <ProductCard key={index} product={product} index={index} />
           ))}
         </div>
 
