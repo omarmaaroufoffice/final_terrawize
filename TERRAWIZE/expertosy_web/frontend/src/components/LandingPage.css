@@ -601,14 +601,14 @@
 .popular-searches {
   width: 100%;
   max-width: 900px;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 }
 
 .popular-searches-header {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding: 1.25rem 1.5rem;
   background: linear-gradient(
     180deg,
