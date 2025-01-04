@@ -3,17 +3,17 @@
   "name": "Expertosy Match - Free recommendation AI powered service",
   "icons": [
     {
-      "src": "expertosy-logo.png",
+      "src": "logo64.png",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/png"
     },
     {
-      "src": "expertosy-logo.png",
+      "src": "logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "expertosy-logo.png",
+      "src": "expertosy_logo.png",
       "type": "image/png",
       "sizes": "512x512"
     }
