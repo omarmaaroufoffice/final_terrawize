@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import Logo from './Logo';
 import './Navigation.css';
 
 const Navigation: React.FC = () => {
@@ -21,7 +22,11 @@ const Navigation: React.FC = () => {
     <nav className="nav-container">
       <div className="nav-content">
         <Link to="/" className="nav-logo">
-          Expertosy Match
+          <Logo size="small" />
+          <div className="nav-logo-text">
+            <span className="logo-text-main">Expertosy</span>
+            <span className="logo-text-sub">AI recommendation service</span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
