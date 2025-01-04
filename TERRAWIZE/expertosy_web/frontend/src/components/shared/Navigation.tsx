@@ -1,21 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Navigation.css';
 import logo from '../../assets/logo.svg';
+import './Navigation.css';
 
 const Navigation: React.FC = () => {
   return (
-    <nav className="nav-container">
-      <Link to="/" className="nav-logo">
-        <img src={logo} alt="Expertosy Logo" />
-        <div className="nav-text">
+    <nav className="nav-bar">
+      <div className="nav-container">
+        <Link to="/" className="nav-logo">
+          <div className="logo-outer-glow"></div>
+          <div className="logo-particles">
+            <div className="particle particle-1"></div>
+            <div className="particle particle-2"></div>
+            <div className="particle particle-3"></div>
+          </div>
+          <div className="logo-inner-ring"></div>
+          <img src={logo} alt="Expertosy Logo" />
           <span className="nav-logo-text">Expertosy</span>
-          <span className="nav-subtitle">AI recommendation service</span>
-        </div>
-      </Link>
-      <div className="nav-links">
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/questionnaire" className="nav-link">Questionnaire</Link>
+        </Link>
+        {/* Rest of the navigation content */}
       </div>
     </nav>
   );
