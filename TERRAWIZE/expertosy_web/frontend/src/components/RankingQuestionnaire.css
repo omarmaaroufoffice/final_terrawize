@@ -613,14 +613,15 @@
   z-index: 2;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.98) 0%,
-    rgba(240, 248, 255, 0.95) 100%
+    rgba(16, 185, 129, 0.15) 0%,
+    rgba(6, 148, 162, 0.08) 50%,
+    rgba(16, 185, 129, 0.15) 100%
   );
   border-radius: 24px;
   box-shadow: 
-    0 20px 60px rgba(79, 70, 229, 0.15),
-    0 10px 30px rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(79, 70, 229, 0.2);
+    0 20px 60px rgba(16, 185, 129, 0.2),
+    0 10px 30px rgba(6, 148, 162, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.25);
   backdrop-filter: blur(20px);
 }
 
@@ -630,9 +631,9 @@
   margin-bottom: 2.5rem;
   padding: 1.5rem;
   background: linear-gradient(135deg, 
-    #4F46E5 0%,
-    #10B981 50%,
-    #4F46E5 100%
+    #10B981 0%,
+    #0EA5E9 50%,
+    #10B981 100%
   );
   background-size: 200% 200%;
   -webkit-background-clip: text;
@@ -640,7 +641,7 @@
   animation: gradientTitle 6s ease infinite;
   position: relative;
   display: inline-block;
-  text-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+  text-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
 .loading-content h2::before {
@@ -652,7 +653,7 @@
   bottom: 0;
   background: linear-gradient(90deg,
     transparent,
-    rgba(79, 70, 229, 0.4),
+    rgba(16, 185, 129, 0.4),
     transparent
   );
   transform: translateX(-100%);
@@ -744,13 +745,13 @@
   position: relative;
   margin-top: 3rem;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
-  border: 1px solid rgba(79, 70, 229, 0.25);
+  border: 1px solid rgba(16, 185, 129, 0.3);
   overflow: hidden;
   box-shadow: 
-    0 10px 30px rgba(79, 70, 229, 0.15),
-    0 4px 10px rgba(16, 185, 129, 0.08);
+    0 10px 30px rgba(16, 185, 129, 0.15),
+    0 4px 10px rgba(6, 148, 162, 0.1);
 }
 
 .loading-progress-container::before {
@@ -762,7 +763,7 @@
   bottom: 0;
   background: linear-gradient(90deg, 
     transparent,
-    rgba(79, 70, 229, 0.2),
+    rgba(16, 185, 129, 0.2),
     transparent
   );
   transform: translateX(-100%);
@@ -771,7 +772,7 @@
 
 .loading-progress-bar {
   height: 6px;
-  background: rgba(79, 70, 229, 0.15);
+  background: rgba(16, 185, 129, 0.15);
   border-radius: 3px;
   overflow: hidden;
   position: relative;
@@ -780,14 +781,14 @@
 .loading-progress-fill {
   height: 100%;
   background: linear-gradient(90deg,
-    #4F46E5,
     #10B981,
-    #4F46E5
+    #0EA5E9,
+    #10B981
   );
   background-size: 200% 100%;
   animation: gradientFlow 2s linear infinite;
   border-radius: 3px;
-  box-shadow: 0 0 10px rgba(79, 70, 229, 0.4);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
 }
 
 .loading-progress-text {
@@ -795,7 +796,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 1rem;
-  color: #1E293B;
+  color: #065F46;
   font-size: 1rem;
   font-weight: 500;
 }
