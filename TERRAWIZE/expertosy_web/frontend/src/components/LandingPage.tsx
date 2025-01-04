@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import api from '../config/api';
 import Navigation from './shared/Navigation';
 import './LandingPage.css';
@@ -115,6 +115,15 @@ const LandingPage: React.FC = () => {
     }
   };
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / card.offsetWidth) * 100;
+    const y = ((e.clientY - rect.top) / card.offsetHeight) * 100;
+    card.style.setProperty('--mouse-x', `${x}%`);
+    card.style.setProperty('--mouse-y', `${y}%`);
+  };
+
   return (
     <div className="landing-page">
       <Navigation />
@@ -206,17 +215,18 @@ const LandingPage: React.FC = () => {
               transition={{ duration: 0.6, delay: 0.8 }}
             >
               {searchExamples.map((example, index) => (
-                <motion.button
+                <motion.div
                   key={index}
                   className="example-item"
                   style={{ '--highlight-color': example.color } as React.CSSProperties}
                   onClick={() => handleExampleClick(example.text)}
-                  whileHover={{ scale: 1.02, y: -2 }}
+                  onMouseMove={handleMouseMove}
+                  whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <span className="example-icon">{example.icon}</span>
                   <span className="example-text">{example.text}</span>
-                </motion.button>
+                </motion.div>
               ))}
             </motion.div>
 
