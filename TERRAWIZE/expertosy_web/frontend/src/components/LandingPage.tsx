@@ -126,6 +126,11 @@ const LandingPage: React.FC = () => {
     }
   };
 
+  const handleTagClick = (query: string) => {
+    setSearchQuery(query);
+    handleSearch();
+  };
+
   return (
     <div className="landing-page">
       <Navigation />
@@ -257,7 +262,7 @@ const LandingPage: React.FC = () => {
                 className="tag-item"
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setSearchQuery("laptop")}
+                onClick={() => handleTagClick("laptop")}
               >
                 <div className="tag-icon">
                   <LaptopIcon size={40} />
@@ -271,7 +276,7 @@ const LandingPage: React.FC = () => {
                 className="tag-item"
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setSearchQuery("smartphone")}
+                onClick={() => handleTagClick("smartphone")}
               >
                 <div className="tag-icon">
                   <SmartphoneIcon size={40} />
@@ -285,7 +290,7 @@ const LandingPage: React.FC = () => {
                 className="tag-item"
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setSearchQuery("camera")}
+                onClick={() => handleTagClick("camera")}
               >
                 <div className="tag-icon">
                   <CameraIcon size={40} />
@@ -299,7 +304,7 @@ const LandingPage: React.FC = () => {
                 className="tag-item"
                 whileHover={{ scale: 1.02, y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setSearchQuery("smartwatch")}
+                onClick={() => handleTagClick("smartwatch")}
               >
                 <div className="tag-icon">
                   <SmartWatchIcon size={40} />
