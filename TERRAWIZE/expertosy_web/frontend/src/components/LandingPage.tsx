@@ -232,26 +232,56 @@ const LandingPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
           >
-            <div className="popular-searches-header">
-              <span className="popular-searches-icon">✨</span>
-              <h3>Popular Searches</h3>
-            </div>
-            <div className="tags">
-              {popularSearches.map((search, index) => (
-                <motion.button
-                  key={index}
-                  className="tag"
-                  onClick={() => setSearchQuery(search.name)}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <span className="tag-icon">{search.icon}</span>
-                  <div className="tag-content">
-                    <span className="tag-name">{search.name}</span>
-                    <span className="tag-description">{search.description}</span>
-                  </div>
-                </motion.button>
-              ))}
+            <h2 className="popular-searches-title">Popular Searches</h2>
+            <div className="tags-grid">
+              <motion.div 
+                className="tag-item"
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSearchQuery("laptop")}
+              >
+                <div className="tag-icon">💻</div>
+                <div className="tag-content">
+                  <h3 className="tag-title">Laptops</h3>
+                  <p className="tag-description">Find the perfect laptop for your needs</p>
+                </div>
+              </motion.div>
+              <motion.div 
+                className="tag-item"
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSearchQuery("smartphone")}
+              >
+                <div className="tag-icon">📱</div>
+                <div className="tag-content">
+                  <h3 className="tag-title">Smartphones</h3>
+                  <p className="tag-description">Compare the latest flagship phones</p>
+                </div>
+              </motion.div>
+              <motion.div 
+                className="tag-item"
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSearchQuery("camera")}
+              >
+                <div className="tag-icon">📸</div>
+                <div className="tag-content">
+                  <h3 className="tag-title">Cameras</h3>
+                  <p className="tag-description">Discover your ideal photography gear</p>
+                </div>
+              </motion.div>
+              <motion.div 
+                className="tag-item"
+                whileHover={{ scale: 1.02, y: -4 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSearchQuery("smartwatch")}
+              >
+                <div className="tag-icon">⌚</div>
+                <div className="tag-content">
+                  <h3 className="tag-title">Smart Watches</h3>
+                  <p className="tag-description">Explore cutting-edge wearable tech</p>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         </div>
