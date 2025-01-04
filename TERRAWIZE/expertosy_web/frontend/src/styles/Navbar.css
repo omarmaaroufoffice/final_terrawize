@@ -73,6 +73,22 @@
   height: 32px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(79, 70, 229, 0.2));
+  animation: rotateLogo 8s linear infinite;
+  transition: all 0.3s ease;
+}
+
+.nav-logo:hover .nav-logo-icon {
+  animation: rotateLogo 4s linear infinite;
+  filter: drop-shadow(0 4px 8px rgba(79, 70, 229, 0.4));
+}
+
+@keyframes rotateLogo {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .nav-logo-text {
