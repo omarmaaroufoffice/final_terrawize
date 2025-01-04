@@ -4,20 +4,20 @@ import './Logo.css';
 
 const Logo: React.FC = () => {
   return (
-    <Link to="/" className="logo">
-      <div className="logo-icon">
-        <div className="logo-outer-ring"></div>
-        <div className="logo-middle-ring"></div>
-        <div className="logo-inner-ring"></div>
-        <div className="logo-particles">
-          <div className="particle particle-1"></div>
-          <div className="particle particle-2"></div>
-          <div className="particle particle-3"></div>
+    <Link to="/" className="nav-logo">
+      <div className="logo-orbital-system">
+        <div className="logo-orbit">
+          <div className="logo-orbit-particle particle-1"></div>
+          <div className="logo-orbit-particle particle-2"></div>
+          <div className="logo-orbit-particle particle-3"></div>
+          <div className="logo-orbit-particle particle-4"></div>
         </div>
-        <div className="logo-glow"></div>
-        <img src="/logo.png" alt="Expertosy Logo" className="logo-image" />
       </div>
-      <span className="logo-text">Expertosy</span>
+      <div className="logo-core">
+        <img src="/static/media/logo.2e2c642bf5931adb622080029bad" alt="Expertosy Logo" />
+      </div>
+      <div className="logo-rings"></div>
+      <span className="nav-logo-text">Expertosy</span>
     </Link>
   );
 };
